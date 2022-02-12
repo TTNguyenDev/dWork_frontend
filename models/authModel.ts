@@ -1,0 +1,88 @@
+import {
+    AnyAction,
+    createSlice,
+    PayloadAction,
+    Reducer,
+} from '@reduxjs/toolkit';
+import { Nullable, StateWithLoading } from '../common';
+import { AuthService } from '../services/authService';
+import { AppThunk, Model } from '../store';
+import { BlockChainConnector } from '../utils/blockchain';
+
+export type AuthState = {
+    data: StateWithLoading<{
+        logged: boolean;
+        userId: Nullable<string>;
+    }>
+};
+
+const initialState: AuthState = {
+    data: {
+        logged: false,
+        userId: null,
+        loading: true,
+    },
+};
+
+const topics = createSlice({
+    name: 'auth',
+    initialState,
+    reducers: {
+        clearData(state) {
+            state = initialState;
+        },
+        logInStart(state) {
+            state.data.loading = true;
+        },
+        logInSuccess(
+            state,
+            action: PayloadAction<{
+                userId: string;
+            }>
+        ) {
+            state.data.logged = true;
+            state.data.userId = action.payload.userId;
+            state.data.loading = false;
+        },
+        logOutStart(state) {
+            state.data.loading = true;
+        },
+        logOutSuccess(state) {
+            state.data.logged = false;
+            state.data.userId = null;
+            state.data.loading = false;
+        },
+        checkLoginStatus(state) {
+            state.data.logged = !!BlockChainConnector.instance.account.accountId;
+            state.data.userId = BlockChainConnector.instance.account.accountId;
+            state.data.loading = false;
+        }
+    },
+});
+
+
+const asyncActions: {
+    logIn: () => AppThunk;
+    logOut: () => AppThunk;
+} = {
+    logIn: () => async (dispatch) => {
+        dispatch(topics.actions.logInStart());
+        await AuthService.logIn();
+    },
+    logOut: () => async (dispatch) => {
+        dispatch(topics.actions.logOutStart());
+        await AuthService.logOut();
+        dispatch(topics.actions.logOutSuccess());
+        window.location.replace('/');
+    }
+}
+
+export const AuthModel: Model<
+    typeof topics.actions,
+    typeof asyncActions,
+    Reducer<AuthState, AnyAction>
+> = Object.freeze({
+    actions: topics.actions,
+    reducer: topics.reducer,
+    asyncActions,
+});

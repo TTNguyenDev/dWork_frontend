@@ -4,5 +4,6 @@
 yarn.lock
 .next
 *-lock.json
+yarn-error.log
 
 

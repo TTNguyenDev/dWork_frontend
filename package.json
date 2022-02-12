@@ -8,13 +8,22 @@
     "start": "next start"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.7.2",
+    "@types/bn.js": "^5.1.0",
+    "bn.js": "^5.2.0",
+    "buffer": "^6.0.3",
+    "collections": "^5.1.13",
+    "near-api-js": "^0.44.2",
     "next": "^11.0.1",
+    "quill": "2.0.0-dev.4",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-query": "^3.34.14",
+    "react-redux": "^7.2.6",
     "rsuite": "^4.10.2"
   },
   "devDependencies": {
+    "@types/collections": "^5.1.2",
     "@types/next": "^9.0.0",
     "@types/react": "17.0.11",
     "css-loader": "^6.2.0",
