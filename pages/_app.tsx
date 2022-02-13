@@ -3,6 +3,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
+import { ConnectWalletModal } from '../components/connectWalletModal';
 import { useApp } from '../hooks/useApp';
 import { store } from '../store';
 import '../styles/global.less';
@@ -20,6 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <Provider store={store}>
                 <Init />
                 <ToastContainer />
+                <ConnectWalletModal />
                 <Component {...pageProps} />
             </Provider>
         </QueryClientProvider>

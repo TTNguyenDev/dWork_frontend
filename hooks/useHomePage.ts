@@ -8,6 +8,7 @@ import { RootState } from "../store";
 import { useListJobs } from "./useListJobs";
 import { useLogin } from "./useLogin";
 import { toast } from 'react-toastify';
+import { ModalsController } from "../utils/modalsController";
 
 
 export type UseHomePageOutput = {
@@ -34,17 +35,31 @@ export const useHomePage = (): UseHomePageOutput => {
     const [makeMoneyBtnLoading, setMakeMoneyBtnLoading] = useState<boolean>(false);
 
     const handleCreateTaskBtnClick = useCallback(async () => {
+        if (!auth.data.logged) {
+            ModalsController.controller.openConnectWalletModal();
+            return
+        }
+
         setCreateTaskBtnLoading(true);
         try {
             await AccountService.register(true);
-            toast('Register as a requester successfully')
+            toast('Register as a requester successfully', {
+                type: 'success'
+            })
         } catch (error) {
-            toast('Register as a requester failed')
+            toast('Register as a requester failed', {
+                type: 'error'
+            })
         }
         setCreateTaskBtnLoading(false);
-    }, [])
+    }, [auth.data.logged])
 
     const handleMakeMoneyBtnClick = useCallback(async () => {
+        if (!auth.data.logged) {
+            ModalsController.controller.openConnectWalletModal();
+            return
+        }
+
         setMakeMoneyBtnLoading(true);
         try {
             await AccountService.register(false);
@@ -57,7 +72,7 @@ export const useHomePage = (): UseHomePageOutput => {
             })
         }
         setMakeMoneyBtnLoading(false);
-    }, []);
+    }, [auth.data.logged]);
 
     return {
         authLoading: auth.data.loading,

@@ -26,6 +26,9 @@ export class AccountService {
         const res =
             await BlockChainConnector.instance.contract.register({
                 requester,
-            });
+            },
+                '30000000000000',
+                '500000000000000000000000'
+            );
     }
 }
