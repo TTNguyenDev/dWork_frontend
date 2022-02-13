@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Avatar, Stack, Dropdown } from 'rsuite';
 import { HeaderAccountTitle } from '../headerAccountTitle';
