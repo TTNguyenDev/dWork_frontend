@@ -32,7 +32,7 @@ const balance = createSlice({
     name: 'balance',
     initialState,
     reducers: {
-        clearDate(state) {
+        clearData(state) {
             state = initialState
         },
         getBalanceStart(state) {

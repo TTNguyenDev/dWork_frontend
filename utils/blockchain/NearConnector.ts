@@ -29,6 +29,9 @@ const ViewMethods: string[] = [
     'get_comments',
     'get_num_post_comments',
     'topics',
+
+    'available_tasks',
+    'user_info'
 ];
 
 const ChangeMethods: string[] = [
@@ -44,6 +47,8 @@ const ChangeMethods: string[] = [
     'set_avatar',
     'set_thumbnail',
     'set_bio',
+
+    'register'
 ];
 
 type ContractMethodType<K = any> = (...args: any) => K;
@@ -75,6 +80,10 @@ type ContractMethodsType = {
     set_avatar: ContractMethodType;
     set_thumbnail: ContractMethodType;
     set_bio: ContractMethodType;
+
+    available_tasks: ContractMethodType;
+    user_info: ContractMethodType;
+    register: ContractMethodType;
 };
 
 export class NearConnector {

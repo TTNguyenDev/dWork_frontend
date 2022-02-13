@@ -4,11 +4,13 @@ import { NearConfig } from "../config";
 import { CONTRACT_NAME } from "../constants";
 import { AppModel } from "../models/appModel";
 import { AuthModel } from "../models/authModel";
+import { ProfileModel } from "../models/profileModel";
 import { RootState } from "../store";
 
 export const useApp = () => {
     const dispatch = useDispatch();
     const app = useSelector((state: RootState) => state.app);
+    const auth = useSelector((state: RootState) => state.auth);
 
     useEffect(() => {
         window.Buffer = window.Buffer || Buffer;
@@ -32,6 +34,13 @@ export const useApp = () => {
             return;
 
         dispatch(AuthModel.actions.checkLoginStatus())
-
     }, [app.data.ready])
+
+    useEffect(() => {
+        if (!auth.data.logged)
+            return;
+
+        dispatch(ProfileModel.asyncActions.fetchProfile())
+    }, [auth.data.logged])
+
 }
