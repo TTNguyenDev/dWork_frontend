@@ -14,6 +14,7 @@ import { ModalsController } from "../utils/modalsController";
 export type UseHomePageOutput = {
     authLoading: boolean,
     logged: boolean,
+    userId: Nullable<string>;
     profileLoading: boolean,
     profileInfo: Nullable<Account>,
     createTaskBtnLoading: boolean,
@@ -22,14 +23,17 @@ export type UseHomePageOutput = {
     handleMakeMoneyBtnClick: () => void;
     jobs: Optional<Job[]>;
     listJobsLoading: boolean;
+    myJobs: Optional<Job[]>;
+    listMyJobsLoading: boolean;
 }
 
 export const useHomePage = (): UseHomePageOutput => {
     const auth = useSelector((state: RootState) => state.auth);
     const profile = useSelector((state: RootState) => state.profile);
 
-    const { loading: loginLoading, requestLogin } = useLogin();
     const { loading: listJobsLoading, jobs } = useListJobs();
+
+    const { loading: listMyJobsLoading, jobs: myJobs } = useListJobs();
 
     const [createTaskBtnLoading, setCreateTaskBtnLoading] = useState<boolean>(false);
     const [makeMoneyBtnLoading, setMakeMoneyBtnLoading] = useState<boolean>(false);
@@ -77,13 +81,16 @@ export const useHomePage = (): UseHomePageOutput => {
     return {
         authLoading: auth.data.loading,
         logged: auth.data.logged,
+        userId: auth.data.userId,
         profileLoading: profile.data.loading,
         profileInfo: profile.data.info,
         createTaskBtnLoading,
         makeMoneyBtnLoading,
         handleCreateTaskBtnClick,
         handleMakeMoneyBtnClick,
-        jobs,
         listJobsLoading,
+        jobs,
+        listMyJobsLoading,
+        myJobs,
     }
 }
