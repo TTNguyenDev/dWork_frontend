@@ -8,7 +8,7 @@ export class AccountService {
                 account_id: accountId
             });
 
-        return res.map((raw: any) => AccountService.mapToModel(raw));
+        return AccountService.mapToModel(res);
     }
 
 
