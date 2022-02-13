@@ -25,6 +25,11 @@ export default function Home() {
         profileInfo,
     } = useHomePage();
 
+    console.log('=======');
+    console.log(authLoading);
+    console.log(profileLoading);
+    console.log(profileInfo);
+
     return (
         <>
             <Header>
@@ -32,8 +37,12 @@ export default function Home() {
             </Header>
             <Layout activeKey="one">
                 <Container className={classes.container}>
-                    {authLoading && <Loader />}
-                    {!authLoading && !profileInfo && (
+                    {(authLoading ||
+                        (!authLoading && logged && profileLoading)) && (
+                        <Loader />
+                    )}
+                    {((!authLoading && !profileLoading && !profileInfo) ||
+                        (!authLoading && !logged)) && (
                         <>
                             <h1 className={classes.title}>
                                 Get Started with dWork
@@ -54,13 +63,13 @@ export default function Home() {
                                         >
                                             Create Task
                                         </h3>
-                                        <desc
+                                        <div
                                             className={classes.card_intro_desc}
                                         >
                                             Human intelligence through an API.
                                             Access a global, on-demand, 24/7
                                             workforce.
-                                        </desc>
+                                        </div>
                                         <Button
                                             appearance="primary"
                                             className={classes.card_intro_btn}
@@ -90,7 +99,7 @@ export default function Home() {
                                             >
                                                 Make Money
                                             </h3>
-                                            <desc
+                                            <div
                                                 className={
                                                     classes.card_intro_desc
                                                 }
@@ -98,7 +107,7 @@ export default function Home() {
                                                 Make money in your spare time.
                                                 Get paid for completing simple
                                                 tasks.
-                                            </desc>
+                                            </div>
                                         </div>
                                         <Button
                                             appearance="primary"
@@ -114,6 +123,7 @@ export default function Home() {
                         </>
                     )}
                     {!authLoading &&
+                        !profileLoading &&
                         profileInfo &&
                         profileInfo.type === AccountTypes.WORKER && (
                             <>

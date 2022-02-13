@@ -4,7 +4,6 @@ import {
     PayloadAction,
     Reducer,
 } from '@reduxjs/toolkit';
-import { Near } from 'near-api-js';
 import { Nullable, StateWithLoading } from '../common';
 import { AccountService } from '../services/accountService';
 import { AppThunk, Model } from '../store';
@@ -19,7 +18,7 @@ export type ProfileState = {
 const initialState: ProfileState = {
     data: {
         info: null,
-        loading: false,
+        loading: true,
     },
 };
 
