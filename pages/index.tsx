@@ -2,7 +2,17 @@ import React from 'react';
 import Header from 'next/head';
 import { Layout } from '../components/layout';
 import classes from './index.module.less';
-import { Button, Col, Container, FlexboxGrid, Grid, List, Row } from 'rsuite';
+import {
+    Button,
+    Col,
+    Container,
+    FlexboxGrid,
+    Grid,
+    List,
+    Nav,
+    Row,
+    Table,
+} from 'rsuite';
 import createTaskLogo from '../assets/logos/create-task.png';
 import makeMoneyLogo from '../assets/logos/make-money.png';
 import { useHomePage } from '../hooks/useHomePage';
@@ -10,11 +20,14 @@ import { Loader } from '../components/loader';
 import { JobCard } from '../components/jobCard';
 import { Job } from '../models/types/jobType';
 import { AccountTypes } from '../models/types/accountType';
+import { Wrapper } from '../components/wrapper';
+import { ModalsController } from '../utils/modalsController';
 
 export default function Home() {
     const {
         authLoading,
         logged,
+        userId,
         createTaskBtnLoading,
         makeMoneyBtnLoading,
         handleCreateTaskBtnClick,
@@ -23,12 +36,9 @@ export default function Home() {
         listJobsLoading,
         profileLoading,
         profileInfo,
+        listMyJobsLoading,
+        myJobs,
     } = useHomePage();
-
-    console.log('=======');
-    console.log(authLoading);
-    console.log(profileLoading);
-    console.log(profileInfo);
 
     return (
         <>
@@ -146,6 +156,128 @@ export default function Home() {
                                                 ))}
                                         </List>
                                     )}
+                                </div>
+                            </>
+                        )}
+                    {!authLoading &&
+                        !profileLoading &&
+                        profileInfo &&
+                        profileInfo.type === AccountTypes.REQUESTER && (
+                            <>
+                                <div>
+                                    <Button
+                                        appearance="primary"
+                                        onClick={
+                                            ModalsController.controller
+                                                .openCreateTaskModal
+                                        }
+                                    >
+                                        New Task
+                                    </Button>
+                                </div>
+                                <div>
+                                    <Table
+                                        data={
+                                            myJobs
+                                                ?.filter(
+                                                    (j) => j.owner === userId
+                                                )
+                                                .reverse() ?? []
+                                        }
+                                        onRowClick={(data) => {
+                                            console.log(data);
+                                        }}
+                                        loading={listMyJobsLoading}
+                                        hover
+                                        autoHeight
+                                    >
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Id
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="taskId" />
+                                        </Table.Column>
+
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Title
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="title" />
+                                        </Table.Column>
+
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Description
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="description" />
+                                        </Table.Column>
+
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Max participants
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="maxParticipants" />
+                                        </Table.Column>
+
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Hour rate
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="hourRate" />
+                                        </Table.Column>
+
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Hour estimation
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="hourEstimation" />
+                                        </Table.Column>
+
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Status
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="status" />
+                                        </Table.Column>
+                                        <Table.Column
+                                            resizable
+                                            width={120}
+                                            fixed="right"
+                                        >
+                                            <Table.HeaderCell>
+                                                Action
+                                            </Table.HeaderCell>
+
+                                            <Table.Cell>
+                                                {(rowData) => {
+                                                    function handleAction() {
+                                                        alert(
+                                                            `id:${rowData.id}`
+                                                        );
+                                                    }
+                                                    return (
+                                                        <span>
+                                                            <a
+                                                                onClick={
+                                                                    handleAction
+                                                                }
+                                                            >
+                                                                Edit
+                                                            </a>
+                                                            |
+                                                            <a
+                                                                onClick={
+                                                                    handleAction
+                                                                }
+                                                            >
+                                                                Remove
+                                                            </a>
+                                                        </span>
+                                                    );
+                                                }}
+                                            </Table.Cell>
+                                        </Table.Column>
+                                    </Table>
                                 </div>
                             </>
                         )}

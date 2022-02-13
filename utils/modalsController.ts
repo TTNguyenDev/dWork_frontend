@@ -1,6 +1,8 @@
 
 export type ModalsControllerType = {
     openConnectWalletModal: () => void;
+    openCreateTaskModal: () => void;
+    closeCreateTaskModal: () => void;
 }
 
 export class ModalsController {
@@ -11,7 +13,7 @@ export class ModalsController {
         return this._controller;
     }
 
-    static setController(controller: Record<keyof ModalsControllerType, () => void>) {
+    static setController(controller: Partial<Record<keyof ModalsControllerType, () => void>>) {
         this._controller = { ...this._controller, ...controller }
     }
 }
