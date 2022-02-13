@@ -14,6 +14,9 @@ export type AuthState = {
         logged: boolean;
         userId: Nullable<string>;
     }>
+    login: StateWithLoading,
+    logout: StateWithLoading
+
 };
 
 const initialState: AuthState = {
@@ -22,6 +25,12 @@ const initialState: AuthState = {
         userId: null,
         loading: true,
     },
+    login: {
+        loading: false,
+    },
+    logout: {
+        loading: false,
+    }
 };
 
 const topics = createSlice({
@@ -32,7 +41,7 @@ const topics = createSlice({
             state = initialState;
         },
         logInStart(state) {
-            state.data.loading = true;
+            state.login.loading = true;
         },
         logInSuccess(
             state,
@@ -42,15 +51,15 @@ const topics = createSlice({
         ) {
             state.data.logged = true;
             state.data.userId = action.payload.userId;
-            state.data.loading = false;
+            state.login.loading = false;
         },
         logOutStart(state) {
-            state.data.loading = true;
+            state.logout.loading = true;
         },
         logOutSuccess(state) {
             state.data.logged = false;
             state.data.userId = null;
-            state.data.loading = false;
+            state.logout.loading = false;
         },
         checkLoginStatus(state) {
             state.data.logged = !!BlockChainConnector.instance.account.accountId;
@@ -72,7 +81,6 @@ const asyncActions: {
     logOut: () => async (dispatch) => {
         dispatch(topics.actions.logOutStart());
         await AuthService.logOut();
-        dispatch(topics.actions.logOutSuccess());
         window.location.replace('/');
     }
 }

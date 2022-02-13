@@ -1,8 +1,9 @@
 import React from 'react';
-import { Dropdown, Nav, Navbar, Header as RSuiteHeader } from 'rsuite';
+import { Navbar, Loader } from 'rsuite';
+import { useHeader } from '../../hooks/useHeader';
 import { Brand } from '../brand';
+import { HeaderAccount } from '../headerAccount';
 import { LoginButton } from '../loginButton';
-import { NavLink } from '../navLink';
 import classes from './header.module.less';
 
 interface HeaderProps {
@@ -10,13 +11,36 @@ interface HeaderProps {
 }
 
 export const Header: React.FunctionComponent<HeaderProps> = ({ activeKey }) => {
+    const {
+        authLoading,
+        logged,
+        userId,
+        loginLoading,
+        requestLogin,
+        logoutLoading,
+        requestLogout,
+    } = useHeader();
+
     return (
         <div className={classes.root}>
             <div className={classes.navbar}>
-                <Navbar.Header className={classes.navbar_header}>
+                <div className={classes.navbar_header}>
                     <Brand />
-                </Navbar.Header>
-                <LoginButton />
+                </div>
+                {authLoading ? (
+                    <Loader />
+                ) : logged ? (
+                    <HeaderAccount
+                        logoutLoading={logoutLoading}
+                        requestLogout={requestLogout}
+                        accountName={userId!}
+                    />
+                ) : (
+                    <LoginButton
+                        loading={loginLoading}
+                        requestLogin={requestLogin}
+                    />
+                )}
             </div>
         </div>
     );

@@ -1,15 +1,19 @@
-import Link from 'next/link';
 import React from 'react';
 import { Button } from 'rsuite';
 import { useLogin } from '../../hooks/useLogin';
 import classes from './brand.module.less';
 
-interface LoginButtonProps {}
+interface LoginButtonProps {
+    loading: boolean;
+    requestLogin: () => void;
+}
 
-export const LoginButton: React.FunctionComponent<LoginButtonProps> = () => {
-    const { loading, requestLogin } = useLogin();
+export const LoginButton: React.FunctionComponent<LoginButtonProps> = ({
+    loading,
+    requestLogin,
+}) => {
     return (
-        <Button loading={loading} onClick={requestLogin}>
+        <Button appearance="primary" loading={loading} onClick={requestLogin}>
             Connect the wallet
         </Button>
     );

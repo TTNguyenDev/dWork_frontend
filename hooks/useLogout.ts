@@ -3,21 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { AuthModel } from "../models/authModel";
 import { RootState } from "../store";
 
-export type UseLoginOutput = {
+export type UseLogoutOutput = {
     loading: boolean,
-    requestLogin: () => void,
+    requestLogout: () => void,
 }
 
-export const useLogin = (): UseLoginOutput => {
+export const useLogout = (): UseLogoutOutput => {
     const dispatch = useDispatch();
     const auth = useSelector((state: RootState) => state.auth);
 
-    const requestLogin = useCallback(() => {
-        dispatch(AuthModel.asyncActions.logIn())
+    const requestLogout = useCallback(() => {
+        dispatch(AuthModel.asyncActions.logOut())
     }, [])
 
     return {
-        loading: auth.login.loading,
-        requestLogin
+        loading: auth.logout.loading,
+        requestLogout
     }
 }

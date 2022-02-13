@@ -18,9 +18,10 @@
     "quill": "2.0.0-dev.4",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-icons": "^4.3.1",
     "react-query": "^3.34.14",
     "react-redux": "^7.2.6",
-    "rsuite": "^4.10.2"
+    "rsuite": "^5.6.0"
   },
   "devDependencies": {
     "@types/collections": "^5.1.2",

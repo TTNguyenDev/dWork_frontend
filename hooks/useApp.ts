@@ -1,11 +1,14 @@
 import { useEffect } from "react"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NearConfig } from "../config";
 import { CONTRACT_NAME } from "../constants";
 import { AppModel } from "../models/appModel";
+import { AuthModel } from "../models/authModel";
+import { RootState } from "../store";
 
 export const useApp = () => {
     const dispatch = useDispatch();
+    const app = useSelector((state: RootState) => state.app);
 
     useEffect(() => {
         window.Buffer = window.Buffer || Buffer;
@@ -22,6 +25,13 @@ export const useApp = () => {
 
         // Init app
         dispatch(AppModel.asyncActions.init())
-
     }, []);
+
+    useEffect(() => {
+        if (!app.data.ready)
+            return;
+
+        dispatch(AuthModel.actions.checkLoginStatus())
+
+    }, [app.data.ready])
 }
