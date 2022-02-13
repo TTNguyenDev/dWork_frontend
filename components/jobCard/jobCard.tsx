@@ -11,18 +11,18 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
     return (
         <Grid fluid className={classes.root}>
             <Row gutter={16}>
-                <Col xs={24} sm={24} md={20}>
+                <Col xs={24} sm={24} md={16}>
                     <h5 className={classes.title}>{job.title}</h5>
                 </Col>
-                <Col xs={24} sm={24} md={4}>
+                <Col xs={24} sm={24} md={8}>
                     <b>{`${job.hourRate}/h`}</b>
                 </Col>
             </Row>
             <Row gutter={16}>
-                <Col xs={24} sm={24} md={20}>
+                <Col xs={24} sm={24} md={16}>
                     <small>{job.description}</small>
                 </Col>
-                <Col xs={24} sm={24} md={4}>
+                <Col xs={24} sm={24} md={8}>
                     <Button appearance="primary" size="sm">
                         Bid now
                     </Button>

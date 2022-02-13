@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { Avatar, Stack, Dropdown } from 'rsuite';
+import { Dropdown } from 'rsuite';
 import { HeaderAccountTitle } from '../headerAccountTitle';
 import { Link } from '../link';
 
@@ -19,7 +19,7 @@ export const HeaderAccount: React.FunctionComponent<HeaderAccountProps> = ({
 }) => {
     return (
         <Dropdown
-            renderToggle={(props) => (
+            renderToggle={(props: any) => (
                 <HeaderAccountTitle
                     title={accountName}
                     avatarSrc={avatarSrc}
@@ -28,9 +28,7 @@ export const HeaderAccount: React.FunctionComponent<HeaderAccountProps> = ({
             )}
             placement="bottomEnd"
         >
-            <Dropdown.Item as={Link} href="/profile">
-                Profile
-            </Dropdown.Item>
+            <Dropdown.Item>Profile</Dropdown.Item>
             <Dropdown.Item onSelect={requestLogout}>Sign out</Dropdown.Item>
         </Dropdown>
     );
