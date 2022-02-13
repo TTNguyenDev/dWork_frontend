@@ -178,11 +178,11 @@ export default function Home() {
                                 <div>
                                     <Table
                                         data={
-                                            myJobs
+                                            (myJobs
                                                 ?.filter(
                                                     (j) => j.owner === userId
                                                 )
-                                                .reverse() ?? []
+                                                .reverse() as any) ?? []
                                         }
                                         onRowClick={(data) => {
                                             console.log(data);
@@ -238,44 +238,6 @@ export default function Home() {
                                                 Status
                                             </Table.HeaderCell>
                                             <Table.Cell dataKey="status" />
-                                        </Table.Column>
-                                        <Table.Column
-                                            resizable
-                                            width={120}
-                                            fixed="right"
-                                        >
-                                            <Table.HeaderCell>
-                                                Action
-                                            </Table.HeaderCell>
-
-                                            <Table.Cell>
-                                                {(rowData) => {
-                                                    function handleAction() {
-                                                        alert(
-                                                            `id:${rowData.id}`
-                                                        );
-                                                    }
-                                                    return (
-                                                        <span>
-                                                            <a
-                                                                onClick={
-                                                                    handleAction
-                                                                }
-                                                            >
-                                                                Edit
-                                                            </a>
-                                                            |
-                                                            <a
-                                                                onClick={
-                                                                    handleAction
-                                                                }
-                                                            >
-                                                                Remove
-                                                            </a>
-                                                        </span>
-                                                    );
-                                                }}
-                                            </Table.Cell>
                                         </Table.Column>
                                     </Table>
                                 </div>
