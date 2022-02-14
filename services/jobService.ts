@@ -10,31 +10,60 @@ export class JobService {
         hourEstimation: string;
         maxParticipants: string;
     }): Promise<void> {
-        await BlockChainConnector.instance.contract.new_task(
+        await BlockChainConnector.instance.contract.new_task({
+            title: payload.title,
+            description: payload.description,
+            hour_rate: Number.parseInt(payload.hourRate),
+            hour_estimation: Number.parseInt(payload.hourEstimation),
+            max_participants: Number.parseInt(payload.maxParticipants),
+        });
+    }
+
+    static async submitProposal(payload: {
+        taskId: string;
+        coverLetter: string;
+        hourEstimation: string;
+    }): Promise<void> {
+        await BlockChainConnector.instance.contract.submit_proposal({
+            task_id: payload.taskId,
+            cover_letter: payload.coverLetter,
+            hour_estimation: Number.parseInt(payload.hourEstimation),
+        });
+    }
+
+    static async fetchAvailableJobs(): Promise<Job[]> {
+        const res = await BlockChainConnector.instance.contract.available_tasks(
             {
-                title: payload.title,
-                description: payload.description,
-                hour_rate: Number.parseInt(payload.hourRate),
-                hour_estimation: Number.parseInt(payload.hourEstimation),
-                max_participants: Number.parseInt(payload.maxParticipants)
+                from_index: 0,
+                limit: 100,
             }
+        );
+
+        return res.map((raw: any) =>
+            JobService.mapToModel({
+                task_id: raw[0],
+                ...raw[1],
+            })
         );
     }
 
-    static async fetchJobs(): Promise<Job[]> {
-        const res =
-            await BlockChainConnector.instance.contract.available_tasks({
-                from_index: 0,
-                limit: 100
-            });
+    static async fetchJobByAccountId(accountId: string): Promise<Job[]> {
+        const res = await BlockChainConnector.instance.contract.current_tasks({
+            account_id: accountId,
+            from_index: 0,
+            limit: 100,
+        });
 
-        return res.map((raw: any) => JobService.mapToModel({
-            task_id: raw[0],
-            ...raw[1]
-        }));
+        return res.map((raw: any) =>
+            JobService.mapToModel({
+                task_id: raw[0],
+                ...raw[1],
+            })
+        );
     }
 
     private static mapToModel(raw: any): Job {
+        console.log(raw);
         return {
             taskId: raw.task_id,
             owner: raw.owner,
@@ -44,7 +73,7 @@ export class JobService {
             hourRate: raw.hour_rate,
             hourEstimation: raw.hour_estimation,
             proposals: raw.proposals,
-            status: raw.status.type
+            status: raw.status.type,
         };
     }
 }

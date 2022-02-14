@@ -6,13 +6,18 @@ import {
 } from '@reduxjs/toolkit';
 import { Nullable, StateWithLoading } from '../common';
 import { AccountService } from '../services/accountService';
+import { JobService } from '../services/jobService';
 import { AppThunk, Model } from '../store';
 import { Account } from './types/accountType';
+import { Job } from './types/jobType';
 
 export type ProfileState = {
     data: StateWithLoading<{
-        info: Nullable<Account>
-    }>
+        info: Nullable<Account>;
+    }>;
+    jobsJoined: StateWithLoading<{
+        jobs: Job[];
+    }>;
 };
 
 const initialState: ProfileState = {
@@ -20,14 +25,18 @@ const initialState: ProfileState = {
         info: null,
         loading: true,
     },
+    jobsJoined: {
+        jobs: [],
+        loading: true,
+    },
 };
 
-const balance = createSlice({
+const profile = createSlice({
     name: 'profile',
     initialState,
     reducers: {
         clearData(state) {
-            state = initialState
+            state = initialState;
         },
         getProfileStarted(state) {
             state.data.loading = true;
@@ -40,36 +49,62 @@ const balance = createSlice({
             state.data.error = action.payload;
             state.data.loading = false;
         },
+        getJobsJoinedStarted(state) {
+            state.jobsJoined.loading = true;
+        },
+        getJobsJoinedSuccess(state, action: PayloadAction<Job[]>) {
+            state.jobsJoined.jobs = action.payload;
+            state.jobsJoined.loading = false;
+        },
+        getJobsJoinedFailed(state, action: PayloadAction<string>) {
+            state.jobsJoined.error = action.payload;
+            state.jobsJoined.loading = false;
+        },
     },
 });
 
 const asyncActions: {
     fetchProfile: () => AppThunk;
+    fetchJobsJoined: () => AppThunk;
 } = {
     fetchProfile: () => async (dispatch, getState) => {
         const { auth } = getState();
 
-        if (!auth.data.userId)
-            return;
+        if (!auth.data.userId) return;
 
-        dispatch(balance.actions.getProfileStarted());
+        dispatch(profile.actions.getProfileStarted());
 
         try {
             const res = await AccountService.fetchUser(auth.data.userId);
-            dispatch(balance.actions.getProfileSuccess(res));
+            dispatch(profile.actions.getProfileSuccess(res));
         } catch (error: any) {
-            console.error('fetchProfile', error)
-            dispatch(balance.actions.getProfileFailed(error.message));
+            console.error('fetchProfile', error);
+            dispatch(profile.actions.getProfileFailed(error.message));
         }
-    }
-}
+    },
+    fetchJobsJoined: () => async (dispatch, getState) => {
+        const { auth } = getState();
+
+        if (!auth.data.userId) return;
+
+        dispatch(profile.actions.getJobsJoinedStarted());
+
+        try {
+            const res = await JobService.fetchJobByAccountId(auth.data.userId);
+            dispatch(profile.actions.getJobsJoinedSuccess(res));
+        } catch (error: any) {
+            console.error('fetchJobsJoined', error);
+            dispatch(profile.actions.getJobsJoinedFailed(error.message));
+        }
+    },
+};
 
 export const ProfileModel: Model<
-    typeof balance.actions,
+    typeof profile.actions,
     typeof asyncActions,
     Reducer<ProfileState, AnyAction>
 > = Object.freeze({
-    actions: balance.actions,
+    actions: profile.actions,
     asyncActions,
-    reducer: balance.reducer,
+    reducer: profile.reducer,
 });

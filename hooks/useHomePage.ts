@@ -6,9 +6,9 @@ import { Job } from "../models/types/jobType";
 import { AccountService } from "../services/accountService";
 import { RootState } from "../store";
 import { useListJobs } from "./useListJobs";
-import { useLogin } from "./useLogin";
 import { toast } from 'react-toastify';
 import { ModalsController } from "../utils/modalsController";
+import { JobService } from "../services/jobService";
 
 
 export type UseHomePageOutput = {
@@ -77,6 +77,7 @@ export const useHomePage = (): UseHomePageOutput => {
         }
         setMakeMoneyBtnLoading(false);
     }, [auth.data.logged]);
+
 
     return {
         authLoading: auth.data.loading,
