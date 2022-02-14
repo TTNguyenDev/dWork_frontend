@@ -6,6 +6,7 @@ import {
     Button,
     Col,
     Container,
+    Divider,
     Drawer,
     FlexboxGrid,
     Grid,
@@ -180,6 +181,10 @@ export default function Home() {
                                         New Task
                                     </Button>
                                 </div>
+                                <Divider />
+                                <h5 style={{ marginBottom: 15 }}>
+                                    Available Tasks
+                                </h5>
                                 <div>
                                     <Table
                                         data={
@@ -274,7 +279,104 @@ export default function Home() {
                                         </Table.Column>
                                     </Table>
                                 </div>
+                                <Divider />
+                                <h5 style={{ marginBottom: 15 }}>
+                                    Processing Tasks
+                                </h5>
+                                <div>
+                                    <Table
+                                        data={
+                                            (myJobs
+                                                ?.filter(
+                                                    (j) => j.owner === userId
+                                                )
+                                                .reverse() as any) ?? []
+                                        }
+                                        onRowClick={(data) => {
+                                            console.log(data);
+                                        }}
+                                        loading={listMyJobsLoading}
+                                        hover
+                                        autoHeight
+                                    >
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Id
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="taskId" />
+                                        </Table.Column>
 
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Title
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="title" />
+                                        </Table.Column>
+
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Description
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="description" />
+                                        </Table.Column>
+
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Max participants
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="maxParticipants" />
+                                        </Table.Column>
+
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Hour rate
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="hourRate" />
+                                        </Table.Column>
+
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Hour estimation
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="hourEstimation" />
+                                        </Table.Column>
+
+                                        <Table.Column resizable>
+                                            <Table.HeaderCell>
+                                                Status
+                                            </Table.HeaderCell>
+                                            <Table.Cell dataKey="status" />
+                                        </Table.Column>
+                                        <Table.Column>
+                                            <Table.HeaderCell>
+                                                Proposals
+                                            </Table.HeaderCell>
+                                            <Table.Cell>
+                                                {(job: Job) =>
+                                                    job.proposals.length
+                                                }
+                                            </Table.Cell>
+                                        </Table.Column>
+                                        <Table.Column>
+                                            <Table.HeaderCell>
+                                                Actions
+                                            </Table.HeaderCell>
+                                            <Table.Cell>
+                                                {(job: Job) => (
+                                                    <Button
+                                                        size="xs"
+                                                        onClick={() => {
+                                                            setDrawerData(job);
+                                                            setOpenDrawer(true);
+                                                        }}
+                                                    >
+                                                        View
+                                                    </Button>
+                                                )}
+                                            </Table.Cell>
+                                        </Table.Column>
+                                    </Table>
+                                </div>
                                 <Drawer
                                     size="lg"
                                     open={openDrawer}
@@ -305,7 +407,7 @@ const TableProposals: React.FunctionComponent<{ job: Job }> = ({ job }) => {
     const { selectProposalLoading, handleSelectProposal } = useSelectProposal();
 
     return (
-        <Table data={job.proposals ?? []} autoHeight hover>
+        <Table data={(job.proposals as any) ?? []} autoHeight hover>
             <Table.Column resizable>
                 <Table.HeaderCell>Account Id</Table.HeaderCell>
                 <Table.Cell dataKey="account_id" />
