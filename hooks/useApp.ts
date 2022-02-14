@@ -48,4 +48,6 @@ export const useApp = () => {
             dispatch(ProfileModel.asyncActions.fetchJobsJoined());
         }
     }, [profile.data.info?.type]);
+
+    console.log(profile);
 };

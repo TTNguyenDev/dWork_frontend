@@ -325,14 +325,15 @@ const TableProposals: React.FunctionComponent<{ job: Job }> = ({ job }) => {
             <Table.Column resizable>
                 <Table.HeaderCell>Actions</Table.HeaderCell>
                 <Table.Cell>
-                    {(rowData: any) => (
+                    {(proposal: any) => (
                         <Button
                             size="xs"
                             loading={selectProposalLoading}
                             onClick={() =>
                                 handleSelectProposal({
                                     taskId: job.taskId,
-                                    index: job.proposals.indexOf(rowData),
+                                    index: job.proposals.indexOf(proposal),
+                                    totalReceived: proposal.total_received,
                                 })
                             }
                         >

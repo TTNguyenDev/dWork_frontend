@@ -5,7 +5,11 @@ import { useQueryClient } from 'react-query';
 
 export type UseSelectProposalOutput = {
     selectProposalLoading: boolean;
-    handleSelectProposal: (payload: any) => void;
+    handleSelectProposal: (payload: {
+        taskId: string;
+        index: number;
+        totalReceived: string;
+    }) => void;
 };
 
 export const useSelectProposal = (): UseSelectProposalOutput => {
@@ -13,26 +17,22 @@ export const useSelectProposal = (): UseSelectProposalOutput => {
 
     const [selectProposalLoading, setSelectProposalLoading] = useState(false);
 
-    const handleSelectProposal = useCallback(
-        async (payload: { taskId: string; index: number }) => {
-            console.log(payload);
-            setSelectProposalLoading(true);
-            try {
-                await JobService.selectProposal(payload);
-                queryClient.invalidateQueries('jobs');
-                toast('Choose proposal successfully', {
-                    type: 'success',
-                });
-            } catch (error) {
-                toast('Choose proposal failed', {
-                    type: 'error',
-                });
-            } finally {
-                setSelectProposalLoading(false);
-            }
-        },
-        []
-    );
+    const handleSelectProposal = useCallback(async (payload) => {
+        setSelectProposalLoading(true);
+        try {
+            await JobService.selectProposal(payload);
+            queryClient.invalidateQueries('jobs');
+            toast('Choose proposal successfully', {
+                type: 'success',
+            });
+        } catch (error) {
+            toast('Choose proposal failed', {
+                type: 'error',
+            });
+        } finally {
+            setSelectProposalLoading(false);
+        }
+    }, []);
 
     return {
         selectProposalLoading,

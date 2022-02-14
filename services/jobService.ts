@@ -34,6 +34,7 @@ export class JobService {
     static async selectProposal(payload: {
         taskId: string;
         index: number;
+        totalReceived: string;
     }): Promise<void> {
         await BlockChainConnector.instance.contract.select_proposal(
             {
@@ -41,7 +42,7 @@ export class JobService {
                 index: payload.index,
             },
             '30000000000000',
-            '15182596957790376'
+            payload.totalReceived
         );
     }
 
