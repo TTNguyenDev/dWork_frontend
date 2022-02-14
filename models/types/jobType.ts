@@ -1,24 +1,30 @@
 import BN from 'bn.js';
 
 export enum JobStatus {
-    READY_FOR_APPLY = 'ReadyForApply'
+    READY_FOR_APPLY = 'ReadyForApply',
+    FOUND_WORKER = 'FoundWorker',
+    WORKER_SUBMITTED = 'WorkSubmitted',
+    PAYOUT = 'Payout',
+    DELETED = 'Deleted',
+    PENDING = 'Pending',
 }
+
+export type Proposal = {
+    accountId: string;
+    coverLetter: string;
+    hourEstimation: number;
+    totalReceived: string;
+    proofOfWork: string;
+};
 
 export type Job = {
-    taskId: string,
-    owner: string,
-    title: string,
-    description: string,
-    maxParticipants: number,
-    hourRate: number,
-    hourEstimation: number,
-    proposals: {
-        account_id: string,
-        cover_letter: string,
-        hour_estimation: number,
-        total_received: BN,
-        proof_of_work: string,
-    }[],
-    status: JobStatus
-}
-
+    taskId: string;
+    owner: string;
+    title: string;
+    description: string;
+    maxParticipants: number;
+    hourRate: number;
+    hourEstimation: number;
+    proposals: Proposal[];
+    status: JobStatus;
+};

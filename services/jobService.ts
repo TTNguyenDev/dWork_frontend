@@ -46,6 +46,22 @@ export class JobService {
         );
     }
 
+    static async submitWork(payload: {
+        taskId: string;
+        url: string;
+    }): Promise<void> {
+        await BlockChainConnector.instance.contract.submit_work({
+            task_id: payload.taskId,
+            url: payload.url,
+        });
+    }
+
+    static async validateWork(payload: { taskId: string }): Promise<void> {
+        await BlockChainConnector.instance.contract.validate_work({
+            task_id: payload.taskId,
+        });
+    }
+
     static async fetchAvailableJobs(): Promise<Job[]> {
         const res = await BlockChainConnector.instance.contract.available_tasks(
             {
@@ -62,12 +78,33 @@ export class JobService {
         );
     }
 
-    static async fetchJobByAccountId(accountId: string): Promise<Job[]> {
+    static async fetchJobByAccountId(accountId?: string): Promise<Job[]> {
         const res = await BlockChainConnector.instance.contract.current_tasks({
-            account_id: accountId,
+            account_id:
+                accountId ?? BlockChainConnector.instance.account.accountId,
             from_index: 0,
             limit: 100,
         });
+
+        return res.map((raw: any) =>
+            JobService.mapToModel({
+                task_id: raw[0],
+                ...raw[1],
+            })
+        );
+    }
+
+    static async fetchJobCompletedByAccountId(
+        accountId?: string
+    ): Promise<Job[]> {
+        const res = await BlockChainConnector.instance.contract.completed_tasks(
+            {
+                account_id:
+                    accountId ?? BlockChainConnector.instance.account.accountId,
+                from_index: 0,
+                limit: 100,
+            }
+        );
 
         return res.map((raw: any) =>
             JobService.mapToModel({
@@ -86,7 +123,13 @@ export class JobService {
             maxParticipants: raw.max_participants,
             hourRate: raw.hour_rate,
             hourEstimation: raw.hour_estimation,
-            proposals: raw.proposals,
+            proposals: raw.proposals.map((p: any) => ({
+                accountId: p.account_id,
+                coverLetter: p.cover_letter,
+                hourEstimation: p.hour_estimation,
+                totalReceived: p.total_received,
+                proofOfWork: p.proof_of_work,
+            })),
             status: raw.status.type,
         };
     }

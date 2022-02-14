@@ -19,7 +19,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
     const auth = useSelector((state: RootState) => state.auth);
 
     const bidBtnShow = useMemo(() => {
-        return !!job.proposals.find((p) => p.account_id === auth.data.userId);
+        return !!job.proposals.find((p) => p.accountId === auth.data.userId);
     }, [job, auth.data.userId]);
 
     return (
@@ -29,7 +29,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                     <Col xs={24} sm={24} md={16}>
                         <h5 className={classes.title}>{job.title}</h5>
                     </Col>
-                    <Col xs={24} sm={24} md={8}>
+                    <Col xs={24} sm={24} md={8} style={{ textAlign: 'right' }}>
                         <b>{`${job.hourRate}/h`}</b>
                     </Col>
                 </Row>
@@ -37,7 +37,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                     <Col xs={24} sm={24} md={16}>
                         <small>{job.description}</small>
                     </Col>
-                    <Col xs={24} sm={24} md={8}>
+                    <Col xs={24} sm={24} md={8} style={{ textAlign: 'right' }}>
                         <Button
                             appearance="primary"
                             size="sm"

@@ -42,12 +42,4 @@ export const useApp = () => {
 
         dispatch(ProfileModel.asyncActions.fetchProfile());
     }, [auth.data.logged]);
-
-    useEffect(() => {
-        if (profile.data.info?.type === AccountTypes.WORKER) {
-            dispatch(ProfileModel.asyncActions.fetchJobsJoined());
-        }
-    }, [profile.data.info?.type]);
-
-    console.log(profile);
 };

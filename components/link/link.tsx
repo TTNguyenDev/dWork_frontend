@@ -1,12 +1,13 @@
-// @ts-nocheck
 import React from 'react';
 import NextLink from 'next/link';
 
-export const Link = React.forwardRef((props, ref) => {
-    const { href, as, ...rest } = props;
-    return (
-        <NextLink href={href} as={as}>
-            <a ref={ref} {...rest} />
-        </NextLink>
-    );
-});
+export const Link = React.forwardRef(
+    (props: { href: string; children: React.ReactNode }, ref) => {
+        const { href, ...rest } = props;
+        return (
+            <NextLink href={href}>
+                <a {...rest} />
+            </NextLink>
+        );
+    }
+);

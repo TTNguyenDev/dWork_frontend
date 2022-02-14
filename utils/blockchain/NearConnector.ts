@@ -15,44 +15,19 @@ import { NearConfig as config } from '../../config';
 const NUM_BLOCKS_NON_ARCHIVAL = 4 * 12 * 3600;
 
 const ViewMethods: string[] = [
-    'get_account',
-    'get_accounts',
-    'get_num_accounts',
-    'get_followers',
-    'get_following',
-    'get_post',
-    'storage_minimum_balance',
-    'storage_balance_of',
-    'get_post_likes',
-    'get_num_likes',
-    'already_like',
-    'get_comments',
-    'get_num_post_comments',
-    'topics',
-
     'available_tasks',
     'current_tasks',
+    'completed_tasks',
     'user_info',
 ];
 
 const ChangeMethods: string[] = [
-    'storage_deposit',
-    'storage_withdraw',
-    'post',
-    'follow',
-    'unfollow',
-    'like_post',
-    'unlike_post',
-    'comment',
-    'new_topic',
-    'set_avatar',
-    'set_thumbnail',
-    'set_bio',
-
     'register',
     'new_task',
     'submit_proposal',
     'select_proposal',
+    'submit_work',
+    'validate_work',
 ];
 
 type ContractMethodType<K = any> = (...args: any) => K;
@@ -87,11 +62,14 @@ type ContractMethodsType = {
 
     available_tasks: ContractMethodType;
     current_tasks: ContractMethodType;
+    completed_tasks: ContractMethodType;
     user_info: ContractMethodType;
     register: ContractMethodType;
     new_task: ContractMethodType;
     submit_proposal: ContractMethodType;
     select_proposal: ContractMethodType;
+    submit_work: ContractMethodType;
+    validate_work: ContractMethodType;
 };
 
 export class NearConnector {
