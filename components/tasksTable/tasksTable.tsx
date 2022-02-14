@@ -26,7 +26,7 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
     const { validateWorkLoading, handleValidateWork } = useValidateWork();
 
     return (
-        <Table data={tasks} loading={loading} hover autoHeight>
+        <Table data={tasks as any} loading={loading} hover autoHeight>
             <Table.Column resizable>
                 <Table.HeaderCell>Id</Table.HeaderCell>
                 <Table.Cell dataKey="taskId" />
