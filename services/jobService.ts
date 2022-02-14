@@ -31,6 +31,21 @@ export class JobService {
         });
     }
 
+    static async selectProposal(payload: {
+        taskId: string;
+        index: number;
+        totalReceived: string;
+    }): Promise<void> {
+        await BlockChainConnector.instance.contract.select_proposal(
+            {
+                task_id: payload.taskId,
+                index: payload.index,
+            },
+            '30000000000000',
+            payload.totalReceived
+        );
+    }
+
     static async fetchAvailableJobs(): Promise<Job[]> {
         const res = await BlockChainConnector.instance.contract.available_tasks(
             {
@@ -63,7 +78,6 @@ export class JobService {
     }
 
     private static mapToModel(raw: any): Job {
-        console.log(raw);
         return {
             taskId: raw.task_id,
             owner: raw.owner,

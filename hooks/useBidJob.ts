@@ -35,7 +35,6 @@ export const useBidJob = (): UseBidJobOutput => {
         if (isValid) {
             setBibJobLoading(true);
             try {
-                console.log(formValueRef.current);
                 await JobService.submitProposal(formValueRef.current);
                 queryClient.invalidateQueries('jobs');
                 toast('Successful bid registration', {
