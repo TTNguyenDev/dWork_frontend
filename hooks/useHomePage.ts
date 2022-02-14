@@ -1,31 +1,36 @@
-import { useCallback, useState } from "react";
-import { useSelector } from "react-redux";
-import { Nullable, Optional } from "../common";
-import { Account } from "../models/types/accountType";
-import { Job } from "../models/types/jobType";
-import { AccountService } from "../services/accountService";
-import { RootState } from "../store";
-import { useListJobs } from "./useListJobs";
+import { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Nullable, Optional } from '../common';
+import { Account } from '../models/types/accountType';
+import { Job } from '../models/types/jobType';
+import { AccountService } from '../services/accountService';
+import { RootState } from '../store';
+import { useListJobs } from './useListJobs';
 import { toast } from 'react-toastify';
-import { ModalsController } from "../utils/modalsController";
-import { JobService } from "../services/jobService";
-
+import { ModalsController } from '../utils/modalsController';
+import { JobService } from '../services/jobService';
+import { useQuery } from 'react-query';
+import { BlockChainConnector } from '../utils/blockchain';
 
 export type UseHomePageOutput = {
-    authLoading: boolean,
-    logged: boolean,
+    authLoading: boolean;
+    logged: boolean;
     userId: Nullable<string>;
-    profileLoading: boolean,
-    profileInfo: Nullable<Account>,
-    createTaskBtnLoading: boolean,
-    makeMoneyBtnLoading: boolean,
+    profileLoading: boolean;
+    profileInfo: Nullable<Account>;
+    createTaskBtnLoading: boolean;
+    makeMoneyBtnLoading: boolean;
     handleCreateTaskBtnClick: () => void;
     handleMakeMoneyBtnClick: () => void;
     jobs: Optional<Job[]>;
     listJobsLoading: boolean;
-    myJobs: Optional<Job[]>;
-    listMyJobsLoading: boolean;
-}
+    jobsAvailableLoading: boolean;
+    jobsAvailable: Optional<Job[]>;
+    jobsProcessingLoading: boolean;
+    jobsProcessing: Optional<Job[]>;
+    jobsCompletedLoading: boolean;
+    jobsCompleted: Optional<Job[]>;
+};
 
 export const useHomePage = (): UseHomePageOutput => {
     const auth = useSelector((state: RootState) => state.auth);
@@ -33,51 +38,67 @@ export const useHomePage = (): UseHomePageOutput => {
 
     const { loading: listJobsLoading, jobs } = useListJobs();
 
-    const { loading: listMyJobsLoading, jobs: myJobs } = useListJobs();
+    const { isLoading: jobsAvailableLoading, data: jobsAvailable } = useQuery<
+        Job[]
+    >('jobsAvailable', async () => {
+        const res = await JobService.fetchAvailableJobs();
+        return res.filter(
+            (r) => r.owner === BlockChainConnector.instance.account.accountId
+        );
+    });
 
-    const [createTaskBtnLoading, setCreateTaskBtnLoading] = useState<boolean>(false);
-    const [makeMoneyBtnLoading, setMakeMoneyBtnLoading] = useState<boolean>(false);
+    const { isLoading: jobsProcessingLoading, data: jobsProcessing } = useQuery<
+        Job[]
+    >('jobsProcessing', () => JobService.fetchJobByAccountId());
+
+    const { isLoading: jobsCompletedLoading, data: jobsCompleted } = useQuery<
+        Job[]
+    >('jobsCompleted', () => JobService.fetchJobCompletedByAccountId());
+
+    const [createTaskBtnLoading, setCreateTaskBtnLoading] =
+        useState<boolean>(false);
+    const [makeMoneyBtnLoading, setMakeMoneyBtnLoading] =
+        useState<boolean>(false);
 
     const handleCreateTaskBtnClick = useCallback(async () => {
         if (!auth.data.logged) {
             ModalsController.controller.openConnectWalletModal();
-            return
+            return;
         }
 
         setCreateTaskBtnLoading(true);
         try {
             await AccountService.register(true);
             toast('Register as a requester successfully', {
-                type: 'success'
-            })
+                type: 'success',
+            });
         } catch (error) {
             toast('Register as a requester failed', {
-                type: 'error'
-            })
+                type: 'error',
+            });
         }
         setCreateTaskBtnLoading(false);
-    }, [auth.data.logged])
+    }, [auth.data.logged]);
 
     const handleMakeMoneyBtnClick = useCallback(async () => {
         if (!auth.data.logged) {
             ModalsController.controller.openConnectWalletModal();
-            return
+            return;
         }
 
         setMakeMoneyBtnLoading(true);
         try {
             await AccountService.register(false);
             toast('Register as a worker successfully', {
-                type: 'success'
-            })
+                type: 'success',
+            });
         } catch (error) {
             toast('Register as a worker failed', {
-                type: 'error'
-            })
+                type: 'error',
+            });
         }
         setMakeMoneyBtnLoading(false);
     }, [auth.data.logged]);
-
 
     return {
         authLoading: auth.data.loading,
@@ -91,7 +112,11 @@ export const useHomePage = (): UseHomePageOutput => {
         handleMakeMoneyBtnClick,
         listJobsLoading,
         jobs,
-        listMyJobsLoading,
-        myJobs,
-    }
-}
+        jobsAvailableLoading,
+        jobsAvailable,
+        jobsProcessingLoading,
+        jobsProcessing,
+        jobsCompletedLoading,
+        jobsCompleted,
+    };
+};
