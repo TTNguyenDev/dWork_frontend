@@ -31,7 +31,8 @@ const ViewMethods: string[] = [
     'topics',
 
     'available_tasks',
-    'user_info'
+    'current_tasks',
+    'user_info',
 ];
 
 const ChangeMethods: string[] = [
@@ -49,7 +50,8 @@ const ChangeMethods: string[] = [
     'set_bio',
 
     'register',
-    'new_task'
+    'new_task',
+    'submit_proposal',
 ];
 
 type ContractMethodType<K = any> = (...args: any) => K;
@@ -83,9 +85,11 @@ type ContractMethodsType = {
     set_bio: ContractMethodType;
 
     available_tasks: ContractMethodType;
+    current_tasks: ContractMethodType;
     user_info: ContractMethodType;
     register: ContractMethodType;
     new_task: ContractMethodType;
+    submit_proposal: ContractMethodType;
 };
 
 export class NearConnector {

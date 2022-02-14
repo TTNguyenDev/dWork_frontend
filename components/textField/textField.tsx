@@ -12,6 +12,8 @@ export const TextField = React.forwardRef(
             label: string;
             type?: 'text' | 'textarea' | 'number';
             rows?: number;
+            readOnly?: boolean;
+            value?: string;
         },
         ref: any
     ) => {
