@@ -6,6 +6,7 @@ import {
     Button,
     Col,
     Container,
+    Drawer,
     FlexboxGrid,
     Grid,
     List,
@@ -22,6 +23,7 @@ import { Job } from '../models/types/jobType';
 import { AccountTypes } from '../models/types/accountType';
 import { Wrapper } from '../components/wrapper';
 import { ModalsController } from '../utils/modalsController';
+import { useSelectProposal } from '../hooks/useSelectProposal';
 
 export default function Home() {
     const {
@@ -39,6 +41,9 @@ export default function Home() {
         listMyJobsLoading,
         myJobs,
     } = useHomePage();
+
+    const [openDrawer, setOpenDrawer] = React.useState(false);
+    const [drawerData, setDrawerData] = React.useState<Job>();
 
     return (
         <>
@@ -239,8 +244,55 @@ export default function Home() {
                                             </Table.HeaderCell>
                                             <Table.Cell dataKey="status" />
                                         </Table.Column>
+                                        <Table.Column>
+                                            <Table.HeaderCell>
+                                                Proposals
+                                            </Table.HeaderCell>
+                                            <Table.Cell>
+                                                {(job: Job) =>
+                                                    job.proposals.length
+                                                }
+                                            </Table.Cell>
+                                        </Table.Column>
+                                        <Table.Column>
+                                            <Table.HeaderCell>
+                                                Actions
+                                            </Table.HeaderCell>
+                                            <Table.Cell>
+                                                {(job: Job) => (
+                                                    <Button
+                                                        size="xs"
+                                                        onClick={() => {
+                                                            setDrawerData(job);
+                                                            setOpenDrawer(true);
+                                                        }}
+                                                    >
+                                                        View
+                                                    </Button>
+                                                )}
+                                            </Table.Cell>
+                                        </Table.Column>
                                     </Table>
                                 </div>
+
+                                <Drawer
+                                    size="lg"
+                                    open={openDrawer}
+                                    onClose={() => setOpenDrawer(false)}
+                                >
+                                    <Drawer.Header>
+                                        <Drawer.Title>
+                                            {drawerData?.taskId}
+                                        </Drawer.Title>
+                                    </Drawer.Header>
+                                    <Drawer.Body>
+                                        <h6></h6>
+                                        <h6 style={{ marginBottom: 20 }}>
+                                            List proposals
+                                        </h6>
+                                        <TableProposals job={drawerData!} />
+                                    </Drawer.Body>
+                                </Drawer>
                             </>
                         )}
                 </Container>
@@ -248,3 +300,47 @@ export default function Home() {
         </>
     );
 }
+
+const TableProposals: React.FunctionComponent<{ job: Job }> = ({ job }) => {
+    const { selectProposalLoading, handleSelectProposal } = useSelectProposal();
+
+    return (
+        <Table data={job.proposals ?? []} autoHeight hover>
+            <Table.Column resizable>
+                <Table.HeaderCell>Account Id</Table.HeaderCell>
+                <Table.Cell dataKey="account_id" />
+            </Table.Column>
+            <Table.Column resizable>
+                <Table.HeaderCell>Cover letter</Table.HeaderCell>
+                <Table.Cell dataKey="cover_letter" />
+            </Table.Column>
+            <Table.Column resizable>
+                <Table.HeaderCell>Hour estimation</Table.HeaderCell>
+                <Table.Cell dataKey="hour_estimation" />
+            </Table.Column>
+            <Table.Column resizable>
+                <Table.HeaderCell>Total received</Table.HeaderCell>
+                <Table.Cell dataKey="total_received" />
+            </Table.Column>
+            <Table.Column resizable>
+                <Table.HeaderCell>Actions</Table.HeaderCell>
+                <Table.Cell>
+                    {(rowData: any) => (
+                        <Button
+                            size="xs"
+                            loading={selectProposalLoading}
+                            onClick={() =>
+                                handleSelectProposal({
+                                    taskId: job.taskId,
+                                    index: job.proposals.indexOf(rowData),
+                                })
+                            }
+                        >
+                            Approve
+                        </Button>
+                    )}
+                </Table.Cell>
+            </Table.Column>
+        </Table>
+    );
+};
