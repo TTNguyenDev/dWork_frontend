@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Grid, Row, Col, Button } from 'rsuite';
 import { useBidJob } from '../../hooks/useBidJob';
+import { AccountTypes } from '../../models/types/accountType';
 import { Job } from '../../models/types/jobType';
 import { RootState } from '../../store';
 import { BidJobModal } from '../bidJobModal';
@@ -17,10 +18,15 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
     const handleClose = () => setOpen(false);
 
     const auth = useSelector((state: RootState) => state.auth);
+    const profile = useSelector((state: RootState) => state.profile);
 
-    const bidBtnShow = useMemo(() => {
+    const bidBtnDisabled = useMemo(() => {
         return !!job.proposals.find((p) => p.accountId === auth.data.userId);
     }, [job, auth.data.userId]);
+
+    const bidBtnHide = useMemo(() => {
+        return profile.data.info?.type === AccountTypes.REQUESTER;
+    }, [profile.data.info]);
 
     return (
         <>
@@ -38,14 +44,16 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                         <small>{job.description}</small>
                     </Col>
                     <Col xs={24} sm={24} md={8} style={{ textAlign: 'right' }}>
-                        <Button
-                            appearance="primary"
-                            size="sm"
-                            onClick={handleOpen}
-                            disabled={bidBtnShow}
-                        >
-                            Bid now
-                        </Button>
+                        {!bidBtnHide && (
+                            <Button
+                                appearance="primary"
+                                size="sm"
+                                onClick={handleOpen}
+                                disabled={bidBtnDisabled}
+                            >
+                                Bid now
+                            </Button>
+                        )}
                     </Col>
                 </Row>
                 <Row gutter={16}>

@@ -2,37 +2,18 @@ import React from 'react';
 import Header from 'next/head';
 import { Layout } from '../components/layout';
 import classes from './index.module.less';
-import {
-    Button,
-    Col,
-    Container,
-    Divider,
-    Drawer,
-    FlexboxGrid,
-    Grid,
-    List,
-    Nav,
-    Row,
-    Table,
-} from 'rsuite';
+import { Button, Col, Container, FlexboxGrid, List } from 'rsuite';
 import createTaskLogo from '../assets/logos/create-task.png';
 import makeMoneyLogo from '../assets/logos/make-money.png';
 import { useHomePage } from '../hooks/useHomePage';
 import { Loader } from '../components/loader';
 import { JobCard } from '../components/jobCard';
 import { Job } from '../models/types/jobType';
-import { AccountTypes } from '../models/types/accountType';
-import { Wrapper } from '../components/wrapper';
-import { ModalsController } from '../utils/modalsController';
-import { useSelectProposal } from '../hooks/useSelectProposal';
-import { TasksTable } from '../components/tasksTable';
-import { TaskDetailsDrawer } from '../components/taskDetailsDrawer';
 
 export default function Home() {
     const {
         authLoading,
         logged,
-        userId,
         createTaskBtnLoading,
         makeMoneyBtnLoading,
         handleCreateTaskBtnClick,
@@ -41,19 +22,12 @@ export default function Home() {
         listJobsLoading,
         profileLoading,
         profileInfo,
-        jobsAvailableLoading,
-        jobsAvailable,
-        jobsProcessingLoading,
-        jobsProcessing,
     } = useHomePage();
-
-    const [openDrawer, setOpenDrawer] = React.useState(false);
-    const [drawerData, setDrawerData] = React.useState<Job>();
 
     return (
         <>
             <Header>
-                <title>Homepage</title>
+                <title>Home</title>
             </Header>
             <Layout activeKey="one">
                 <Container className={classes.container}>
@@ -142,86 +116,37 @@ export default function Home() {
                             </FlexboxGrid>
                         </>
                     )}
-                    {!authLoading &&
-                        !profileLoading &&
-                        profileInfo &&
-                        profileInfo.type === AccountTypes.WORKER && (
-                            <>
-                                <h1 className={classes.title}>Jobs</h1>
-                                <div className={classes.search_wrapper}></div>
-                                <div className={classes.list_jobs_wrapper}>
-                                    {listJobsLoading ? (
-                                        <Loader />
-                                    ) : (
-                                        <List className={classes.list_jobs}>
-                                            {(!jobs || !jobs.length) && (
-                                                <div>No jobs</div>
-                                            )}
-                                            {jobs &&
-                                                !!jobs.length &&
-                                                jobs.map((job: Job) => (
-                                                    <List.Item key={job.taskId}>
-                                                        <JobCard job={job} />
-                                                    </List.Item>
-                                                ))}
-                                        </List>
-                                    )}
-                                </div>
-                            </>
-                        )}
-                    {!authLoading &&
-                        !profileLoading &&
-                        profileInfo &&
-                        profileInfo.type === AccountTypes.REQUESTER && (
-                            <>
-                                <div>
-                                    <Button
-                                        appearance="primary"
-                                        onClick={
-                                            ModalsController.controller
-                                                .openCreateTaskModal
-                                        }
-                                    >
-                                        New Task
-                                    </Button>
-                                </div>
-                                <Divider />
-                                <h5 style={{ marginBottom: 15 }}>
-                                    Available Tasks
-                                </h5>
-                                <div>
-                                    <TasksTable
-                                        type="available"
-                                        tasks={(jobsAvailable as any) ?? []}
-                                        loading={jobsAvailableLoading}
-                                        handleViewBtnClick={(task: Job) => {
-                                            setDrawerData(task);
-                                            setOpenDrawer(true);
-                                        }}
-                                    />
-                                </div>
-                                <Divider />
-                                <h5 style={{ marginBottom: 15 }}>
-                                    Processing Tasks
-                                </h5>
-                                <div>
-                                    <TasksTable
-                                        type="processing"
-                                        tasks={(jobsProcessing as any) ?? []}
-                                        loading={jobsProcessingLoading}
-                                        handleViewBtnClick={(task: Job) => {
-                                            setDrawerData(task);
-                                            setOpenDrawer(true);
-                                        }}
-                                    />
-                                </div>
-                                <TaskDetailsDrawer
-                                    task={drawerData}
-                                    open={openDrawer}
-                                    setOpen={setOpenDrawer}
-                                />
-                            </>
-                        )}
+                    {!authLoading && !profileLoading && profileInfo && (
+                        <>
+                            <h3
+                                style={{
+                                    marginBottom: 50,
+                                    textAlign: 'center',
+                                }}
+                            >
+                                Tasks
+                            </h3>
+                            <div className={classes.search_wrapper}></div>
+                            <div className={classes.list_jobs_wrapper}>
+                                {listJobsLoading ? (
+                                    <Loader />
+                                ) : (
+                                    <List className={classes.list_jobs}>
+                                        {(!jobs || !jobs.length) && (
+                                            <div>No jobs</div>
+                                        )}
+                                        {jobs &&
+                                            !!jobs.length &&
+                                            jobs.map((job: Job) => (
+                                                <List.Item key={job.taskId}>
+                                                    <JobCard job={job} />
+                                                </List.Item>
+                                            ))}
+                                    </List>
+                                )}
+                            </div>
+                        </>
+                    )}
                 </Container>
             </Layout>
         </>

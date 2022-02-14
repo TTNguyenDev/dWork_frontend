@@ -21,7 +21,12 @@ export const ProposalsTable: React.FunctionComponent<ProposalsTableProps> = ({
         useSelectProposal();
 
     return (
-        <Table data={proposals ?? []} autoHeight hover loading={loading}>
+        <Table
+            data={(proposals as any) ?? []}
+            autoHeight
+            hover
+            loading={loading}
+        >
             <Table.Column resizable>
                 <Table.HeaderCell>Account Id</Table.HeaderCell>
                 <Table.Cell dataKey="accountId" />
