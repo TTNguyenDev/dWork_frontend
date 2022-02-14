@@ -92,7 +92,7 @@ export default function AccountPage() {
                         profileInfo &&
                         profileInfo.type === AccountTypes.REQUESTER && (
                             <>
-                                <div>
+                                <div style={{ textAlign: 'right' }}>
                                     <Button
                                         appearance="primary"
                                         onClick={
