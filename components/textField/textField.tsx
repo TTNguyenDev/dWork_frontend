@@ -14,6 +14,7 @@ export const TextField = React.forwardRef(
             rows?: number;
             readOnly?: boolean;
             value?: string;
+            style?: any;
         },
         ref: any
     ) => {

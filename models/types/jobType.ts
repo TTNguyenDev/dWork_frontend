@@ -23,7 +23,7 @@ export type Job = {
     title: string;
     description: string;
     maxParticipants: number;
-    hourRate: number;
+    hourRate: string;
     hourEstimation: number;
     proposals: Proposal[];
     status: JobStatus;

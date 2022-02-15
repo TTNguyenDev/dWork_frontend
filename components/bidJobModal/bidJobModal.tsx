@@ -1,17 +1,18 @@
 import React from 'react';
 import { Modal, Button, Form } from 'rsuite';
 import { useBidJob } from '../../hooks/useBidJob';
+import { Job } from '../../models/types/jobType';
 import { TextField } from '../textField';
 
 type BidJobModalProps = {
-    taskId: string;
+    task: Job;
     open: boolean;
     handleOpen: () => void;
     handleClose: () => void;
 };
 
 export const BidJobModal: React.FunctionComponent<BidJobModalProps> = ({
-    taskId,
+    task,
     open,
     handleOpen,
     handleClose,
@@ -40,7 +41,8 @@ export const BidJobModal: React.FunctionComponent<BidJobModalProps> = ({
                     handleClose();
                 }}
                 formDefaultValue={{
-                    taskId,
+                    taskId: task.taskId,
+                    hourEstimation: task.hourEstimation,
                 }}
             >
                 <Modal.Body>

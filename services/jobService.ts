@@ -1,6 +1,6 @@
-import BN from 'bn.js';
 import { Job } from '../models/types/jobType';
 import { BlockChainConnector } from '../utils/blockchain';
+import { utils } from 'near-api-js';
 
 export class JobService {
     static async createTask(payload: {
@@ -13,8 +13,8 @@ export class JobService {
         await BlockChainConnector.instance.contract.new_task({
             title: payload.title,
             description: payload.description,
-            hour_rate: Number.parseInt(payload.hourRate),
-            hour_estimation: Number.parseInt(payload.hourEstimation),
+            hour_rate: utils.format.parseNearAmount(payload.hourRate),
+            hour_estimation: Number.parseInt(payload.hourEstimation) * 3600,
             max_participants: Number.parseInt(payload.maxParticipants),
         });
     }
@@ -58,6 +58,12 @@ export class JobService {
 
     static async validateWork(payload: { taskId: string }): Promise<void> {
         await BlockChainConnector.instance.contract.validate_work({
+            task_id: payload.taskId,
+        });
+    }
+
+    static async rejectWork(payload: { taskId: string }): Promise<void> {
+        await BlockChainConnector.instance.contract.reject_work({
             task_id: payload.taskId,
         });
     }
@@ -121,13 +127,13 @@ export class JobService {
             title: raw.title,
             description: raw.description,
             maxParticipants: raw.max_participants,
-            hourRate: raw.hour_rate,
+            hourRate: utils.format.formatNearAmount(raw.hour_rate),
             hourEstimation: raw.hour_estimation,
             proposals: raw.proposals.map((p: any) => ({
                 accountId: p.account_id,
                 coverLetter: p.cover_letter,
-                hourEstimation: p.hour_estimation,
-                totalReceived: p.total_received,
+                hourEstimation: Number.parseInt(p.hour_estimation) / 3600,
+                totalReceived: utils.format.formatNearAmount(p.total_received),
                 proofOfWork: p.proof_of_work,
             })),
             status: raw.status.type,

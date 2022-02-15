@@ -2,7 +2,7 @@ import React from 'react';
 import Header from 'next/head';
 import { Layout } from '../components/layout';
 import classes from './index.module.less';
-import { Button, Col, Container, FlexboxGrid, List } from 'rsuite';
+import { Button, Col, Container, FlexboxGrid, List, Stack } from 'rsuite';
 import createTaskLogo from '../assets/logos/create-task.png';
 import makeMoneyLogo from '../assets/logos/make-money.png';
 import { useHomePage } from '../hooks/useHomePage';
@@ -120,7 +120,7 @@ export default function Home() {
                         <>
                             <h3
                                 style={{
-                                    marginBottom: 50,
+                                    marginBottom: 15,
                                     textAlign: 'center',
                                 }}
                             >
@@ -131,20 +131,27 @@ export default function Home() {
                                 {listJobsLoading ? (
                                     <Loader />
                                 ) : (
-                                    <List className={classes.list_jobs}>
+                                    <Stack
+                                        direction="column"
+                                        alignItems="stretch"
+                                        spacing={30}
+                                        className={classes.list_jobs}
+                                    >
                                         {(!jobs || !jobs.length) && (
                                             <div>No jobs</div>
                                         )}
                                         {jobs &&
                                             !!jobs.length &&
                                             jobs.map((job: Job) => (
-                                                <List.Item key={job.taskId}>
-                                                    <JobCard job={job} />
-                                                </List.Item>
+                                                <JobCard
+                                                    job={job}
+                                                    key={job.taskId}
+                                                />
                                             ))}
-                                    </List>
+                                    </Stack>
                                 )}
                             </div>
+                            <div style={{ marginBottom: 50 }} />
                         </>
                     )}
                 </Container>

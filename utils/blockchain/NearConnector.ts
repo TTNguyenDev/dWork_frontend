@@ -28,6 +28,7 @@ const ChangeMethods: string[] = [
     'select_proposal',
     'submit_work',
     'validate_work',
+    'reject_work',
 ];
 
 type ContractMethodType<K = any> = (...args: any) => K;
@@ -70,6 +71,7 @@ type ContractMethodsType = {
     select_proposal: ContractMethodType;
     submit_work: ContractMethodType;
     validate_work: ContractMethodType;
+    reject_work: ContractMethodType;
 };
 
 export class NearConnector {
