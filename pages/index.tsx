@@ -151,6 +151,7 @@ export default function Home() {
                                     </Stack>
                                 )}
                             </div>
+                            <div style={{ marginBottom: 50 }} />
                         </>
                     )}
                 </Container>

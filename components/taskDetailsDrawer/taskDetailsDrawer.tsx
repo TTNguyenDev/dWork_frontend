@@ -10,6 +10,7 @@ import {
     Row,
     Stack,
 } from 'rsuite';
+import { useRejectWork } from '../../hooks/useRejectWork';
 import { useValidateWork } from '../../hooks/useValidateWork';
 import { Job, JobStatus } from '../../models/types/jobType';
 import { ProposalsTable } from '../proposalsTable';
@@ -26,6 +27,7 @@ export const TaskDetailsDrawer: React.FunctionComponent<
     TaskDetailsDrawerProps
 > = ({ task, open, setOpen }) => {
     const { validateWorkLoading, handleValidateWork } = useValidateWork();
+    const { rejectWorkLoading, handleRejectWork } = useRejectWork();
 
     if (!task) return null;
 
@@ -149,7 +151,10 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                             <div style={{ marginBottom: 15 }} />
                                             {task.status ===
                                                 JobStatus.WORKER_SUBMITTED && (
-                                                <Stack justifyContent="flex-end">
+                                                <Stack
+                                                    justifyContent="flex-end"
+                                                    spacing={10}
+                                                >
                                                     <Button
                                                         appearance="primary"
                                                         loading={
@@ -161,7 +166,20 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                                             });
                                                         }}
                                                     >
-                                                        Validate
+                                                        Approve
+                                                    </Button>
+                                                    <Button
+                                                        appearance="ghost"
+                                                        loading={
+                                                            rejectWorkLoading
+                                                        }
+                                                        onClick={() => {
+                                                            handleRejectWork({
+                                                                taskId: task.taskId,
+                                                            });
+                                                        }}
+                                                    >
+                                                        Reject
                                                     </Button>
                                                 </Stack>
                                             )}

@@ -1,1 +1,1 @@
-export * from './tasksTable';
+export * from './statusBadge';

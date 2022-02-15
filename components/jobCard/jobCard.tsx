@@ -90,7 +90,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
             </Panel>
 
             <BidJobModal
-                task={job.task}
+                task={job}
                 open={open}
                 handleOpen={handleOpen}
                 handleClose={handleClose}

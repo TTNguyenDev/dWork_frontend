@@ -1,5 +1,3 @@
-import BN from 'bn.js';
-import { Near } from 'near-api-js';
 import { Job } from '../models/types/jobType';
 import { BlockChainConnector } from '../utils/blockchain';
 import { utils } from 'near-api-js';
@@ -64,6 +62,12 @@ export class JobService {
         });
     }
 
+    static async rejectWork(payload: { taskId: string }): Promise<void> {
+        await BlockChainConnector.instance.contract.reject_work({
+            task_id: payload.taskId,
+        });
+    }
+
     static async fetchAvailableJobs(): Promise<Job[]> {
         const res = await BlockChainConnector.instance.contract.available_tasks(
             {
@@ -121,8 +125,7 @@ export class JobService {
             taskId: raw.task_id,
             owner: raw.owner,
             title: raw.title,
-            description:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus fermentum venenatis pulvinar. Proin vitae lectus urna. Sed erat ipsum, maximus a elit nec, condimentum placerat ex. Ut tincidunt mi eget condimentum mollis. Pellentesque aliquam velit quis est varius, sed molestie dolor ultrices. Pellentesque eget dapibus eros, at blandit arcu. Duis id purus quis mi porttitor viverra vel tempus elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos posuere"',
+            description: raw.description,
             maxParticipants: raw.max_participants,
             hourRate: utils.format.formatNearAmount(raw.hour_rate),
             hourEstimation: raw.hour_estimation,
