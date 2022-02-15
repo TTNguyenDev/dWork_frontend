@@ -1,8 +1,9 @@
 import React from 'react';
-import { Table, Button, Badge } from 'rsuite';
+import { Table, Button, Badge, Stack } from 'rsuite';
 import { useValidateWork } from '../../hooks/useValidateWork';
 import { Job, JobStatus } from '../../models/types/jobType';
 import { BlockChainConnector } from '../../utils/blockchain';
+import { StatusBadge } from '../statusBadge/statusBadge';
 import { SubmitWorkModal } from '../submitWorkModal';
 import classes from './tasksTable.module.less';
 
@@ -23,62 +24,38 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const { validateWorkLoading, handleValidateWork } = useValidateWork();
-
     return (
         <Table data={tasks as any} loading={loading} hover autoHeight>
-            <Table.Column resizable>
-                <Table.HeaderCell>Id</Table.HeaderCell>
-                <Table.Cell dataKey="taskId" />
+            <Table.Column width={50}>
+                <Table.HeaderCell>No</Table.HeaderCell>
+                <Table.Cell>{(task: Job) => tasks.indexOf(task)}</Table.Cell>
             </Table.Column>
 
-            <Table.Column resizable>
+            <Table.Column resizable width={250}>
                 <Table.HeaderCell>Title</Table.HeaderCell>
                 <Table.Cell dataKey="title" />
             </Table.Column>
-
-            <Table.Column resizable>
-                <Table.HeaderCell>Description</Table.HeaderCell>
-                <Table.Cell dataKey="description" />
-            </Table.Column>
-
-            <Table.Column resizable>
+            <Table.Column width={120}>
                 <Table.HeaderCell>Max participants</Table.HeaderCell>
                 <Table.Cell dataKey="maxParticipants" />
             </Table.Column>
 
-            <Table.Column resizable>
+            <Table.Column width={120} resizable>
                 <Table.HeaderCell>Hour rate</Table.HeaderCell>
                 <Table.Cell dataKey="hourRate" />
             </Table.Column>
-
-            <Table.Column resizable>
+            <Table.Column width={120} resizable>
                 <Table.HeaderCell>Hour estimation</Table.HeaderCell>
                 <Table.Cell dataKey="hourEstimation" />
             </Table.Column>
 
-            <Table.Column resizable width={120}>
+            <Table.Column width={120}>
                 <Table.HeaderCell>Status</Table.HeaderCell>
                 <Table.Cell>
-                    {({ status }: Job) => (
-                        <Badge
-                            color={
-                                status === JobStatus.READY_FOR_APPLY
-                                    ? 'green'
-                                    : status === JobStatus.FOUND_WORKER
-                                    ? 'cyan'
-                                    : status === JobStatus.WORKER_SUBMITTED
-                                    ? 'blue'
-                                    : status === JobStatus.PAYOUT
-                                    ? 'violet'
-                                    : 'blue'
-                            }
-                            content={status}
-                        />
-                    )}
+                    {({ status }: Job) => <StatusBadge status={status} />}
                 </Table.Cell>
             </Table.Column>
-            <Table.Column resizable>
+            <Table.Column width={80}>
                 <Table.HeaderCell>Proposals</Table.HeaderCell>
                 <Table.Cell>{(job: Job) => job.proposals.length}</Table.Cell>
             </Table.Column>
@@ -86,7 +63,7 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
                 <Table.HeaderCell>Actions</Table.HeaderCell>
                 <Table.Cell>
                     {(task: Job) => (
-                        <>
+                        <Stack spacing={5}>
                             <Button
                                 size="xs"
                                 onClick={() => handleViewBtnClick(task)}
@@ -110,24 +87,7 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
                                         />
                                     </>
                                 )}
-                            {type === 'processing' &&
-                                task.owner ===
-                                    BlockChainConnector.instance.account
-                                        .accountId &&
-                                task.status === JobStatus.WORKER_SUBMITTED && (
-                                    <Button
-                                        size="xs"
-                                        loading={validateWorkLoading}
-                                        onClick={() =>
-                                            handleValidateWork({
-                                                taskId: task.taskId,
-                                            })
-                                        }
-                                    >
-                                        Validate
-                                    </Button>
-                                )}
-                        </>
+                        </Stack>
                     )}
                 </Table.Cell>
             </Table.Column>

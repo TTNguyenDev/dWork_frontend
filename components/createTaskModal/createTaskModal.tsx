@@ -53,18 +53,21 @@ export const CreateTaskModal: React.FunctionComponent<
                     />
                     <TextField
                         name="hourRate"
-                        label="Hour Rate"
+                        label="Hour Rate Ⓝ"
                         type="number"
+                        style={{ width: 'unset' }}
                     />
                     <TextField
                         name="hourEstimation"
-                        label="Hour estimation"
+                        label="Hour estimation (hours)"
                         type="number"
+                        style={{ width: 'unset' }}
                     />
                     <TextField
                         name="maxParticipants"
                         label="Max participants"
                         type="number"
+                        style={{ width: 'unset' }}
                     />
                 </Modal.Body>
                 <Modal.Footer>

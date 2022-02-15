@@ -1,6 +1,8 @@
 import BN from 'bn.js';
+import { Near } from 'near-api-js';
 import { Job } from '../models/types/jobType';
 import { BlockChainConnector } from '../utils/blockchain';
+import { utils } from 'near-api-js';
 
 export class JobService {
     static async createTask(payload: {
@@ -13,8 +15,8 @@ export class JobService {
         await BlockChainConnector.instance.contract.new_task({
             title: payload.title,
             description: payload.description,
-            hour_rate: Number.parseInt(payload.hourRate),
-            hour_estimation: Number.parseInt(payload.hourEstimation),
+            hour_rate: utils.format.parseNearAmount(payload.hourRate),
+            hour_estimation: Number.parseInt(payload.hourEstimation) * 3600,
             max_participants: Number.parseInt(payload.maxParticipants),
         });
     }
@@ -119,15 +121,16 @@ export class JobService {
             taskId: raw.task_id,
             owner: raw.owner,
             title: raw.title,
-            description: raw.description,
+            description:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus fermentum venenatis pulvinar. Proin vitae lectus urna. Sed erat ipsum, maximus a elit nec, condimentum placerat ex. Ut tincidunt mi eget condimentum mollis. Pellentesque aliquam velit quis est varius, sed molestie dolor ultrices. Pellentesque eget dapibus eros, at blandit arcu. Duis id purus quis mi porttitor viverra vel tempus elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos posuere"',
             maxParticipants: raw.max_participants,
-            hourRate: raw.hour_rate,
+            hourRate: utils.format.formatNearAmount(raw.hour_rate),
             hourEstimation: raw.hour_estimation,
             proposals: raw.proposals.map((p: any) => ({
                 accountId: p.account_id,
                 coverLetter: p.cover_letter,
-                hourEstimation: p.hour_estimation,
-                totalReceived: p.total_received,
+                hourEstimation: Number.parseInt(p.hour_estimation) / 3600,
+                totalReceived: utils.format.formatNearAmount(p.total_received),
                 proofOfWork: p.proof_of_work,
             })),
             status: raw.status.type,

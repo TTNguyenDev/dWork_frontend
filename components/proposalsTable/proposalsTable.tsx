@@ -27,26 +27,26 @@ export const ProposalsTable: React.FunctionComponent<ProposalsTableProps> = ({
             hover
             loading={loading}
         >
-            <Table.Column resizable>
+            <Table.Column resizable width={200}>
                 <Table.HeaderCell>Account Id</Table.HeaderCell>
                 <Table.Cell dataKey="accountId" />
             </Table.Column>
-            <Table.Column resizable>
+            <Table.Column resizable width={200}>
                 <Table.HeaderCell>Cover letter</Table.HeaderCell>
                 <Table.Cell dataKey="coverLetter" />
             </Table.Column>
-            <Table.Column resizable>
+            <Table.Column width={120}>
                 <Table.HeaderCell>Hour estimation</Table.HeaderCell>
                 <Table.Cell dataKey="hourEstimation" />
             </Table.Column>
-            <Table.Column resizable>
+            <Table.Column resizable width={150}>
                 <Table.HeaderCell>Total received</Table.HeaderCell>
                 <Table.Cell dataKey="totalReceived" />
             </Table.Column>
             {accountType === AccountTypes.REQUESTER &&
                 task.owner === BlockChainConnector.instance.account.accountId &&
                 task.status === JobStatus.READY_FOR_APPLY && (
-                    <Table.Column resizable>
+                    <Table.Column width={150}>
                         <Table.HeaderCell>Actions</Table.HeaderCell>
                         <Table.Cell>
                             {(proposal: Proposal) => (
