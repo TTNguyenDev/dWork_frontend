@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Grid, Row, Col, Button } from 'rsuite';
+import { Grid, Row, Col, Button, Avatar } from 'rsuite';
 import { useBidJob } from '../../hooks/useBidJob';
 import { AccountTypes } from '../../models/types/accountType';
 import { Job } from '../../models/types/jobType';
@@ -35,8 +35,13 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                     <Col xs={24} sm={24} md={16}>
                         <h5 className={classes.title}>{job.title}</h5>
                     </Col>
-                    <Col xs={24} sm={24} md={8} style={{ textAlign: 'right' }}>
-                        <b>{`${job.hourRate}/h`}</b>
+                    <Col
+                        xs={24}
+                        sm={24}
+                        md={8}
+                        style={{ textAlign: 'right', fontSize: '1.05em' }}
+                    >
+                        <b>{`${job.hourRate}/hour`}</b>
                     </Col>
                 </Row>
                 <Row gutter={16}>
@@ -51,7 +56,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                                 onClick={handleOpen}
                                 disabled={bidBtnDisabled}
                             >
-                                Bid now
+                                {bidBtnDisabled ? 'Registered' : 'Bid now'}
                             </Button>
                         )}
                     </Col>

@@ -15,6 +15,7 @@ export const Header: React.FunctionComponent<HeaderProps> = ({ activeKey }) => {
         authLoading,
         logged,
         userId,
+        accountType,
         loginLoading,
         requestLogin,
         logoutLoading,
@@ -31,6 +32,7 @@ export const Header: React.FunctionComponent<HeaderProps> = ({ activeKey }) => {
                     <Loader />
                 ) : logged ? (
                     <HeaderAccount
+                        accountType={accountType}
                         logoutLoading={logoutLoading}
                         requestLogout={requestLogout}
                         accountName={userId!}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button } from 'rsuite';
+import { Table, Button, Badge } from 'rsuite';
 import { useValidateWork } from '../../hooks/useValidateWork';
 import { Job, JobStatus } from '../../models/types/jobType';
 import { BlockChainConnector } from '../../utils/blockchain';
@@ -57,9 +57,26 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
                 <Table.Cell dataKey="hourEstimation" />
             </Table.Column>
 
-            <Table.Column resizable>
+            <Table.Column resizable width={120}>
                 <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.Cell dataKey="status" />
+                <Table.Cell>
+                    {({ status }: Job) => (
+                        <Badge
+                            color={
+                                status === JobStatus.READY_FOR_APPLY
+                                    ? 'green'
+                                    : status === JobStatus.FOUND_WORKER
+                                    ? 'cyan'
+                                    : status === JobStatus.WORKER_SUBMITTED
+                                    ? 'blue'
+                                    : status === JobStatus.PAYOUT
+                                    ? 'violet'
+                                    : 'blue'
+                            }
+                            content={status}
+                        />
+                    )}
+                </Table.Cell>
             </Table.Column>
             <Table.Column resizable>
                 <Table.HeaderCell>Proposals</Table.HeaderCell>
