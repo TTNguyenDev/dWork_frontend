@@ -55,7 +55,7 @@ export class JobService {
     }
 
     static async validateWork(payload: { taskId: string }): Promise<void> {
-        await BlockChainConnector.instance.contract.validate_work({
+        await BlockChainConnector.instance.contract.approve_work({
             task_id: payload.taskId,
         });
     }
@@ -89,8 +89,6 @@ export class JobService {
             from_index: 0,
             limit: 100,
         });
-
-        console.log(res);
 
         return res.map((raw: any) =>
             JobService.mapToModel({

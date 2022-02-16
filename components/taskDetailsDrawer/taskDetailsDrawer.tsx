@@ -13,6 +13,7 @@ import {
 import { useRejectWork } from '../../hooks/useRejectWork';
 import { useValidateWork } from '../../hooks/useValidateWork';
 import { Job, JobStatus } from '../../models/types/jobType';
+import { BlockChainConnector } from '../../utils/blockchain';
 import { ProposalsTable } from '../proposalsTable';
 import { StatusBadge } from '../statusBadge/statusBadge';
 import classes from './taskDetailsDrawer.module.less';
@@ -138,39 +139,54 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                             </p>
                                             <div style={{ marginBottom: 15 }} />
                                             {task.status ===
-                                                JobStatus.WORKER_SUBMITTED && (
-                                                <Stack
-                                                    justifyContent="flex-end"
-                                                    spacing={10}
-                                                >
-                                                    <Button
-                                                        appearance="primary"
-                                                        loading={
-                                                            validateWorkLoading
-                                                        }
-                                                        onClick={() => {
-                                                            handleValidateWork({
-                                                                taskId: task.taskId,
-                                                            });
-                                                        }}
+                                                JobStatus.WORKER_SUBMITTED &&
+                                                task.owner ===
+                                                    BlockChainConnector.instance
+                                                        .account.accountId && (
+                                                    <Stack
+                                                        justifyContent="flex-end"
+                                                        spacing={10}
                                                     >
-                                                        Approve
-                                                    </Button>
-                                                    <Button
-                                                        appearance="ghost"
-                                                        loading={
-                                                            rejectWorkLoading
-                                                        }
-                                                        onClick={() => {
-                                                            handleRejectWork({
-                                                                taskId: task.taskId,
-                                                            });
-                                                        }}
-                                                    >
-                                                        Reject
-                                                    </Button>
-                                                </Stack>
-                                            )}
+                                                        <Button
+                                                            appearance="primary"
+                                                            loading={
+                                                                validateWorkLoading
+                                                            }
+                                                            onClick={() => {
+                                                                handleValidateWork(
+                                                                    {
+                                                                        taskId: task.taskId,
+                                                                    }
+                                                                ).then(() =>
+                                                                    setOpen(
+                                                                        false
+                                                                    )
+                                                                );
+                                                            }}
+                                                        >
+                                                            Approve
+                                                        </Button>
+                                                        <Button
+                                                            appearance="ghost"
+                                                            loading={
+                                                                rejectWorkLoading
+                                                            }
+                                                            onClick={() => {
+                                                                handleRejectWork(
+                                                                    {
+                                                                        taskId: task.taskId,
+                                                                    }
+                                                                ).then(() =>
+                                                                    setOpen(
+                                                                        false
+                                                                    )
+                                                                );
+                                                            }}
+                                                        >
+                                                            Reject
+                                                        </Button>
+                                                    </Stack>
+                                                )}
                                         </Panel>
                                     </Col>
                                 </Row>
