@@ -52,14 +52,8 @@ export const CreateTaskModal: React.FunctionComponent<
                         rows={5}
                     />
                     <TextField
-                        name="hourRate"
-                        label="Hour Rate Ⓝ"
-                        type="number"
-                        style={{ width: 'unset' }}
-                    />
-                    <TextField
-                        name="hourEstimation"
-                        label="Hour estimation (hours)"
+                        name="price"
+                        label="Price Ⓝ"
                         type="number"
                         style={{ width: 'unset' }}
                     />

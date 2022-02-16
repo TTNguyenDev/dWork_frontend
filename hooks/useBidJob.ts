@@ -11,7 +11,7 @@ const { StringType, NumberType } = Schema.Types;
 
 const model = Schema.Model({
     coverLetter: StringType().isRequired('This field is required.'),
-    hourEstimation: NumberType().isRequired('This field is required.'),
+    price: StringType().isRequired('This field is required.'),
 });
 
 export type UseBidJobOutput = {

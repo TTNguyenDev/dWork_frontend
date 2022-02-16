@@ -41,14 +41,9 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
             </Table.Column>
 
             <Table.Column width={120} resizable>
-                <Table.HeaderCell>Hour rate</Table.HeaderCell>
-                <Table.Cell dataKey="hourRate" />
+                <Table.HeaderCell>Price</Table.HeaderCell>
+                <Table.Cell dataKey="price" />
             </Table.Column>
-            <Table.Column width={120} resizable>
-                <Table.HeaderCell>Hour estimation</Table.HeaderCell>
-                <Table.Cell dataKey="hourEstimation" />
-            </Table.Column>
-
             <Table.Column width={120}>
                 <Table.HeaderCell>Status</Table.HeaderCell>
                 <Table.Cell>

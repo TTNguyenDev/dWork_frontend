@@ -12,8 +12,7 @@ const { StringType, NumberType } = Schema.Types;
 const model = Schema.Model({
     title: StringType().isRequired('This field is required.'),
     description: StringType().isRequired('This field is required.'),
-    hourRate: NumberType().isRequired('This field is required.'),
-    hourEstimation: NumberType().isRequired('This field is required.'),
+    price: NumberType().isRequired('This field is required.'),
     maxParticipants: NumberType().isRequired('This field is required.'),
 });
 
