@@ -122,23 +122,19 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                                         </b>
                                                     </Stack>
                                                 </List.Item>
-                                                <List.Item>
-                                                    <Stack justifyContent="space-between">
-                                                        <div>
-                                                            Total received
-                                                        </div>
-                                                        <b>
-                                                            {`${task.proposals[0].totalReceived} Ⓝ`}
-                                                        </b>
-                                                    </Stack>
-                                                </List.Item>
                                             </List>
                                         </Panel>
                                     </Col>
                                     <Col xs={24} sm={24} md={12}>
                                         <Panel header="Proof of work" bordered>
                                             <p style={{ marginBottom: 15 }}>
-                                                {task.proposals[0].proofOfWork}
+                                                {task.proposals[0]
+                                                    .proofOfWork ? (
+                                                    task.proposals[0]
+                                                        .proofOfWork
+                                                ) : (
+                                                    <i>Empty</i>
+                                                )}
                                             </p>
                                             <div style={{ marginBottom: 15 }} />
                                             {task.status ===

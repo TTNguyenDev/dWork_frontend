@@ -52,7 +52,12 @@ export const BidJobModal: React.FunctionComponent<BidJobModalProps> = ({
                         type="textarea"
                         rows={5}
                     />
-                    <TextField name="price" label="Price" type="number" />
+                    <TextField
+                        name="price"
+                        label="Price Ⓝ"
+                        type="number"
+                        style={{ width: 'unset' }}
+                    />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

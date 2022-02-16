@@ -39,10 +39,6 @@ export const ProposalsTable: React.FunctionComponent<ProposalsTableProps> = ({
                 <Table.HeaderCell>Price</Table.HeaderCell>
                 <Table.Cell dataKey="price" />
             </Table.Column>
-            <Table.Column resizable width={150}>
-                <Table.HeaderCell>Total received</Table.HeaderCell>
-                <Table.Cell dataKey="totalReceived" />
-            </Table.Column>
             {accountType === AccountTypes.REQUESTER &&
                 task.owner === BlockChainConnector.instance.account.accountId &&
                 task.status === JobStatus.READY_FOR_APPLY && (
@@ -62,8 +58,7 @@ export const ProposalsTable: React.FunctionComponent<ProposalsTableProps> = ({
                                                     index: proposals.indexOf(
                                                         proposal
                                                     ),
-                                                    totalReceived:
-                                                        proposal.totalReceived,
+                                                    price: proposal.price,
                                                 })
                                             }
                                         >
