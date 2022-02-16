@@ -6,15 +6,19 @@ export class JobService {
     static async createTask(payload: {
         title: string;
         description: string;
-        hourRate: string;
-        hourEstimation: string;
+        price: string;
         maxParticipants: string;
     }): Promise<void> {
+        console.log({
+            title: payload.title,
+            description: payload.description,
+            price: utils.format.parseNearAmount(payload.price),
+            max_participants: Number.parseInt(payload.maxParticipants),
+        });
         await BlockChainConnector.instance.contract.new_task({
             title: payload.title,
             description: payload.description,
-            hour_rate: utils.format.parseNearAmount(payload.hourRate),
-            hour_estimation: Number.parseInt(payload.hourEstimation) * 3600,
+            price: utils.format.parseNearAmount(payload.price),
             max_participants: Number.parseInt(payload.maxParticipants),
         });
     }
@@ -22,12 +26,12 @@ export class JobService {
     static async submitProposal(payload: {
         taskId: string;
         coverLetter: string;
-        hourEstimation: string;
+        price: string;
     }): Promise<void> {
         await BlockChainConnector.instance.contract.submit_proposal({
             task_id: payload.taskId,
             cover_letter: payload.coverLetter,
-            hour_estimation: Number.parseInt(payload.hourEstimation),
+            price: utils.format.parseNearAmount(payload.price),
         });
     }
 
@@ -127,12 +131,11 @@ export class JobService {
             title: raw.title,
             description: raw.description,
             maxParticipants: raw.max_participants,
-            hourRate: utils.format.formatNearAmount(raw.hour_rate),
-            hourEstimation: raw.hour_estimation,
+            price: utils.format.formatNearAmount(raw.price),
             proposals: raw.proposals.map((p: any) => ({
                 accountId: p.account_id,
                 coverLetter: p.cover_letter,
-                hourEstimation: Number.parseInt(p.hour_estimation) / 3600,
+                price: utils.format.formatNearAmount(p.price),
                 totalReceived: utils.format.formatNearAmount(p.total_received),
                 proofOfWork: p.proof_of_work,
             })),

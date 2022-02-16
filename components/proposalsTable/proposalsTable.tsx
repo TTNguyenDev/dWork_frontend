@@ -36,8 +36,8 @@ export const ProposalsTable: React.FunctionComponent<ProposalsTableProps> = ({
                 <Table.Cell dataKey="coverLetter" />
             </Table.Column>
             <Table.Column width={120}>
-                <Table.HeaderCell>Hour estimation</Table.HeaderCell>
-                <Table.Cell dataKey="hourEstimation" />
+                <Table.HeaderCell>Price</Table.HeaderCell>
+                <Table.Cell dataKey="price" />
             </Table.Column>
             <Table.Column resizable width={150}>
                 <Table.HeaderCell>Total received</Table.HeaderCell>

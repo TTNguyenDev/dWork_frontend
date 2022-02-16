@@ -54,16 +54,10 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                     </Row>
                     <Row>
                         <Col xs={24} sm={24} md={8}>
-                            <h6 style={{ marginBottom: 5 }}>Hour rate</h6>
+                            <h6 style={{ marginBottom: 5 }}>Price</h6>
                             <p
                                 style={{ marginBottom: 15 }}
-                            >{`${task.hourRate} Ⓝ`}</p>
-                        </Col>
-                        <Col xs={24} sm={24} md={8}>
-                            <h6 style={{ marginBottom: 5 }}>Hour estimation</h6>
-                            <p style={{ marginBottom: 15 }}>
-                                {`${task.hourEstimation} hours`}
-                            </p>
+                            >{`${task.price} Ⓝ`}</p>
                         </Col>
                         <Col xs={24} sm={24} md={8}>
                             <h6 style={{ marginBottom: 5 }}>Status</h6>
@@ -122,11 +116,9 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                                 </List.Item>
                                                 <List.Item>
                                                     <Stack justifyContent="space-between">
-                                                        <div>
-                                                            Hour estimation
-                                                        </div>
+                                                        <div>Price</div>
                                                         <b>
-                                                            {`${task.proposals[0].hourEstimation} hours`}
+                                                            {`${task.proposals[0].price} Ⓝ`}
                                                         </b>
                                                     </Stack>
                                                 </List.Item>

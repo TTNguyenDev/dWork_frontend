@@ -42,7 +42,6 @@ export const BidJobModal: React.FunctionComponent<BidJobModalProps> = ({
                 }}
                 formDefaultValue={{
                     taskId: task.taskId,
-                    hourEstimation: task.hourEstimation,
                 }}
             >
                 <Modal.Body>
@@ -53,11 +52,7 @@ export const BidJobModal: React.FunctionComponent<BidJobModalProps> = ({
                         type="textarea"
                         rows={5}
                     />
-                    <TextField
-                        name="hourEstimation"
-                        label="Hour estimation"
-                        type="number"
-                    />
+                    <TextField name="price" label="Price" type="number" />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

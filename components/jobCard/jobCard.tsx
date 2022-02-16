@@ -43,7 +43,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                             md={8}
                             style={{ textAlign: 'right', fontSize: '1.05em' }}
                         >
-                            <b>{`${job.hourRate}/h`}</b>
+                            <b>{`${job.price} Ⓝ`}</b>
                         </Col>
                     </Row>
                     <Row gutter={16}>

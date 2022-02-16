@@ -12,7 +12,7 @@ export enum JobStatus {
 export type Proposal = {
     accountId: string;
     coverLetter: string;
-    hourEstimation: number;
+    price: string;
     totalReceived: string;
     proofOfWork: string;
 };
@@ -23,8 +23,7 @@ export type Job = {
     title: string;
     description: string;
     maxParticipants: number;
-    hourRate: string;
-    hourEstimation: number;
+    price: string;
     proposals: Proposal[];
     status: JobStatus;
 };
