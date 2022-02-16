@@ -42,7 +42,7 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
 
             <Table.Column width={120} resizable>
                 <Table.HeaderCell>Price</Table.HeaderCell>
-                <Table.Cell dataKey="price" />
+                <Table.Cell>{(task: Job) => `${task.price} Ⓝ`}</Table.Cell>
             </Table.Column>
             <Table.Column width={120}>
                 <Table.HeaderCell>Status</Table.HeaderCell>

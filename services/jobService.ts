@@ -9,12 +9,6 @@ export class JobService {
         price: string;
         maxParticipants: string;
     }): Promise<void> {
-        console.log({
-            title: payload.title,
-            description: payload.description,
-            price: utils.format.parseNearAmount(payload.price),
-            max_participants: Number.parseInt(payload.maxParticipants),
-        });
         await BlockChainConnector.instance.contract.new_task({
             title: payload.title,
             description: payload.description,
@@ -38,7 +32,7 @@ export class JobService {
     static async selectProposal(payload: {
         taskId: string;
         index: number;
-        totalReceived: string;
+        price: string;
     }): Promise<void> {
         await BlockChainConnector.instance.contract.select_proposal(
             {
@@ -46,7 +40,7 @@ export class JobService {
                 index: payload.index,
             },
             '30000000000000',
-            payload.totalReceived
+            utils.format.parseNearAmount(payload.price)
         );
     }
 
@@ -95,6 +89,8 @@ export class JobService {
             from_index: 0,
             limit: 100,
         });
+
+        console.log(res);
 
         return res.map((raw: any) =>
             JobService.mapToModel({

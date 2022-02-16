@@ -12,7 +12,7 @@ export type UseSelectProposalOutput = {
     handleSelectProposal: (payload: {
         taskId: string;
         index: number;
-        totalReceived: string;
+        price: string;
     }) => void;
 };
 
