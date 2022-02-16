@@ -27,7 +27,7 @@ const ChangeMethods: string[] = [
     'submit_proposal',
     'select_proposal',
     'submit_work',
-    'validate_work',
+    'approve_work',
     'reject_work',
 ];
 
@@ -70,7 +70,7 @@ type ContractMethodsType = {
     submit_proposal: ContractMethodType;
     select_proposal: ContractMethodType;
     submit_work: ContractMethodType;
-    validate_work: ContractMethodType;
+    approve_work: ContractMethodType;
     reject_work: ContractMethodType;
 };
 

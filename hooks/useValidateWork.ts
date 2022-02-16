@@ -5,7 +5,7 @@ import { useQueryClient } from 'react-query';
 
 export type UseValidateWorkOutput = {
     validateWorkLoading: boolean;
-    handleValidateWork: (payload: { taskId: string }) => void;
+    handleValidateWork: (payload: { taskId: string }) => Promise<void>;
 };
 
 export const useValidateWork = (): UseValidateWorkOutput => {
@@ -19,11 +19,11 @@ export const useValidateWork = (): UseValidateWorkOutput => {
             await JobService.validateWork(payload);
             queryClient.invalidateQueries('jobsProcessing');
             queryClient.invalidateQueries('jobsCompleted');
-            toast('Validate work successfully', {
+            toast('Approve work successfully', {
                 type: 'success',
             });
         } catch (error) {
-            toast('Validate work failed', {
+            toast('Approve work failed', {
                 type: 'error',
             });
         } finally {

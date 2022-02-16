@@ -5,7 +5,7 @@ import { useQueryClient } from 'react-query';
 
 export type UseRejectWorkOutput = {
     rejectWorkLoading: boolean;
-    handleRejectWork: (payload: { taskId: string }) => void;
+    handleRejectWork: (payload: { taskId: string }) => Promise<void>;
 };
 
 export const useRejectWork = (): UseRejectWorkOutput => {
