@@ -63,6 +63,12 @@ export const CreateTaskModal: React.FunctionComponent<
                         type="number"
                         style={{ width: 'unset' }}
                     />
+                    <TextField
+                        name="duration"
+                        label="Duration"
+                        type="number"
+                        style={{ width: 'unset' }}
+                    />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

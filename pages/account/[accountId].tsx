@@ -55,7 +55,7 @@ export default function AccountPage() {
                                         tasks={(jobsProcessing as any) ?? []}
                                         loading={jobsProcessingLoading}
                                         handleViewBtnClick={(task: Job) => {
-                                            setDrawerData({...task});
+                                            setDrawerData({ ...task });
                                             setOpenDrawer(true);
                                         }}
                                     />

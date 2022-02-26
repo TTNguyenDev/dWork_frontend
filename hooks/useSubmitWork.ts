@@ -7,7 +7,7 @@ import { useQueryClient } from 'react-query';
 const { StringType, NumberType } = Schema.Types;
 
 const model = Schema.Model({
-    url: StringType().isRequired('This field is required.'),
+    proof: StringType().isRequired('This field is required.'),
 });
 
 export type UseSubmitWorkOutput = {
@@ -32,6 +32,7 @@ export const useSubmitWork = (): UseSubmitWorkOutput => {
             setSubmitWorkLoading(true);
             try {
                 await JobService.submitWork(formValueRef.current);
+                queryClient.invalidateQueries('jobsAvailable');
                 queryClient.invalidateQueries('jobsProcessing');
                 queryClient.invalidateQueries('jobsCompleted');
                 toast('Submit work successfully', {

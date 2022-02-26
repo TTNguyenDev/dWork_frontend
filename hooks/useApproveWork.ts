@@ -3,20 +3,23 @@ import { JobService } from '../services/jobService';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 
-export type UseValidateWorkOutput = {
-    validateWorkLoading: boolean;
-    handleValidateWork: (payload: { taskId: string }) => Promise<void>;
+export type UseApproveWorkOutput = {
+    approveWorkLoading: boolean;
+    handleApproveWork: (payload: {
+        taskId: string;
+        workerId: string;
+    }) => Promise<void>;
 };
 
-export const useValidateWork = (): UseValidateWorkOutput => {
+export const useApproveWork = (): UseApproveWorkOutput => {
     const queryClient = useQueryClient();
 
-    const [validateWorkLoading, setValidateWorkLoading] = useState(false);
+    const [approveWorkLoading, setApproveWorkLoading] = useState(false);
 
-    const handleValidateWork = useCallback(async (payload) => {
-        setValidateWorkLoading(true);
+    const handleApproveWork = useCallback(async (payload) => {
+        setApproveWorkLoading(true);
         try {
-            await JobService.validateWork(payload);
+            await JobService.approveWork(payload);
             queryClient.invalidateQueries('jobsProcessing');
             queryClient.invalidateQueries('jobsCompleted');
             toast('Approve work successfully', {
@@ -27,12 +30,12 @@ export const useValidateWork = (): UseValidateWorkOutput => {
                 type: 'error',
             });
         } finally {
-            setValidateWorkLoading(false);
+            setApproveWorkLoading(false);
         }
     }, []);
 
     return {
-        validateWorkLoading,
-        handleValidateWork,
+        approveWorkLoading,
+        handleApproveWork,
     };
 };

@@ -14,6 +14,7 @@ const model = Schema.Model({
     description: StringType().isRequired('This field is required.'),
     price: NumberType().isRequired('This field is required.'),
     maxParticipants: NumberType().isRequired('This field is required.'),
+    duration: NumberType().isRequired('This field is required.'),
 });
 
 export type UseCreateTaskOutput = {
@@ -25,8 +26,6 @@ export type UseCreateTaskOutput = {
 
 export const useCreateTask = (): UseCreateTaskOutput => {
     const queryClient = useQueryClient();
-
-    const app = useSelector((state: RootState) => state.app);
 
     const formValueRef = useRef<any>({});
     const [createTaskLoading, setCreateTaskLoading] = useState(false);

@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Grid, Row, Col, Button, Avatar, Panel } from 'rsuite';
+import { Grid, Row, Col, Button, Avatar, Panel, Stack } from 'rsuite';
 import { AccountTypes } from '../../models/types/accountType';
 import { Job } from '../../models/types/jobType';
 import { RootState } from '../../store';
-import { BidJobModal } from '../bidJobModal';
 // @ts-ignore
 import ReactReadMoreReadLess from 'react-read-more-read-less';
 import classes from './jobCard.module.less';
+import Countdown, { zeroPad } from 'react-countdown';
+import { SubmitWorkModal } from '../submitWorkModal';
 
 interface JobCardProps {
     job: Job;
@@ -26,7 +27,11 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
     }, [job, auth.data.userId]);
 
     const bidBtnHide = useMemo(() => {
-        return profile.data.info?.type === AccountTypes.REQUESTER;
+        return (
+            profile.data.info?.type === AccountTypes.REQUESTER ||
+            job.availableUntil < Date.now() ||
+            job.proposals.length >= job.maxParticipants
+        );
     }, [profile.data.info]);
 
     return (
@@ -66,6 +71,40 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                             md={8}
                             style={{ textAlign: 'right' }}
                         >
+                            <Stack direction="column" alignItems="stretch">
+                                <div>
+                                    {`${job.proposals.length}/${job.maxParticipants}`}
+                                </div>
+                                <div>
+                                    <Countdown
+                                        date={job.availableUntil}
+                                        renderer={({
+                                            hours,
+                                            minutes,
+                                            seconds,
+                                        }) =>
+                                            `${zeroPad(hours)}:${zeroPad(
+                                                minutes
+                                            )}:${zeroPad(seconds)}`
+                                        }
+                                    />
+                                </div>
+                            </Stack>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col xs={24} sm={24} md={16}>
+                            <i
+                                className={classes.owner}
+                                style={{ color: '#555' }}
+                            >{`Create by: ${job.owner}`}</i>
+                        </Col>
+                        <Col
+                            xs={24}
+                            sm={24}
+                            md={8}
+                            style={{ textAlign: 'right' }}
+                        >
                             {!bidBtnHide && (
                                 <Button
                                     appearance="primary"
@@ -73,24 +112,18 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                                     onClick={handleOpen}
                                     disabled={bidBtnDisabled}
                                 >
-                                    {bidBtnDisabled ? 'Registered' : 'Bid now'}
+                                    {bidBtnDisabled
+                                        ? 'Submitted'
+                                        : 'Submit now'}
                                 </Button>
                             )}
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col>
-                            <i
-                                className={classes.owner}
-                                style={{ color: '#555' }}
-                            >{`Create by: ${job.owner}`}</i>
                         </Col>
                     </Row>
                 </Grid>
             </Panel>
 
-            <BidJobModal
-                task={job}
+            <SubmitWorkModal
+                taskId={job.taskId}
                 open={open}
                 handleOpen={handleOpen}
                 handleClose={handleClose}
