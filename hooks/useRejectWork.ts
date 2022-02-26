@@ -5,7 +5,10 @@ import { useQueryClient } from 'react-query';
 
 export type UseRejectWorkOutput = {
     rejectWorkLoading: boolean;
-    handleRejectWork: (payload: { taskId: string }) => Promise<void>;
+    handleRejectWork: (payload: {
+        taskId: string;
+        workerId: string;
+    }) => Promise<void>;
 };
 
 export const useRejectWork = (): UseRejectWorkOutput => {
@@ -17,6 +20,7 @@ export const useRejectWork = (): UseRejectWorkOutput => {
         setRejectWorkLoading(true);
         try {
             await JobService.rejectWork(payload);
+            queryClient.invalidateQueries('jobsAvailable');
             queryClient.invalidateQueries('jobsProcessing');
             queryClient.invalidateQueries('jobsCompleted');
             toast('Reject work successfully', {

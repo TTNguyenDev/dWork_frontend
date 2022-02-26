@@ -1,22 +1,19 @@
 import React from 'react';
 import {
+    Badge,
     Button,
     Col,
     Divider,
     Drawer,
     Grid,
-    List,
     Panel,
     Row,
     Stack,
 } from 'rsuite';
 import { useRejectWork } from '../../hooks/useRejectWork';
-import { useValidateWork } from '../../hooks/useValidateWork';
-import { Job, JobStatus } from '../../models/types/jobType';
+import { useApproveWork } from '../../hooks/useApproveWork';
+import { Job } from '../../models/types/jobType';
 import { BlockChainConnector } from '../../utils/blockchain';
-import { ProposalsTable } from '../proposalsTable';
-import { StatusBadge } from '../statusBadge/statusBadge';
-import classes from './taskDetailsDrawer.module.less';
 
 interface TaskDetailsDrawerProps {
     task?: Job;
@@ -27,7 +24,7 @@ interface TaskDetailsDrawerProps {
 export const TaskDetailsDrawer: React.FunctionComponent<
     TaskDetailsDrawerProps
 > = ({ task, open, setOpen }) => {
-    const { validateWorkLoading, handleValidateWork } = useValidateWork();
+    const { approveWorkLoading, handleApproveWork } = useApproveWork();
     const { rejectWorkLoading, handleRejectWork } = useRejectWork();
 
     if (!task) return null;
@@ -35,7 +32,23 @@ export const TaskDetailsDrawer: React.FunctionComponent<
     return (
         <Drawer full open={open} onClose={() => setOpen(false)}>
             <Drawer.Header>
-                <Drawer.Title>Task details</Drawer.Title>
+                <Drawer.Title>
+                    <Stack justifyContent="space-between">
+                        <div>Task details</div>
+                        {task.owner ===
+                            BlockChainConnector.instance.account.accountId &&
+                            (task.availableUntil < Date.now() ||
+                                (task.availableUntil >= Date.now() &&
+                                    task.maxParticipants ===
+                                        task.proposals.filter(
+                                            (p) => p.isApproved
+                                        ).length)) && (
+                                <Button size="sm" appearance="primary">
+                                    Mark task as completed
+                                </Button>
+                            )}
+                    </Stack>
+                </Drawer.Title>
             </Drawer.Header>
             <Drawer.Body>
                 <Grid fluid>
@@ -61,10 +74,31 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                             >{`${task.price} Ⓝ`}</p>
                         </Col>
                         <Col xs={24} sm={24} md={8}>
-                            <h6 style={{ marginBottom: 5 }}>Status</h6>
+                            <h6 style={{ marginBottom: 5 }}>Duration</h6>
                             <div style={{ marginBottom: 15 }}>
-                                <StatusBadge status={task.status} />
+                                <span
+                                    style={{
+                                        color:
+                                            task.availableUntil >= Date.now()
+                                                ? 'green'
+                                                : 'red',
+                                    }}
+                                >
+                                    {`${new Date(
+                                        task.availableUntil
+                                    ).toLocaleDateString()} ${new Date(
+                                        task.availableUntil
+                                    ).toLocaleTimeString()}`}
+                                </span>
                             </div>
+                        </Col>
+                        <Col xs={24} sm={24} md={8}>
+                            <h6 style={{ marginBottom: 5 }}>
+                                Max participants
+                            </h6>
+                            <p style={{ marginBottom: 15 }}>
+                                {task.maxParticipants}
+                            </p>
                         </Col>
                     </Row>
                     <Row>
@@ -77,57 +111,25 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                     </Row>
                 </Grid>
                 <Divider />
-                <h6 style={{ marginBottom: 5 }}>Proposals</h6>
-                {task.status === JobStatus.READY_FOR_APPLY && (
-                    <ProposalsTable task={task} proposals={task.proposals} />
-                )}
+                <h6
+                    style={{ marginBottom: 5 }}
+                >{`Proposals (${task.proposals.length})`}</h6>
                 <div style={{ marginBottom: 15 }} />
-                {task.status !== JobStatus.READY_FOR_APPLY &&
-                    task.proposals[0] &&
-                    task.proposals[0] && (
-                        <>
-                            <Grid fluid>
-                                <Row>
-                                    <Col xs={24} sm={24} md={12}>
-                                        <Panel header="Proposals" bordered>
-                                            <List>
-                                                <List.Item>
-                                                    <Stack justifyContent="space-between">
-                                                        <div>Account ID</div>
-                                                        <b>
-                                                            {
-                                                                task
-                                                                    .proposals[0]
-                                                                    .accountId
-                                                            }
-                                                        </b>
-                                                    </Stack>
-                                                </List.Item>
-                                                <List.Item>
-                                                    <Stack justifyContent="space-between">
-                                                        <div>Cover letter</div>
-                                                        <b>
-                                                            {
-                                                                task
-                                                                    .proposals[0]
-                                                                    .coverLetter
-                                                            }
-                                                        </b>
-                                                    </Stack>
-                                                </List.Item>
-                                                <List.Item>
-                                                    <Stack justifyContent="space-between">
-                                                        <div>Price</div>
-                                                        <b>
-                                                            {`${task.proposals[0].price} Ⓝ`}
-                                                        </b>
-                                                    </Stack>
-                                                </List.Item>
-                                            </List>
-                                        </Panel>
-                                    </Col>
-                                    <Col xs={24} sm={24} md={12}>
-                                        <Panel header="Proof of work" bordered>
+                {task.proposals[0] ? (
+                    <>
+                        <Grid fluid>
+                            {task.proposals.map((p) => (
+                                <Row key={p.accountId}>
+                                    <Col xs={24} sm={24} md={24}>
+                                        <Panel bordered>
+                                            <div style={{ marginBottom: 15 }}>
+                                                <b>
+                                                    {
+                                                        task.proposals[0]
+                                                            .accountId
+                                                    }
+                                                </b>
+                                            </div>
                                             <p style={{ marginBottom: 15 }}>
                                                 {task.proposals[0]
                                                     .proofOfWork ? (
@@ -138,8 +140,13 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                                 )}
                                             </p>
                                             <div style={{ marginBottom: 15 }} />
-                                            {task.status ===
-                                                JobStatus.WORKER_SUBMITTED &&
+                                            {p.isApproved && (
+                                                <Badge
+                                                    color="green"
+                                                    content="Approved"
+                                                />
+                                            )}
+                                            {!p.isApproved &&
                                                 task.owner ===
                                                     BlockChainConnector.instance
                                                         .account.accountId && (
@@ -150,12 +157,14 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                                         <Button
                                                             appearance="primary"
                                                             loading={
-                                                                validateWorkLoading
+                                                                approveWorkLoading
                                                             }
                                                             onClick={() => {
-                                                                handleValidateWork(
+                                                                handleApproveWork(
                                                                     {
                                                                         taskId: task.taskId,
+                                                                        workerId:
+                                                                            p.accountId,
                                                                     }
                                                                 ).then(() =>
                                                                     setOpen(
@@ -175,6 +184,8 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                                                 handleRejectWork(
                                                                     {
                                                                         taskId: task.taskId,
+                                                                        workerId:
+                                                                            p.accountId,
                                                                     }
                                                                 ).then(() =>
                                                                     setOpen(
@@ -190,10 +201,13 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                         </Panel>
                                     </Col>
                                 </Row>
-                            </Grid>
-                            <div style={{ marginBottom: 15 }} />
-                        </>
-                    )}
+                            ))}
+                        </Grid>
+                        <div style={{ marginBottom: 15 }} />
+                    </>
+                ) : (
+                    'Empty'
+                )}
             </Drawer.Body>
         </Drawer>
     );

@@ -1,6 +1,7 @@
 import { Job } from '../models/types/jobType';
 import { BlockChainConnector } from '../utils/blockchain';
 import { utils } from 'near-api-js';
+import BN from 'bn.js';
 
 export class JobService {
     static async createTask(payload: {
@@ -8,60 +9,66 @@ export class JobService {
         description: string;
         price: string;
         maxParticipants: string;
+        duration: string;
     }): Promise<void> {
-        await BlockChainConnector.instance.contract.new_task({
-            title: payload.title,
-            description: payload.description,
-            price: utils.format.parseNearAmount(payload.price),
-            max_participants: Number.parseInt(payload.maxParticipants),
-        });
-    }
-
-    static async submitProposal(payload: {
-        taskId: string;
-        coverLetter: string;
-        price: string;
-    }): Promise<void> {
-        await BlockChainConnector.instance.contract.submit_proposal({
-            task_id: payload.taskId,
-            cover_letter: payload.coverLetter,
-            price: utils.format.parseNearAmount(payload.price),
-        });
-    }
-
-    static async selectProposal(payload: {
-        taskId: string;
-        index: number;
-        price: string;
-    }): Promise<void> {
-        await BlockChainConnector.instance.contract.select_proposal(
+        const maxParticipants = Number.parseInt(payload.maxParticipants);
+        await BlockChainConnector.instance.contract.new_task(
             {
-                task_id: payload.taskId,
-                index: payload.index,
+                title: payload.title,
+                description: payload.description,
+                price: utils.format.parseNearAmount(payload.price),
+                max_participants: maxParticipants,
+                duration: (
+                    Number.parseInt(payload.duration) *
+                    60 *
+                    1000000000
+                ).toString(),
             },
             '30000000000000',
-            utils.format.parseNearAmount(payload.price)
+            utils.format.parseNearAmount(
+                new BN(payload.price).mul(new BN(maxParticipants)).toString()
+            )
         );
     }
 
     static async submitWork(payload: {
         taskId: string;
-        url: string;
+        proof: string;
     }): Promise<void> {
-        await BlockChainConnector.instance.contract.submit_work({
-            task_id: payload.taskId,
-            url: payload.url,
-        });
+        await BlockChainConnector.instance.contract.submit_work(
+            {
+                task_id: payload.taskId,
+                proof: payload.proof,
+            },
+            '30000000000000',
+            utils.format.parseNearAmount('0.01')
+        );
     }
 
-    static async validateWork(payload: { taskId: string }): Promise<void> {
+    static async approveWork(payload: {
+        taskId: string;
+        workerId: string;
+    }): Promise<void> {
         await BlockChainConnector.instance.contract.approve_work({
             task_id: payload.taskId,
+            worker_id: payload.workerId,
         });
     }
 
-    static async rejectWork(payload: { taskId: string }): Promise<void> {
+    static async rejectWork(payload: {
+        taskId: string;
+        workerId: string;
+    }): Promise<void> {
         await BlockChainConnector.instance.contract.reject_work({
+            task_id: payload.taskId,
+            worker_id: payload.workerId,
+        });
+    }
+
+    static async markATaskAsCompleted(payload: {
+        taskId: string;
+    }): Promise<void> {
+        await BlockChainConnector.instance.contract.mark_task_as_completed({
             task_id: payload.taskId,
         });
     }
@@ -128,12 +135,10 @@ export class JobService {
             price: utils.format.formatNearAmount(raw.price),
             proposals: raw.proposals.map((p: any) => ({
                 accountId: p.account_id,
-                coverLetter: p.cover_letter,
-                price: utils.format.formatNearAmount(p.price),
-                totalReceived: utils.format.formatNearAmount(p.total_received),
                 proofOfWork: p.proof_of_work,
+                isApproved: p.is_approved,
             })),
-            status: raw.status.type,
+            availableUntil: Number.parseInt(raw.available_until.substr(0, 13)),
         };
     }
 }

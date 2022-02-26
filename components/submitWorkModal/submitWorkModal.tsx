@@ -46,8 +46,8 @@ export const SubmitWorkModal: React.FunctionComponent<SubmitWorkModalProps> = ({
                 <Modal.Body>
                     <TextField name="taskId" label="Id" readOnly />
                     <TextField
-                        name="url"
-                        label="Url"
+                        name="proof"
+                        label="Proof"
                         type="textarea"
                         rows={5}
                     />

@@ -11,10 +11,8 @@ export enum JobStatus {
 
 export type Proposal = {
     accountId: string;
-    coverLetter: string;
-    price: string;
-    totalReceived: string;
     proofOfWork: string;
+    isApproved: boolean;
 };
 
 export type Job = {
@@ -25,5 +23,5 @@ export type Job = {
     maxParticipants: number;
     price: string;
     proposals: Proposal[];
-    status: JobStatus;
+    availableUntil: number;
 };
