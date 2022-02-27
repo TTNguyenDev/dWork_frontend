@@ -7,14 +7,19 @@ import { useQueryClient } from 'react-query';
 const { StringType, NumberType } = Schema.Types;
 
 const model = Schema.Model({
-    proof: StringType().isRequired('This field is required.'),
+    // proof: StringType().isRequired('This field is required.'),
 });
 
 export type UseSubmitWorkOutput = {
     model: typeof model;
     submitWorkLoading: boolean;
     handleFormChange: (payload: any) => void;
-    handleFormSubmit: (payload: any) => void;
+    handleFormSubmit: (
+        isValid: boolean,
+        taskId: string,
+        proof: string,
+        afterSubmit: () => void
+    ) => void;
 };
 
 export const useSubmitWork = (): UseSubmitWorkOutput => {
@@ -27,26 +32,33 @@ export const useSubmitWork = (): UseSubmitWorkOutput => {
         formValueRef.current = formValue;
     }, []);
 
-    const handleFormSubmit = useCallback(async (isValid: boolean) => {
-        if (isValid) {
-            setSubmitWorkLoading(true);
-            try {
-                await JobService.submitWork(formValueRef.current);
-                queryClient.invalidateQueries('jobsAvailable');
-                queryClient.invalidateQueries('jobsProcessing');
-                queryClient.invalidateQueries('jobsCompleted');
-                toast('Submit work successfully', {
-                    type: 'success',
-                });
-            } catch (error) {
-                toast('Submit work failed', {
-                    type: 'error',
-                });
-            } finally {
-                setSubmitWorkLoading(false);
+    const handleFormSubmit = useCallback(
+        async (isValid, taskId, proof, afterSubmit) => {
+            if (isValid) {
+                setSubmitWorkLoading(true);
+                try {
+                    await JobService.submitWork({
+                        taskId,
+                        proof,
+                    });
+                    queryClient.invalidateQueries('jobsAvailable');
+                    queryClient.invalidateQueries('jobsProcessing');
+                    queryClient.invalidateQueries('jobsCompleted');
+                    toast('Submit work successfully', {
+                        type: 'success',
+                    });
+                    afterSubmit();
+                } catch (error) {
+                    toast('Submit work failed', {
+                        type: 'error',
+                    });
+                } finally {
+                    setSubmitWorkLoading(false);
+                }
             }
-        }
-    }, []);
+        },
+        []
+    );
 
     return {
         model,

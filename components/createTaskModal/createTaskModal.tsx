@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Modal, Button, Form, InputNumber, Input } from 'rsuite';
 import { useCreateTask } from '../../hooks/useCreateTask';
 import { ModalsController } from '../../utils/modalsController';
+import { Editor } from '../editor';
 import { TextField } from '../textField';
+import classes from './createTaskModal.module.less';
 
 type createTaskModalProps = {};
 
@@ -22,9 +24,15 @@ export const CreateTaskModal: React.FunctionComponent<
     const { model, createTaskLoading, handleFormChange, handleFormSubmit } =
         useCreateTask();
 
+    const [descValue, setDescValue] = useState<string>('');
+
+    const handleEditorChange = useCallback((value: string) => {
+        setDescValue(value);
+    }, []);
+
     return (
         <Modal
-            size="xs"
+            size="sm"
             backdrop
             keyboard={false}
             open={open}
@@ -39,18 +47,11 @@ export const CreateTaskModal: React.FunctionComponent<
                 fluid
                 onChange={handleFormChange}
                 onSubmit={async (payload) => {
-                    await handleFormSubmit(payload);
-                    handleClose();
+                    await handleFormSubmit(payload, descValue, handleClose);
                 }}
             >
                 <Modal.Body>
                     <TextField name="title" label="Title" />
-                    <TextField
-                        name="description"
-                        label="Description"
-                        type="textarea"
-                        rows={5}
-                    />
                     <TextField
                         name="price"
                         label="Price Ⓝ"
@@ -69,6 +70,20 @@ export const CreateTaskModal: React.FunctionComponent<
                         type="number"
                         style={{ width: 'unset' }}
                     />
+                    <Editor
+                        onChange={handleEditorChange}
+                        style={{
+                            padding: 0,
+                        }}
+                        placeholder="Description"
+                    />
+                    {/* <TextField
+                        name="description"
+                        label="Description"
+                        type="textarea"
+                        rows={5}
+                        value="asdasdasdsa"
+                    /> */}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
