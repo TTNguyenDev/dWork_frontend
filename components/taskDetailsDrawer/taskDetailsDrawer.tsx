@@ -82,13 +82,13 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                     </Row>
                     <Row>
                         <Col xs={24} sm={24} md={8}>
-                            <h6 style={{ marginBottom: 5 }}>Price</h6>
+                            <h6 style={{ marginBottom: 5 }}>Bounty prize</h6>
                             <p
                                 style={{ marginBottom: 15 }}
                             >{`${task.price} Ⓝ`}</p>
                         </Col>
                         <Col xs={24} sm={24} md={8}>
-                            <h6 style={{ marginBottom: 5 }}>Duration</h6>
+                            <h6 style={{ marginBottom: 5 }}>Deadline</h6>
                             <div style={{ marginBottom: 15 }}>
                                 <span
                                     style={{
@@ -124,6 +124,7 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                     dangerouslySetInnerHTML={{
                                         __html: task.description,
                                     }}
+                                    style={{ maxWidth: 800 }}
                                 />
                             </Panel>
                         </Col>
@@ -138,18 +139,16 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                     <>
                         <Grid fluid>
                             {task.proposals.map((p) => (
-                                <Row key={p.accountId}>
+                                <Row
+                                    key={p.accountId}
+                                    style={{ marginBottom: 15 }}
+                                >
                                     <Col xs={24} sm={24} md={24}>
                                         <Panel bordered>
                                             <div style={{ marginBottom: 15 }}>
-                                                <b>
-                                                    {
-                                                        task.proposals[0]
-                                                            .accountId
-                                                    }
-                                                </b>
+                                                <b>{p.accountId}</b>
                                             </div>
-                                            {task.proposals[0].proofOfWork ? (
+                                            {p.proofOfWork ? (
                                                 <div
                                                     className="ql-editor"
                                                     dangerouslySetInnerHTML={{
@@ -157,7 +156,10 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                                             .proposals[0]
                                                             .proofOfWork,
                                                     }}
-                                                    style={{ marginBottom: 15 }}
+                                                    style={{
+                                                        marginBottom: 15,
+                                                        maxWidth: 800,
+                                                    }}
                                                 />
                                             ) : (
                                                 <p style={{ marginBottom: 15 }}>

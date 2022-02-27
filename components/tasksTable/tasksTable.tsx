@@ -33,11 +33,11 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
                 <Table.Cell dataKey="title" />
             </Table.Column>
             <Table.Column width={120} resizable>
-                <Table.HeaderCell>Price</Table.HeaderCell>
+                <Table.HeaderCell>Bounty prize</Table.HeaderCell>
                 <Table.Cell>{(task: Job) => `${task.price} Ⓝ`}</Table.Cell>
             </Table.Column>
             <Table.Column width={220}>
-                <Table.HeaderCell>Available until</Table.HeaderCell>
+                <Table.HeaderCell>Deadline</Table.HeaderCell>
                 <Table.Cell>
                     {({ availableUntil }: Job) => {
                         const datetime = new Date(availableUntil);

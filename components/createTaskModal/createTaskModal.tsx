@@ -54,7 +54,7 @@ export const CreateTaskModal: React.FunctionComponent<
                     <TextField name="title" label="Title" />
                     <TextField
                         name="price"
-                        label="Price Ⓝ"
+                        label="Bounty prize Ⓝ"
                         type="number"
                         style={{ width: 'unset' }}
                     />
