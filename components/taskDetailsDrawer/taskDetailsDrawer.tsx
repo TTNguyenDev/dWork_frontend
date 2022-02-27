@@ -15,7 +15,8 @@ import { useApproveWork } from '../../hooks/useApproveWork';
 import { Job } from '../../models/types/jobType';
 import { BlockChainConnector } from '../../utils/blockchain';
 import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
-
+import Avatar from 'react-avatar';
+import * as dateFns from 'date-fns';
 interface TaskDetailsDrawerProps {
     task?: Job;
     open: boolean;
@@ -77,7 +78,15 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                         </Col>
                         <Col xs={24} sm={24} md={8}>
                             <h6 style={{ marginBottom: 5 }}>Owner</h6>
-                            <p style={{ marginBottom: 15 }}>{task.owner}</p>
+                            <Stack style={{ color: '#555' }} spacing={5}>
+                                <Avatar
+                                    size="1.5em"
+                                    textSizeRatio={1.75}
+                                    round
+                                    name={task.owner}
+                                />
+                                <div>{task.owner}</div>
+                            </Stack>
                         </Col>
                     </Row>
                     <Row>
@@ -98,11 +107,10 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                                 : 'red',
                                     }}
                                 >
-                                    {`${new Date(
-                                        task.availableUntil
-                                    ).toLocaleDateString()} ${new Date(
-                                        task.availableUntil
-                                    ).toLocaleTimeString()}`}
+                                    {dateFns.format(
+                                        task.availableUntil,
+                                        'yyyy-MM-dd HH:mm'
+                                    )}
                                 </span>
                             </div>
                         </Col>
@@ -146,7 +154,18 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                     <Col xs={24} sm={24} md={24}>
                                         <Panel bordered>
                                             <div style={{ marginBottom: 15 }}>
-                                                <b>{p.accountId}</b>
+                                                <Stack
+                                                    style={{ color: '#555' }}
+                                                    spacing={5}
+                                                >
+                                                    <Avatar
+                                                        size="1.5em"
+                                                        textSizeRatio={1.75}
+                                                        round
+                                                        name={p.accountId}
+                                                    />
+                                                    <div>{p.accountId}</div>
+                                                </Stack>
                                             </div>
                                             {p.proofOfWork ? (
                                                 <div

@@ -8,7 +8,7 @@ export type CreateTaskInput = {
     description: string;
     price: string;
     maxParticipants: string;
-    duration: string;
+    duration: number;
 };
 export class JobService {
     static async createTask(payload: CreateTaskInput): Promise<void> {
@@ -19,11 +19,7 @@ export class JobService {
                 description: payload.description,
                 price: utils.format.parseNearAmount(payload.price),
                 max_participants: maxParticipants,
-                duration: (
-                    Number.parseInt(payload.duration) *
-                    60 *
-                    1000000000
-                ).toString(),
+                duration: (payload.duration * 1000000).toString(),
             },
             '30000000000000',
             utils.format.parseNearAmount(
