@@ -11,7 +11,7 @@ const { StringType, NumberType } = Schema.Types;
 
 const model = Schema.Model({
     title: StringType().isRequired('This field is required.'),
-    description: StringType().isRequired('This field is required.'),
+    // description: StringType().isRequired('This field is required.'),
     price: NumberType().isRequired('This field is required.'),
     maxParticipants: NumberType().isRequired('This field is required.'),
     duration: NumberType().isRequired('This field is required.'),
@@ -21,7 +21,11 @@ export type UseCreateTaskOutput = {
     model: typeof model;
     createTaskLoading: boolean;
     handleFormChange: (payload: any) => void;
-    handleFormSubmit: (payload: any) => void;
+    handleFormSubmit: (
+        isValid: boolean,
+        description: string,
+        afterSubmit: () => void
+    ) => void;
 };
 
 export const useCreateTask = (): UseCreateTaskOutput => {
@@ -34,26 +38,33 @@ export const useCreateTask = (): UseCreateTaskOutput => {
         formValueRef.current = formValue;
     }, []);
 
-    const handleFormSubmit = useCallback(async (isValid: boolean) => {
-        if (isValid) {
-            setCreateTaskLoading(true);
-            try {
-                await JobService.createTask(formValueRef.current);
-                queryClient.invalidateQueries('jobs');
-                queryClient.invalidateQueries('jobsAvailable');
-                toast('Create task successfully', {
-                    type: 'success',
-                });
-            } catch (error) {
-                console.error(error);
-                toast('Create task failed', {
-                    type: 'error',
-                });
-            } finally {
-                setCreateTaskLoading(false);
+    const handleFormSubmit = useCallback(
+        async (isValid, description, afterSubmit) => {
+            if (isValid) {
+                setCreateTaskLoading(true);
+                try {
+                    await JobService.createTask({
+                        ...formValueRef.current,
+                        description,
+                    });
+                    queryClient.invalidateQueries('jobs');
+                    queryClient.invalidateQueries('jobsAvailable');
+                    toast('Create task successfully', {
+                        type: 'success',
+                    });
+                    afterSubmit();
+                } catch (error) {
+                    console.error(error);
+                    toast('Create task failed', {
+                        type: 'error',
+                    });
+                } finally {
+                    setCreateTaskLoading(false);
+                }
             }
-        }
-    }, []);
+        },
+        []
+    );
 
     return {
         model,

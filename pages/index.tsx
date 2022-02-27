@@ -9,6 +9,7 @@ import { useHomePage } from '../hooks/useHomePage';
 import { Loader } from '../components/loader';
 import { JobCard } from '../components/jobCard';
 import { Job } from '../models/types/jobType';
+import { TaskDetailsDrawer } from '../components/taskDetailsDrawer';
 
 export default function Home() {
     const {
@@ -23,6 +24,14 @@ export default function Home() {
         profileLoading,
         profileInfo,
     } = useHomePage();
+
+    const [openDrawer, setOpenDrawer] = React.useState(false);
+    const [drawerData, setDrawerData] = React.useState<Job>();
+
+    const handleViewDetails = React.useCallback((data: Job) => {
+        setDrawerData(data);
+        setOpenDrawer(true);
+    }, []);
 
     return (
         <>
@@ -146,10 +155,18 @@ export default function Home() {
                                                 <JobCard
                                                     job={job}
                                                     key={job.taskId}
+                                                    handleViewDetails={
+                                                        handleViewDetails
+                                                    }
                                                 />
                                             ))}
                                     </Stack>
                                 )}
+                                <TaskDetailsDrawer
+                                    task={drawerData}
+                                    open={openDrawer}
+                                    setOpen={setOpenDrawer}
+                                />
                             </div>
                             <div style={{ marginBottom: 50 }} />
                         </>

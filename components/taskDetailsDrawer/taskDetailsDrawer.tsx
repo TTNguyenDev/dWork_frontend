@@ -14,6 +14,7 @@ import { useRejectWork } from '../../hooks/useRejectWork';
 import { useApproveWork } from '../../hooks/useApproveWork';
 import { Job } from '../../models/types/jobType';
 import { BlockChainConnector } from '../../utils/blockchain';
+import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
 
 interface TaskDetailsDrawerProps {
     task?: Job;
@@ -26,6 +27,8 @@ export const TaskDetailsDrawer: React.FunctionComponent<
 > = ({ task, open, setOpen }) => {
     const { approveWorkLoading, handleApproveWork } = useApproveWork();
     const { rejectWorkLoading, handleRejectWork } = useRejectWork();
+    const { markATaskAsCompletedLoading, handleMarkATaskAsCompleted } =
+        useMarkATaskAsCompleted();
 
     if (!task) return null;
 
@@ -35,15 +38,26 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                 <Drawer.Title>
                     <Stack justifyContent="space-between">
                         <div>Task details</div>
-                        {task.owner ===
-                            BlockChainConnector.instance.account.accountId &&
+                        {task.type !== 'completed' &&
+                            task.owner ===
+                                BlockChainConnector.instance.account
+                                    .accountId &&
                             (task.availableUntil < Date.now() ||
                                 (task.availableUntil >= Date.now() &&
                                     task.maxParticipants ===
                                         task.proposals.filter(
                                             (p) => p.isApproved
                                         ).length)) && (
-                                <Button size="sm" appearance="primary">
+                                <Button
+                                    size="sm"
+                                    appearance="primary"
+                                    loading={markATaskAsCompletedLoading}
+                                    onClick={() =>
+                                        handleMarkATaskAsCompleted({
+                                            taskId: task.taskId,
+                                        }).then(() => setOpen(false))
+                                    }
+                                >
                                     Mark task as completed
                                 </Button>
                             )}
@@ -105,7 +119,12 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                         <Col xs={24}>
                             <h6 style={{ marginBottom: 5 }}>Description</h6>
                             <Panel bordered>
-                                <p>{task.description}</p>
+                                <div
+                                    className="ql-editor"
+                                    dangerouslySetInnerHTML={{
+                                        __html: task.description,
+                                    }}
+                                />
                             </Panel>
                         </Col>
                     </Row>
@@ -130,15 +149,21 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                                     }
                                                 </b>
                                             </div>
-                                            <p style={{ marginBottom: 15 }}>
-                                                {task.proposals[0]
-                                                    .proofOfWork ? (
-                                                    task.proposals[0]
-                                                        .proofOfWork
-                                                ) : (
+                                            {task.proposals[0].proofOfWork ? (
+                                                <div
+                                                    className="ql-editor"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: task
+                                                            .proposals[0]
+                                                            .proofOfWork,
+                                                    }}
+                                                    style={{ marginBottom: 15 }}
+                                                />
+                                            ) : (
+                                                <p style={{ marginBottom: 15 }}>
                                                     <i>Empty</i>
-                                                )}
-                                            </p>
+                                                </p>
+                                            )}
                                             <div style={{ marginBottom: 15 }} />
                                             {p.isApproved && (
                                                 <Badge

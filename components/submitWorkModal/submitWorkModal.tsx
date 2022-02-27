@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Button, Form } from 'rsuite';
 import { useSubmitWork } from '../../hooks/useSubmitWork';
 import { TextField } from '../textField';
+import { Editor } from '../editor';
 
 type SubmitWorkModalProps = {
     taskId: string;
@@ -19,9 +20,15 @@ export const SubmitWorkModal: React.FunctionComponent<SubmitWorkModalProps> = ({
     const { model, submitWorkLoading, handleFormChange, handleFormSubmit } =
         useSubmitWork();
 
+    const [proofValue, setDescValue] = React.useState<string>('');
+
+    const handleEditorChange = React.useCallback((value: string) => {
+        setDescValue(value);
+    }, []);
+
     return (
         <Modal
-            size="xs"
+            size="sm"
             backdrop
             keyboard={false}
             open={open}
@@ -36,8 +43,12 @@ export const SubmitWorkModal: React.FunctionComponent<SubmitWorkModalProps> = ({
                 fluid
                 onChange={handleFormChange}
                 onSubmit={async (payload) => {
-                    await handleFormSubmit(payload);
-                    handleClose();
+                    await handleFormSubmit(
+                        payload,
+                        taskId,
+                        proofValue,
+                        handleClose
+                    );
                 }}
                 formDefaultValue={{
                     taskId,
@@ -45,12 +56,19 @@ export const SubmitWorkModal: React.FunctionComponent<SubmitWorkModalProps> = ({
             >
                 <Modal.Body>
                     <TextField name="taskId" label="Id" readOnly />
-                    <TextField
+                    <Editor
+                        onChange={handleEditorChange}
+                        style={{
+                            padding: 0,
+                        }}
+                        placeholder="Description"
+                    />
+                    {/* <TextField
                         name="proof"
                         label="Proof"
                         type="textarea"
                         rows={5}
-                    />
+                    /> */}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

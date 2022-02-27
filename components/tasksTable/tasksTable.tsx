@@ -1,11 +1,11 @@
 import React from 'react';
 import { Table, Button, Stack } from 'rsuite';
-import { Job } from '../../models/types/jobType';
+import { Job, JobType } from '../../models/types/jobType';
 import { MdDone } from 'react-icons/md';
 import { BlockChainConnector } from '../../utils/blockchain';
 import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
 interface TasksTableProps {
-    type: 'available' | 'processing' | 'completed' | 'pending';
+    type: JobType;
     tasks: Job[];
     loading: boolean;
     handleViewBtnClick: (task: Job) => void;
@@ -77,13 +77,16 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
                             <Stack spacing={5}>
                                 <Button
                                     size="xs"
-                                    onClick={() => handleViewBtnClick(task)}
+                                    onClick={() =>
+                                        handleViewBtnClick({ ...task, type })
+                                    }
                                 >
                                     View
                                 </Button>
-                                {task.owner ===
-                                    BlockChainConnector.instance.account
-                                        .accountId &&
+                                {type !== 'completed' &&
+                                    task.owner ===
+                                        BlockChainConnector.instance.account
+                                            .accountId &&
                                     (task.availableUntil < Date.now() ||
                                         (task.availableUntil >= Date.now() &&
                                             task.maxParticipants ===

@@ -1,0 +1,59 @@
+.root {
+    height: 100%;
+    padding-bottom: 45px;
+    border: none;
+    overflow: hidden;
+
+    [class='ql-toolbar ql-snow'] {
+        // background: #f5f5f5;
+        background: #fff;
+        border: none !important;
+        padding: 10px 0 !important;
+    }
+
+    [class='ql-container ql-snow'] {
+        border: none !important;
+        background: #eff5fb;
+        border-radius: 12px;
+    }
+
+    [class='ql-tooltip ql-editing'][data-mode='video'] {
+        top: 0 !important;
+        right: 0 !important;
+        left: unset !important;
+    }
+
+    [class='ql-editor'] {
+        padding: 9px 21px !important;
+    }
+
+    [class='ql-editor ql-blank'] {
+        padding: 9px 21px !important;
+
+        &::before {
+            font-style: normal !important;
+            font-size: 14px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+            color: #a0aec0 !important;
+            left: 21px !important;
+        }
+    }
+
+    [nft='true'] {
+        &::before {
+            content: attr(data-nft-tag);
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #000;
+            color: #fff;
+        }
+    }
+}
+
+.create-post {
+    [class='ql-toolbar ql-snow'] {
+        margin-bottom: 125px;
+    }
+}

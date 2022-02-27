@@ -5,14 +5,12 @@ import { CONTRACT_NAME } from '../constants';
 import { AppModel } from '../models/appModel';
 import { AuthModel } from '../models/authModel';
 import { ProfileModel } from '../models/profileModel';
-import { AccountTypes } from '../models/types/accountType';
 import { RootState } from '../store';
 
 export const useApp = () => {
     const dispatch = useDispatch();
     const app = useSelector((state: RootState) => state.app);
     const auth = useSelector((state: RootState) => state.auth);
-    const profile = useSelector((state: RootState) => state.profile);
 
     useEffect(() => {
         window.Buffer = window.Buffer || Buffer;

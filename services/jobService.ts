@@ -3,14 +3,15 @@ import { BlockChainConnector } from '../utils/blockchain';
 import { utils } from 'near-api-js';
 import BN from 'bn.js';
 
+export type CreateTaskInput = {
+    title: string;
+    description: string;
+    price: string;
+    maxParticipants: string;
+    duration: string;
+};
 export class JobService {
-    static async createTask(payload: {
-        title: string;
-        description: string;
-        price: string;
-        maxParticipants: string;
-        duration: string;
-    }): Promise<void> {
+    static async createTask(payload: CreateTaskInput): Promise<void> {
         const maxParticipants = Number.parseInt(payload.maxParticipants);
         await BlockChainConnector.instance.contract.new_task(
             {

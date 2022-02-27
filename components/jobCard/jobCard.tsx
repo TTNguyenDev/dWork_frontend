@@ -12,9 +12,13 @@ import { SubmitWorkModal } from '../submitWorkModal';
 
 interface JobCardProps {
     job: Job;
+    handleViewDetails: (data: Job) => void;
 }
 
-export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
+export const JobCard: React.FunctionComponent<JobCardProps> = ({
+    job,
+    handleViewDetails,
+}) => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -22,11 +26,11 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
     const auth = useSelector((state: RootState) => state.auth);
     const profile = useSelector((state: RootState) => state.profile);
 
-    const bidBtnDisabled = useMemo(() => {
+    const registerBtnDisabled = useMemo(() => {
         return !!job.proposals.find((p) => p.accountId === auth.data.userId);
     }, [job, auth.data.userId]);
 
-    const bidBtnHide = useMemo(() => {
+    const registerBtnHide = useMemo(() => {
         return (
             profile.data.info?.type === AccountTypes.REQUESTER ||
             job.availableUntil < Date.now() ||
@@ -40,7 +44,12 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                 <Grid fluid className={classes.root}>
                     <Row gutter={16}>
                         <Col xs={24} sm={24} md={16}>
-                            <h5 className={classes.title}>{job.title}</h5>
+                            <h5
+                                className={classes.title}
+                                onClick={() => handleViewDetails(job)}
+                            >
+                                {job.title}
+                            </h5>
                         </Col>
                         <Col
                             xs={24}
@@ -51,7 +60,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                             <b>{`${job.price} Ⓝ`}</b>
                         </Col>
                     </Row>
-                    <Row gutter={16}>
+                    <Row gutter={16} style={{ marginBottom: 10 }}>
                         <Col xs={24} sm={24} md={16}>
                             <div style={{ marginBottom: 15 }}>
                                 <ReactReadMoreReadLess
@@ -61,7 +70,10 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                                     readMoreClassName={classes.read_more}
                                     readLessClassName={classes.read_less}
                                 >
-                                    {job.description}
+                                    {job.description.replace(
+                                        /<(.|\n)*?>/g,
+                                        ' '
+                                    )}
                                 </ReactReadMoreReadLess>
                             </div>
                         </Col>
@@ -76,18 +88,24 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                                     {`${job.proposals.length}/${job.maxParticipants}`}
                                 </div>
                                 <div>
-                                    <Countdown
-                                        date={job.availableUntil}
-                                        renderer={({
-                                            hours,
-                                            minutes,
-                                            seconds,
-                                        }) =>
-                                            `${zeroPad(hours)}:${zeroPad(
-                                                minutes
-                                            )}:${zeroPad(seconds)}`
-                                        }
-                                    />
+                                    {job.availableUntil < Date.now() ? (
+                                        <div style={{ color: 'red' }}>
+                                            Expired
+                                        </div>
+                                    ) : (
+                                        <Countdown
+                                            date={job.availableUntil}
+                                            renderer={({
+                                                hours,
+                                                minutes,
+                                                seconds,
+                                            }) =>
+                                                `${zeroPad(hours)}:${zeroPad(
+                                                    minutes
+                                                )}:${zeroPad(seconds)}`
+                                            }
+                                        />
+                                    )}
                                 </div>
                             </Stack>
                         </Col>
@@ -105,14 +123,14 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ job }) => {
                             md={8}
                             style={{ textAlign: 'right' }}
                         >
-                            {!bidBtnHide && (
+                            {!registerBtnHide && (
                                 <Button
                                     appearance="primary"
                                     size="sm"
                                     onClick={handleOpen}
-                                    disabled={bidBtnDisabled}
+                                    disabled={registerBtnDisabled}
                                 >
-                                    {bidBtnDisabled
+                                    {registerBtnDisabled
                                         ? 'Submitted'
                                         : 'Submit now'}
                                 </Button>
