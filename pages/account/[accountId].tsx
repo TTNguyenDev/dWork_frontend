@@ -35,7 +35,7 @@ export default function AccountPage() {
             </Header>
             <Layout activeKey="one">
                 <Container className={classes.container}>
-                    <h3 style={{ marginBottom: 50 }}>My Account</h3>
+                    <h3 style={{ marginBottom: 30 }}>My Account</h3>
 
                     {(authLoading ||
                         (!authLoading && logged && profileLoading)) && (
@@ -92,17 +92,6 @@ export default function AccountPage() {
                         profileInfo &&
                         profileInfo.type === AccountTypes.REQUESTER && (
                             <>
-                                <div style={{ textAlign: 'right' }}>
-                                    <Button
-                                        appearance="primary"
-                                        onClick={
-                                            ModalsController.controller
-                                                .openCreateTaskModal
-                                        }
-                                    >
-                                        New Task
-                                    </Button>
-                                </div>
                                 <Divider />
                                 <h5 style={{ marginBottom: 15 }}>
                                     Available Tasks

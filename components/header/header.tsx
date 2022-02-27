@@ -1,6 +1,9 @@
 import React from 'react';
-import { Navbar, Loader } from 'rsuite';
+import { BsPlusLg } from 'react-icons/bs';
+import { Navbar, Loader, Stack, Button, IconButton } from 'rsuite';
 import { useHeader } from '../../hooks/useHeader';
+import { AccountTypes } from '../../models/types/accountType';
+import { ModalsController } from '../../utils/modalsController';
 import { Brand } from '../brand';
 import { HeaderAccount } from '../headerAccount';
 import { LoginButton } from '../loginButton';
@@ -31,12 +34,26 @@ export const Header: React.FunctionComponent<HeaderProps> = ({ activeKey }) => {
                 {authLoading ? (
                     <Loader />
                 ) : logged ? (
-                    <HeaderAccount
-                        accountType={accountType}
-                        logoutLoading={logoutLoading}
-                        requestLogout={requestLogout}
-                        accountName={userId!}
-                    />
+                    <Stack spacing="30px">
+                        {accountType === AccountTypes.REQUESTER && (
+                            <IconButton
+                                appearance="primary"
+                                size="sm"
+                                icon={<BsPlusLg />}
+                                style={{ width: 30, height: 30 }}
+                                onClick={
+                                    ModalsController.controller
+                                        .openCreateTaskModal
+                                }
+                            />
+                        )}
+                        <HeaderAccount
+                            accountType={accountType}
+                            logoutLoading={logoutLoading}
+                            requestLogout={requestLogout}
+                            accountName={userId!}
+                        />
+                    </Stack>
                 ) : (
                     <LoginButton
                         loading={loginLoading}
