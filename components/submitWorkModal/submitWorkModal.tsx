@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Form } from 'rsuite';
+import { Modal, Button, Form, Message } from 'rsuite';
 import { useSubmitWork } from '../../hooks/useSubmitWork';
 import { TextField } from '../textField';
 import { Editor } from '../editor';
@@ -69,6 +69,12 @@ export const SubmitWorkModal: React.FunctionComponent<SubmitWorkModalProps> = ({
                         type="textarea"
                         rows={5}
                     /> */}
+                    <div style={{ marginBottom: 50 }} />
+                    <Message showIcon type="info" header="Informational">
+                        You need to deposit 0.01 near to submit your work. We do
+                        this to avoid spam submissions. You will get a refund
+                        after the requester checks your post.
+                    </Message>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

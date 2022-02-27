@@ -1,7 +1,8 @@
 import React from 'react';
-import { Avatar, Badge, Stack } from 'rsuite';
+import { Badge, Stack } from 'rsuite';
 import { AccountTypes } from '../../models/types/accountType';
 import classes from './headerAccountTitle.module.less';
+import Avatar from 'react-avatar';
 
 interface HeaderAccountTitleProps {
     accountType: AccountTypes;
@@ -22,12 +23,12 @@ export const HeaderAccountTitle: React.FunctionComponent<
             )}
             <div className={classes.title}>{title}</div>
             <Avatar
-                circle
-                src={
-                    avatarSrc ??
-                    'https://avatars.githubusercontent.com/u/12592949'
-                }
+                round
+                src={avatarSrc}
                 alt={title}
+                name={title}
+                size="35"
+                textSizeRatio={1.75}
             />
         </Stack>
     );
