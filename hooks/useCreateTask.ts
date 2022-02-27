@@ -14,7 +14,7 @@ const model = Schema.Model({
     // description: StringType().isRequired('This field is required.'),
     price: NumberType().isRequired('This field is required.'),
     maxParticipants: NumberType().isRequired('This field is required.'),
-    duration: NumberType().isRequired('This field is required.'),
+    // duration: NumberType().isRequired('This field is required.'),
 });
 
 export type UseCreateTaskOutput = {
@@ -24,6 +24,7 @@ export type UseCreateTaskOutput = {
     handleFormSubmit: (
         isValid: boolean,
         description: string,
+        duration: number,
         afterSubmit: () => void
     ) => void;
 };
@@ -39,13 +40,14 @@ export const useCreateTask = (): UseCreateTaskOutput => {
     }, []);
 
     const handleFormSubmit = useCallback(
-        async (isValid, description, afterSubmit) => {
+        async (isValid, description, duration, afterSubmit) => {
             if (isValid) {
                 setCreateTaskLoading(true);
                 try {
                     await JobService.createTask({
                         ...formValueRef.current,
                         description,
+                        duration,
                     });
                     queryClient.invalidateQueries('jobs');
                     queryClient.invalidateQueries('jobsAvailable');

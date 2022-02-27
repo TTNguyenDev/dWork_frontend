@@ -1,10 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Modal, Button, Form, InputNumber, Input } from 'rsuite';
+import {
+    Modal,
+    Button,
+    Form,
+    InputNumber,
+    Input,
+    DateRangePicker,
+    DatePicker,
+} from 'rsuite';
 import { useCreateTask } from '../../hooks/useCreateTask';
 import { ModalsController } from '../../utils/modalsController';
 import { Editor } from '../editor';
 import { TextField } from '../textField';
 import classes from './createTaskModal.module.less';
+import * as dateFns from 'date-fns';
 
 type createTaskModalProps = {};
 
@@ -25,6 +34,7 @@ export const CreateTaskModal: React.FunctionComponent<
         useCreateTask();
 
     const [descValue, setDescValue] = useState<string>('');
+    const [durationValue, setDurationValue] = useState<number>(0);
 
     const handleEditorChange = useCallback((value: string) => {
         setDescValue(value);
@@ -47,7 +57,12 @@ export const CreateTaskModal: React.FunctionComponent<
                 fluid
                 onChange={handleFormChange}
                 onSubmit={async (payload) => {
-                    await handleFormSubmit(payload, descValue, handleClose);
+                    await handleFormSubmit(
+                        payload,
+                        descValue,
+                        durationValue,
+                        handleClose
+                    );
                 }}
             >
                 <Modal.Body>
@@ -64,12 +79,51 @@ export const CreateTaskModal: React.FunctionComponent<
                         type="number"
                         style={{ width: 'unset' }}
                     />
-                    <TextField
+                    {/* <TextField
                         name="duration"
                         label="Duration"
                         type="number"
                         style={{ width: 'unset' }}
+                    /> */}
+                    <label className="rs-form-control-label">Deadline</label>
+                    <DatePicker
+                        onChange={(value) => {
+                            setDurationValue(
+                                (value as Date).getTime() - Date.now()
+                            );
+                        }}
+                        format="yyyy-MM-dd HH:mm"
+                        style={{ width: '100%' }}
+                        disabledDate={(date) =>
+                            dateFns.isBefore(
+                                date!,
+                                dateFns.subDays(new Date(), 1)
+                            )
+                        }
+                        disabledHours={(hour, date) => {
+                            if (
+                                dateFns.getDate(date) ===
+                                dateFns.getDate(new Date())
+                            ) {
+                                return hour < dateFns.getHours(new Date());
+                            }
+
+                            return false;
+                        }}
+                        disabledMinutes={(minute, date) => {
+                            if (
+                                dateFns.getDate(date) ===
+                                    dateFns.getDate(new Date()) &&
+                                dateFns.getHours(date) ===
+                                    dateFns.getHours(new Date())
+                            ) {
+                                return minute < dateFns.getMinutes(new Date());
+                            }
+
+                            return false;
+                        }}
                     />
+                    <div style={{ marginBottom: 15 }} />
                     <Editor
                         onChange={handleEditorChange}
                         style={{
