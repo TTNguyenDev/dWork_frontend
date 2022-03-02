@@ -23,6 +23,8 @@ export default function Home() {
         listJobsLoading,
         profileLoading,
         profileInfo,
+        fetchNextPage,
+        isFetchingNextPage,
     } = useHomePage();
 
     const [openDrawer, setOpenDrawer] = React.useState(false);
@@ -160,6 +162,16 @@ export default function Home() {
                                                     }
                                                 />
                                             ))}
+                                        <div style={{ textAlign: 'center' }}>
+                                            <Button
+                                                size="lg"
+                                                appearance="primary"
+                                                onClick={fetchNextPage}
+                                                loading={isFetchingNextPage}
+                                            >
+                                                View More
+                                            </Button>
+                                        </div>
                                     </Stack>
                                 )}
                                 <TaskDetailsDrawer

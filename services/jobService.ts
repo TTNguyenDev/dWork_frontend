@@ -74,18 +74,32 @@ export class JobService {
         const res = await BlockChainConnector.instance.contract.available_tasks(
             {
                 from_index: 0,
-                limit: 100,
+                limit: 50,
             }
         );
 
-        return res
-            .map((raw: any) =>
-                JobService.mapToModel({
-                    task_id: raw[0],
-                    ...raw[1],
-                })
-            )
-            .reverse();
+        return res.map((raw: any) =>
+            JobService.mapToModel({
+                task_id: raw[0],
+                ...raw[1],
+            })
+        );
+    }
+
+    static async fetchAvailableJobsInfinity({ pageParam = 0 }): Promise<Job[]> {
+        const res = await BlockChainConnector.instance.contract.available_tasks(
+            {
+                from_index: pageParam,
+                limit: 10,
+            }
+        );
+
+        return res.map((raw: any) =>
+            JobService.mapToModel({
+                task_id: raw[0],
+                ...raw[1],
+            })
+        );
     }
 
     static async fetchJobByAccountId(accountId?: string): Promise<Job[]> {
@@ -93,17 +107,15 @@ export class JobService {
             account_id:
                 accountId ?? BlockChainConnector.instance.account.accountId,
             from_index: 0,
-            limit: 100,
+            limit: 50,
         });
 
-        return res
-            .map((raw: any) =>
-                JobService.mapToModel({
-                    task_id: raw[0],
-                    ...raw[1],
-                })
-            )
-            .reverse();
+        return res.map((raw: any) =>
+            JobService.mapToModel({
+                task_id: raw[0],
+                ...raw[1],
+            })
+        );
     }
 
     static async fetchJobCompletedByAccountId(
@@ -114,18 +126,16 @@ export class JobService {
                 account_id:
                     accountId ?? BlockChainConnector.instance.account.accountId,
                 from_index: 0,
-                limit: 100,
+                limit: 50,
             }
         );
 
-        return res
-            .map((raw: any) =>
-                JobService.mapToModel({
-                    task_id: raw[0],
-                    ...raw[1],
-                })
-            )
-            .reverse();
+        return res.map((raw: any) =>
+            JobService.mapToModel({
+                task_id: raw[0],
+                ...raw[1],
+            })
+        );
     }
 
     private static mapToModel(raw: any): Job {

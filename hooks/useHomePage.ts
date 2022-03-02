@@ -30,13 +30,20 @@ export type UseHomePageOutput = {
     jobsProcessing: Optional<Job[]>;
     jobsCompletedLoading: boolean;
     jobsCompleted: Optional<Job[]>;
+    fetchNextPage: () => Promise<void>;
+    isFetchingNextPage: boolean;
 };
 
 export const useHomePage = (): UseHomePageOutput => {
     const auth = useSelector((state: RootState) => state.auth);
     const profile = useSelector((state: RootState) => state.profile);
 
-    const { loading: listJobsLoading, jobs } = useListJobs();
+    const {
+        loading: listJobsLoading,
+        jobs,
+        fetchNextPage,
+        isFetchingNextPage,
+    } = useListJobs();
 
     const { isLoading: jobsAvailableLoading, data: jobsAvailable } = useQuery<
         Job[]
@@ -118,5 +125,7 @@ export const useHomePage = (): UseHomePageOutput => {
         jobsProcessing,
         jobsCompletedLoading,
         jobsCompleted,
+        fetchNextPage,
+        isFetchingNextPage,
     };
 };
