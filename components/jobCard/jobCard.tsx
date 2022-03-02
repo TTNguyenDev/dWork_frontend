@@ -50,7 +50,13 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
                 <Grid
                     fluid
                     className={classes.root}
-                    style={{ opacity: registerBtnHide ? 0.5 : 1 }}
+                    style={{
+                        opacity:
+                            job.availableUntil < Date.now() ||
+                            job.proposals.length >= job.maxParticipants
+                                ? 0.5
+                                : 1,
+                    }}
                 >
                     <Row gutter={16}>
                         <Col xs={24} sm={24} md={16}>
