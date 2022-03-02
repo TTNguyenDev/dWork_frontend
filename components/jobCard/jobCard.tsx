@@ -47,7 +47,11 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
                 style={{ cursor: 'pointer' }}
                 onClick={() => handleViewDetails(job)}
             >
-                <Grid fluid className={classes.root}>
+                <Grid
+                    fluid
+                    className={classes.root}
+                    style={{ opacity: registerBtnHide ? 0.5 : 1 }}
+                >
                     <Row gutter={16}>
                         <Col xs={24} sm={24} md={16}>
                             <h5 className={classes.title}>{job.title}</h5>
