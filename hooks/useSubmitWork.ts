@@ -35,6 +35,13 @@ export const useSubmitWork = (): UseSubmitWorkOutput => {
     const handleFormSubmit = useCallback(
         async (isValid, taskId, proof, afterSubmit) => {
             if (isValid) {
+                if (!proof?.replace(/<(.|\n)*?>/g, '').trim()) {
+                    toast('Proof is required!', {
+                        type: 'error',
+                    });
+                    return;
+                }
+
                 setSubmitWorkLoading(true);
                 try {
                     await JobService.submitWork({

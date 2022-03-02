@@ -78,12 +78,14 @@ export class JobService {
             }
         );
 
-        return res.map((raw: any) =>
-            JobService.mapToModel({
-                task_id: raw[0],
-                ...raw[1],
-            })
-        );
+        return res
+            .map((raw: any) =>
+                JobService.mapToModel({
+                    task_id: raw[0],
+                    ...raw[1],
+                })
+            )
+            .reverse();
     }
 
     static async fetchJobByAccountId(accountId?: string): Promise<Job[]> {
@@ -94,12 +96,14 @@ export class JobService {
             limit: 100,
         });
 
-        return res.map((raw: any) =>
-            JobService.mapToModel({
-                task_id: raw[0],
-                ...raw[1],
-            })
-        );
+        return res
+            .map((raw: any) =>
+                JobService.mapToModel({
+                    task_id: raw[0],
+                    ...raw[1],
+                })
+            )
+            .reverse();
     }
 
     static async fetchJobCompletedByAccountId(
@@ -114,12 +118,14 @@ export class JobService {
             }
         );
 
-        return res.map((raw: any) =>
-            JobService.mapToModel({
-                task_id: raw[0],
-                ...raw[1],
-            })
-        );
+        return res
+            .map((raw: any) =>
+                JobService.mapToModel({
+                    task_id: raw[0],
+                    ...raw[1],
+                })
+            )
+            .reverse();
     }
 
     private static mapToModel(raw: any): Job {

@@ -65,11 +65,16 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
                     </Row>
                     <Row gutter={16} style={{ marginBottom: 10 }}>
                         <Col xs={24} sm={24} md={16}>
-                            <div style={{ marginBottom: 15 }}>
+                            <div
+                                style={{
+                                    marginBottom: 15,
+                                    wordBreak: 'break-word',
+                                }}
+                            >
                                 <ReactReadMoreReadLess
                                     charLimit={180}
-                                    readMoreText={'read more'}
-                                    readLessText={'read less'}
+                                    readMoreText={''}
+                                    readLessText={''}
                                     readMoreClassName={classes.read_more}
                                     readLessClassName={classes.read_less}
                                 >
