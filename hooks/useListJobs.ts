@@ -10,6 +10,7 @@ export type UseListJobsOutput = {
     loading: boolean;
     jobs: Optional<Job[]>;
     isFetchingNextPage: boolean;
+    hasNextPage: Optional<boolean>;
     fetchNextPage: () => Promise<any>;
 };
 
@@ -26,8 +27,8 @@ export const useListJobs = (): UseListJobsOutput => {
         status,
     } = useInfiniteQuery('jobs', JobService.fetchAvailableJobsInfinity, {
         getNextPageParam: (lastPage, pages) => {
-            console.log(lastPage.length * pages.length + 1);
-            return lastPage.length * pages.length + 1;
+            if (lastPage.length < 10) return undefined;
+            return 10 * pages.length;
         },
     });
 
@@ -44,5 +45,6 @@ export const useListJobs = (): UseListJobsOutput => {
         jobs,
         isFetchingNextPage,
         fetchNextPage,
+        hasNextPage,
     };
 };

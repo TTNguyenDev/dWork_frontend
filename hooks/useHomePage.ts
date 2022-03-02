@@ -32,6 +32,7 @@ export type UseHomePageOutput = {
     jobsCompleted: Optional<Job[]>;
     fetchNextPage: () => Promise<void>;
     isFetchingNextPage: boolean;
+    hasNextPage: Optional<boolean>;
 };
 
 export const useHomePage = (): UseHomePageOutput => {
@@ -42,6 +43,7 @@ export const useHomePage = (): UseHomePageOutput => {
         loading: listJobsLoading,
         jobs,
         fetchNextPage,
+        hasNextPage,
         isFetchingNextPage,
     } = useListJobs();
 
@@ -127,5 +129,6 @@ export const useHomePage = (): UseHomePageOutput => {
         jobsCompleted,
         fetchNextPage,
         isFetchingNextPage,
+        hasNextPage,
     };
 };

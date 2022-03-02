@@ -25,6 +25,7 @@ export default function Home() {
         profileInfo,
         fetchNextPage,
         isFetchingNextPage,
+        hasNextPage,
     } = useHomePage();
 
     const [openDrawer, setOpenDrawer] = React.useState(false);
@@ -168,6 +169,7 @@ export default function Home() {
                                                 appearance="primary"
                                                 onClick={fetchNextPage}
                                                 loading={isFetchingNextPage}
+                                                disabled={!hasNextPage}
                                             >
                                                 View More
                                             </Button>
