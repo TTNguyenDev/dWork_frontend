@@ -1,10 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Schema } from 'rsuite';
 import { JobService } from '../services/jobService';
-import { RootState } from '../store';
 import { toast } from 'react-toastify';
-import { ModalsController } from '../utils/modalsController';
 import { useQueryClient } from 'react-query';
 
 const { StringType, NumberType } = Schema.Types;
@@ -41,6 +38,20 @@ export const useCreateTask = (): UseCreateTaskOutput => {
 
     const handleFormSubmit = useCallback(
         async (isValid, description, duration, afterSubmit) => {
+            if (!description?.replace(/<(.|\n)*?>/g, '').trim()) {
+                toast('Description is required!', {
+                    type: 'error',
+                });
+                return;
+            }
+
+            if (!duration) {
+                toast('Deadline is required!', {
+                    type: 'error',
+                });
+                return;
+            }
+
             if (isValid) {
                 setCreateTaskLoading(true);
                 try {
