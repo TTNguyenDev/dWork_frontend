@@ -12,7 +12,7 @@ import {
 } from 'rsuite';
 import { useRejectWork } from '../../hooks/useRejectWork';
 import { useApproveWork } from '../../hooks/useApproveWork';
-import { Job } from '../../models/types/jobType';
+import { Job, Proposal } from '../../models/types/jobType';
 import { BlockChainConnector } from '../../utils/blockchain';
 import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
 import Avatar from 'react-avatar';
@@ -23,11 +23,99 @@ interface TaskDetailsDrawerProps {
     setOpen: (open: boolean) => void;
 }
 
+const ProposalItem = ({
+    p,
+    task,
+    setOpen,
+}: {
+    p: Proposal;
+    task: Job;
+    setOpen: (open: boolean) => void;
+}) => {
+    const { approveWorkLoading, handleApproveWork } = useApproveWork();
+    const { rejectWorkLoading, handleRejectWork } = useRejectWork();
+
+    return (
+        <Row key={p.accountId} style={{ marginBottom: 15 }}>
+            <Col xs={24} sm={24} md={24}>
+                <Panel bordered>
+                    <div style={{ marginBottom: 15 }}>
+                        <Stack
+                            style={{
+                                color: '#555',
+                            }}
+                            spacing={5}
+                        >
+                            <Avatar
+                                size="1.5em"
+                                textSizeRatio={1.75}
+                                round
+                                name={p.accountId}
+                            />
+                            <div>{p.accountId}</div>
+                        </Stack>
+                    </div>
+                    {p.proofOfWork ? (
+                        <div
+                            className="ql-editor"
+                            dangerouslySetInnerHTML={{
+                                __html: p.proofOfWork,
+                            }}
+                            style={{
+                                marginBottom: 15,
+                                maxWidth: 800,
+                            }}
+                        />
+                    ) : (
+                        <p
+                            style={{
+                                marginBottom: 15,
+                            }}
+                        >
+                            <i>Empty</i>
+                        </p>
+                    )}
+                    <div style={{ marginBottom: 15 }} />
+                    {p.isApproved && <Badge color="green" content="Approved" />}
+                    {!p.isApproved &&
+                        task.owner ===
+                            BlockChainConnector.instance.account.accountId && (
+                            <Stack justifyContent="flex-end" spacing={10}>
+                                <Button
+                                    appearance="primary"
+                                    loading={approveWorkLoading}
+                                    onClick={() => {
+                                        handleApproveWork({
+                                            taskId: task.taskId,
+                                            workerId: p.accountId,
+                                        }).then(() => setOpen(false));
+                                    }}
+                                >
+                                    Approve
+                                </Button>
+                                <Button
+                                    appearance="ghost"
+                                    loading={rejectWorkLoading}
+                                    onClick={() => {
+                                        handleRejectWork({
+                                            taskId: task.taskId,
+                                            workerId: p.accountId,
+                                        }).then(() => setOpen(false));
+                                    }}
+                                >
+                                    Reject
+                                </Button>
+                            </Stack>
+                        )}
+                </Panel>
+            </Col>
+        </Row>
+    );
+};
+
 export const TaskDetailsDrawer: React.FunctionComponent<
     TaskDetailsDrawerProps
 > = ({ task, open, setOpen }) => {
-    const { approveWorkLoading, handleApproveWork } = useApproveWork();
-    const { rejectWorkLoading, handleRejectWork } = useRejectWork();
     const { markATaskAsCompletedLoading, handleMarkATaskAsCompleted } =
         useMarkATaskAsCompleted();
 
@@ -147,106 +235,11 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                     <>
                         <Grid fluid>
                             {task.proposals.map((p) => (
-                                <Row
-                                    key={p.accountId}
-                                    style={{ marginBottom: 15 }}
-                                >
-                                    <Col xs={24} sm={24} md={24}>
-                                        <Panel bordered>
-                                            <div style={{ marginBottom: 15 }}>
-                                                <Stack
-                                                    style={{ color: '#555' }}
-                                                    spacing={5}
-                                                >
-                                                    <Avatar
-                                                        size="1.5em"
-                                                        textSizeRatio={1.75}
-                                                        round
-                                                        name={p.accountId}
-                                                    />
-                                                    <div>{p.accountId}</div>
-                                                </Stack>
-                                            </div>
-                                            {p.proofOfWork ? (
-                                                <div
-                                                    className="ql-editor"
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: task
-                                                            .proposals[0]
-                                                            .proofOfWork,
-                                                    }}
-                                                    style={{
-                                                        marginBottom: 15,
-                                                        maxWidth: 800,
-                                                    }}
-                                                />
-                                            ) : (
-                                                <p style={{ marginBottom: 15 }}>
-                                                    <i>Empty</i>
-                                                </p>
-                                            )}
-                                            <div style={{ marginBottom: 15 }} />
-                                            {p.isApproved && (
-                                                <Badge
-                                                    color="green"
-                                                    content="Approved"
-                                                />
-                                            )}
-                                            {!p.isApproved &&
-                                                task.owner ===
-                                                    BlockChainConnector.instance
-                                                        .account.accountId && (
-                                                    <Stack
-                                                        justifyContent="flex-end"
-                                                        spacing={10}
-                                                    >
-                                                        <Button
-                                                            appearance="primary"
-                                                            loading={
-                                                                approveWorkLoading
-                                                            }
-                                                            onClick={() => {
-                                                                handleApproveWork(
-                                                                    {
-                                                                        taskId: task.taskId,
-                                                                        workerId:
-                                                                            p.accountId,
-                                                                    }
-                                                                ).then(() =>
-                                                                    setOpen(
-                                                                        false
-                                                                    )
-                                                                );
-                                                            }}
-                                                        >
-                                                            Approve
-                                                        </Button>
-                                                        <Button
-                                                            appearance="ghost"
-                                                            loading={
-                                                                rejectWorkLoading
-                                                            }
-                                                            onClick={() => {
-                                                                handleRejectWork(
-                                                                    {
-                                                                        taskId: task.taskId,
-                                                                        workerId:
-                                                                            p.accountId,
-                                                                    }
-                                                                ).then(() =>
-                                                                    setOpen(
-                                                                        false
-                                                                    )
-                                                                );
-                                                            }}
-                                                        >
-                                                            Reject
-                                                        </Button>
-                                                    </Stack>
-                                                )}
-                                        </Panel>
-                                    </Col>
-                                </Row>
+                                <ProposalItem
+                                    p={p}
+                                    task={task}
+                                    setOpen={setOpen}
+                                />
                             ))}
                         </Grid>
                         <div style={{ marginBottom: 15 }} />

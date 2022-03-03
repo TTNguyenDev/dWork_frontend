@@ -34,7 +34,7 @@ export const Header: React.FunctionComponent<HeaderProps> = ({ activeKey }) => {
                 {authLoading ? (
                     <Loader />
                 ) : logged ? (
-                    <Stack spacing="30px">
+                    <Stack>
                         {accountType === AccountTypes.REQUESTER && (
                             <IconButton
                                 appearance="primary"

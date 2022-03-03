@@ -120,7 +120,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
                     </Row>
                     <Row gutter={16}>
                         <Col xs={24} sm={24} md={24}>
-                            <Stack spacing={15}>
+                            <Stack spacing={15} style={{ flexWrap: 'wrap' }}>
                                 <Stack
                                     className={classes.owner}
                                     style={{ color: '#555' }}

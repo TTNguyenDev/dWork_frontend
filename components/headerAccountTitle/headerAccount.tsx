@@ -14,7 +14,7 @@ export const HeaderAccountTitle: React.FunctionComponent<
     HeaderAccountTitleProps
 > = ({ accountType, avatarSrc, title, ...props }) => {
     return (
-        <Stack className={classes.root} spacing="1em" {...props}>
+        <Stack className={classes.root} spacing="0.75em" {...props}>
             {accountType === AccountTypes.WORKER && (
                 <Badge color="green" content="WORKER" />
             )}
