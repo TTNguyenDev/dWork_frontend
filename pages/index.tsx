@@ -29,12 +29,15 @@ export default function Home() {
     } = useHomePage();
 
     const [openDrawer, setOpenDrawer] = React.useState(false);
-    const [drawerData, setDrawerData] = React.useState<Job>();
+    const [drawerData, setDrawerData] = React.useState<{ taskId: string }>();
 
-    const handleViewDetails = React.useCallback((data: Job) => {
-        setDrawerData(data);
-        setOpenDrawer(true);
-    }, []);
+    const handleViewDetails = React.useCallback(
+        (payload: { taskId: string }) => {
+            setDrawerData(payload);
+            setOpenDrawer(true);
+        },
+        []
+    );
 
     return (
         <>
@@ -121,7 +124,7 @@ export default function Home() {
                                             loading={makeMoneyBtnLoading}
                                             onClick={handleMakeMoneyBtnClick}
                                         >
-                                            Requester a Worker account
+                                            Create a Worker account
                                         </Button>
                                     </section>
                                 </FlexboxGrid.Item>
@@ -177,7 +180,7 @@ export default function Home() {
                                     </Stack>
                                 )}
                                 <TaskDetailsDrawer
-                                    task={drawerData}
+                                    taskId={drawerData?.taskId}
                                     open={openDrawer}
                                     setOpen={setOpenDrawer}
                                 />

@@ -4,23 +4,22 @@ import { Job, JobType } from '../../models/types/jobType';
 import { MdDone } from 'react-icons/md';
 import { BlockChainConnector } from '../../utils/blockchain';
 import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
+
 interface TasksTableProps {
     type: JobType;
     tasks: Job[];
     loading: boolean;
-    handleViewBtnClick: (task: Job) => void;
+    setOpenDrawer: (open: boolean) => void;
+    setDrawerData: (payload: { taskId: string; type: JobType }) => void;
 }
 
 export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
     type,
     tasks,
     loading,
-    handleViewBtnClick,
+    setOpenDrawer,
+    setDrawerData,
 }) => {
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
     return (
         <Table data={tasks as any} loading={loading} hover autoHeight>
             <Table.Column width={50}>
@@ -77,9 +76,13 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
                             <Stack spacing={5}>
                                 <Button
                                     size="xs"
-                                    onClick={() =>
-                                        handleViewBtnClick({ ...task, type })
-                                    }
+                                    onClick={() => {
+                                        setDrawerData({
+                                            taskId: task.taskId,
+                                            type,
+                                        });
+                                        setOpenDrawer(true);
+                                    }}
                                 >
                                     View
                                 </Button>

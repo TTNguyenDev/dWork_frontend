@@ -43,7 +43,7 @@ export const CreateTaskModal: React.FunctionComponent<
     return (
         <Modal
             size="sm"
-            backdrop
+            backdrop="static"
             keyboard={false}
             open={open}
             onClose={handleClose}

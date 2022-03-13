@@ -2,12 +2,11 @@ import React from 'react';
 import Header from 'next/head';
 import { Layout } from '../../components/layout';
 import classes from './account.module.less';
-import { Button, Container, Divider } from 'rsuite';
+import { Container, Divider } from 'rsuite';
 import { useHomePage } from '../../hooks/useHomePage';
 import { Loader } from '../../components/loader';
-import { Job } from '../../models/types/jobType';
+import { Job, JobType } from '../../models/types/jobType';
 import { AccountTypes } from '../../models/types/accountType';
-import { ModalsController } from '../../utils/modalsController';
 import { TasksTable } from '../../components/tasksTable';
 import { TaskDetailsDrawer } from '../../components/taskDetailsDrawer';
 
@@ -26,8 +25,8 @@ export default function AccountPage() {
     } = useHomePage();
 
     const [openDrawer, setOpenDrawer] = React.useState(false);
-    const [drawerData, setDrawerData] = React.useState<Job>();
-
+    const [drawerData, setDrawerData] =
+        React.useState<{ taskId: string; type: JobType }>();
     return (
         <>
             <Header>
@@ -54,17 +53,10 @@ export default function AccountPage() {
                                         type="processing"
                                         tasks={(jobsProcessing as any) ?? []}
                                         loading={jobsProcessingLoading}
-                                        handleViewBtnClick={(task: Job) => {
-                                            setDrawerData({ ...task });
-                                            setOpenDrawer(true);
-                                        }}
+                                        setOpenDrawer={setOpenDrawer}
+                                        setDrawerData={setDrawerData}
                                     />
                                 </div>
-                                <TaskDetailsDrawer
-                                    task={drawerData}
-                                    open={openDrawer}
-                                    setOpen={setOpenDrawer}
-                                />
                                 <Divider />
                                 <h5 style={{ marginBottom: 15 }}>
                                     Completed Tasks
@@ -74,17 +66,10 @@ export default function AccountPage() {
                                         type="completed"
                                         tasks={(jobsCompleted as any) ?? []}
                                         loading={jobsCompletedLoading}
-                                        handleViewBtnClick={(task: Job) => {
-                                            setDrawerData({ ...task });
-                                            setOpenDrawer(true);
-                                        }}
+                                        setOpenDrawer={setOpenDrawer}
+                                        setDrawerData={setDrawerData}
                                     />
                                 </div>
-                                <TaskDetailsDrawer
-                                    task={drawerData}
-                                    open={openDrawer}
-                                    setOpen={setOpenDrawer}
-                                />
                             </>
                         )}
                     {!authLoading &&
@@ -101,10 +86,8 @@ export default function AccountPage() {
                                         type="available"
                                         tasks={(jobsAvailable as any) ?? []}
                                         loading={jobsAvailableLoading}
-                                        handleViewBtnClick={(task: Job) => {
-                                            setDrawerData(task);
-                                            setOpenDrawer(true);
-                                        }}
+                                        setOpenDrawer={setOpenDrawer}
+                                        setDrawerData={setDrawerData}
                                     />
                                 </div>
                                 <Divider />
@@ -116,17 +99,10 @@ export default function AccountPage() {
                                         type="processing"
                                         tasks={(jobsProcessing as any) ?? []}
                                         loading={jobsProcessingLoading}
-                                        handleViewBtnClick={(task: Job) => {
-                                            setDrawerData(task);
-                                            setOpenDrawer(true);
-                                        }}
+                                        setOpenDrawer={setOpenDrawer}
+                                        setDrawerData={setDrawerData}
                                     />
                                 </div>
-                                <TaskDetailsDrawer
-                                    task={drawerData}
-                                    open={openDrawer}
-                                    setOpen={setOpenDrawer}
-                                />
                                 <Divider />
                                 <h5 style={{ marginBottom: 15 }}>
                                     Completed Tasks
@@ -136,19 +112,18 @@ export default function AccountPage() {
                                         type="completed"
                                         tasks={(jobsCompleted as any) ?? []}
                                         loading={jobsCompletedLoading}
-                                        handleViewBtnClick={(task: Job) => {
-                                            setDrawerData(task);
-                                            setOpenDrawer(true);
-                                        }}
+                                        setOpenDrawer={setOpenDrawer}
+                                        setDrawerData={setDrawerData}
                                     />
                                 </div>
-                                <TaskDetailsDrawer
-                                    task={drawerData}
-                                    open={openDrawer}
-                                    setOpen={setOpenDrawer}
-                                />
                             </>
                         )}
+                    <TaskDetailsDrawer
+                        taskId={drawerData?.taskId}
+                        type={drawerData?.type}
+                        open={openDrawer}
+                        setOpen={setOpenDrawer}
+                    />
                 </Container>
             </Layout>
         </>

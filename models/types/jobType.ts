@@ -24,7 +24,6 @@ export type Job = {
     price: string;
     proposals: Proposal[];
     availableUntil: number;
-    type?: JobType;
 };
 
 export type JobType = 'available' | 'processing' | 'completed' | 'pending';

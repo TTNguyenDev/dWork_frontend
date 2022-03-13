@@ -138,6 +138,14 @@ export class JobService {
         );
     }
 
+    static async fetchJobById(taskId?: string): Promise<Job> {
+        const res = await BlockChainConnector.instance.contract.task_by_id({
+            task_id: taskId,
+        });
+
+        return this.mapToModel({ ...res, task_id: taskId });
+    }
+
     private static mapToModel(raw: any): Job {
         return {
             taskId: raw.task_id,

@@ -23,6 +23,7 @@ export const useRejectWork = (): UseRejectWorkOutput => {
             queryClient.invalidateQueries('jobsAvailable');
             queryClient.invalidateQueries('jobsProcessing');
             queryClient.invalidateQueries('jobsCompleted');
+            queryClient.invalidateQueries(payload.taskId);
             toast('Reject work successfully', {
                 type: 'success',
             });

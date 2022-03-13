@@ -19,6 +19,7 @@ const ViewMethods: string[] = [
     'current_tasks',
     'completed_tasks',
     'user_info',
+    'task_by_id',
 ];
 
 const ChangeMethods: string[] = [
@@ -34,34 +35,6 @@ const ChangeMethods: string[] = [
 
 type ContractMethodType<K = any> = (...args: any) => K;
 type ContractMethodsType = {
-    get_account: ContractMethodType;
-    get_accounts: ContractMethodType;
-    get_num_accounts: ContractMethodType;
-    get_followers: ContractMethodType;
-    get_following: ContractMethodType;
-    get_post: ContractMethodType;
-    storage_minimum_balance: ContractMethodType;
-    storage_balance_of: ContractMethodType;
-    get_post_likes: ContractMethodType;
-    get_num_likes: ContractMethodType;
-    already_like: ContractMethodType;
-    get_comments: ContractMethodType;
-    get_num_post_comments: ContractMethodType;
-    topics: ContractMethodType;
-    storage_deposit: ContractMethodType;
-    storage_withdraw: ContractMethodType;
-    post: ContractMethodType;
-    follow: ContractMethodType;
-    unfollow: ContractMethodType;
-    like_post: ContractMethodType;
-    unlike_post: ContractMethodType;
-    comment: ContractMethodType;
-    new_topic: ContractMethodType;
-    nftContract: any;
-    set_avatar: ContractMethodType;
-    set_thumbnail: ContractMethodType;
-    set_bio: ContractMethodType;
-
     available_tasks: ContractMethodType;
     current_tasks: ContractMethodType;
     completed_tasks: ContractMethodType;
@@ -74,6 +47,7 @@ type ContractMethodsType = {
     approve_work: ContractMethodType;
     reject_work: ContractMethodType;
     mark_task_as_completed: ContractMethodType;
+    task_by_id: ContractMethodType;
 };
 
 export class NearConnector {

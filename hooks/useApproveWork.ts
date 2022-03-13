@@ -21,7 +21,8 @@ export const useApproveWork = (): UseApproveWorkOutput => {
         try {
             await JobService.approveWork(payload);
             queryClient.invalidateQueries('jobsProcessing');
-            queryClient.invalidateQueries('jobsCompleted');
+            queryClient.invalidateQueries('jobsProcessing');
+            queryClient.invalidateQueries(payload.taskId);
             toast('Approve work successfully', {
                 type: 'success',
             });

@@ -9,12 +9,12 @@ import ReactReadMoreReadLess from 'react-read-more-read-less';
 import classes from './jobCard.module.less';
 import Countdown, { zeroPad } from 'react-countdown';
 import { SubmitWorkModal } from '../submitWorkModal';
-import { BsClock, BsFillPeopleFill, BsPeopleFill } from 'react-icons/bs';
+import { BsClock, BsPeopleFill } from 'react-icons/bs';
 import Avatar from 'react-avatar';
 
 interface JobCardProps {
     job: Job;
-    handleViewDetails: (data: Job) => void;
+    handleViewDetails: (payload: { taskId: string }) => void;
 }
 
 export const JobCard: React.FunctionComponent<JobCardProps> = ({
@@ -45,7 +45,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
             <Panel
                 bordered
                 style={{ cursor: 'pointer' }}
-                onClick={() => handleViewDetails(job)}
+                onClick={() => handleViewDetails({ taskId: job.taskId })}
             >
                 <Grid
                     fluid
