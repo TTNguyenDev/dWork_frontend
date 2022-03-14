@@ -2,14 +2,13 @@ import React from 'react';
 import Header from 'next/head';
 import { Layout } from '../components/layout';
 import classes from './index.module.less';
-import { Button, Col, Container, FlexboxGrid, List, Stack } from 'rsuite';
+import { Button, Col, Container, FlexboxGrid, Stack } from 'rsuite';
 import createTaskLogo from '../assets/logos/create-task.png';
 import makeMoneyLogo from '../assets/logos/make-money.png';
 import { useHomePage } from '../hooks/useHomePage';
 import { Loader } from '../components/loader';
 import { JobCard } from '../components/jobCard';
 import { Job } from '../models/types/jobType';
-import { TaskDetailsDrawer } from '../components/taskDetailsDrawer';
 
 export default function Home() {
     const {
@@ -27,17 +26,6 @@ export default function Home() {
         isFetchingNextPage,
         hasNextPage,
     } = useHomePage();
-
-    const [openDrawer, setOpenDrawer] = React.useState(false);
-    const [drawerData, setDrawerData] = React.useState<{ taskId: string }>();
-
-    const handleViewDetails = React.useCallback(
-        (payload: { taskId: string }) => {
-            setDrawerData(payload);
-            setOpenDrawer(true);
-        },
-        []
-    );
 
     return (
         <>
@@ -159,11 +147,8 @@ export default function Home() {
                                             !!jobs.length &&
                                             jobs.map((job: Job) => (
                                                 <JobCard
-                                                    job={job}
+                                                    task={job}
                                                     key={job.taskId}
-                                                    handleViewDetails={
-                                                        handleViewDetails
-                                                    }
                                                 />
                                             ))}
                                         <div style={{ textAlign: 'center' }}>
@@ -179,11 +164,6 @@ export default function Home() {
                                         </div>
                                     </Stack>
                                 )}
-                                <TaskDetailsDrawer
-                                    taskId={drawerData?.taskId}
-                                    open={openDrawer}
-                                    setOpen={setOpenDrawer}
-                                />
                             </div>
                             <div style={{ marginBottom: 50 }} />
                         </>

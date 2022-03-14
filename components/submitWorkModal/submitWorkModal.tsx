@@ -29,7 +29,7 @@ export const SubmitWorkModal: React.FunctionComponent<SubmitWorkModalProps> = ({
     return (
         <Modal
             size="sm"
-            backdrop
+            backdrop="static"
             keyboard={false}
             open={open}
             onClose={handleClose}

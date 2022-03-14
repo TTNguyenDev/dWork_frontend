@@ -5,10 +5,9 @@ import classes from './account.module.less';
 import { Container, Divider } from 'rsuite';
 import { useHomePage } from '../../hooks/useHomePage';
 import { Loader } from '../../components/loader';
-import { Job, JobType } from '../../models/types/jobType';
+import { JobType } from '../../models/types/jobType';
 import { AccountTypes } from '../../models/types/accountType';
 import { TasksTable } from '../../components/tasksTable';
-import { TaskDetailsDrawer } from '../../components/taskDetailsDrawer';
 
 export default function AccountPage() {
     const {
@@ -24,9 +23,6 @@ export default function AccountPage() {
         jobsCompleted,
     } = useHomePage();
 
-    const [openDrawer, setOpenDrawer] = React.useState(false);
-    const [drawerData, setDrawerData] =
-        React.useState<{ taskId: string; type: JobType }>();
     return (
         <>
             <Header>
@@ -53,8 +49,6 @@ export default function AccountPage() {
                                         type="processing"
                                         tasks={(jobsProcessing as any) ?? []}
                                         loading={jobsProcessingLoading}
-                                        setOpenDrawer={setOpenDrawer}
-                                        setDrawerData={setDrawerData}
                                     />
                                 </div>
                                 <Divider />
@@ -66,8 +60,6 @@ export default function AccountPage() {
                                         type="completed"
                                         tasks={(jobsCompleted as any) ?? []}
                                         loading={jobsCompletedLoading}
-                                        setOpenDrawer={setOpenDrawer}
-                                        setDrawerData={setDrawerData}
                                     />
                                 </div>
                             </>
@@ -86,8 +78,6 @@ export default function AccountPage() {
                                         type="available"
                                         tasks={(jobsAvailable as any) ?? []}
                                         loading={jobsAvailableLoading}
-                                        setOpenDrawer={setOpenDrawer}
-                                        setDrawerData={setDrawerData}
                                     />
                                 </div>
                                 <Divider />
@@ -99,8 +89,6 @@ export default function AccountPage() {
                                         type="processing"
                                         tasks={(jobsProcessing as any) ?? []}
                                         loading={jobsProcessingLoading}
-                                        setOpenDrawer={setOpenDrawer}
-                                        setDrawerData={setDrawerData}
                                     />
                                 </div>
                                 <Divider />
@@ -112,18 +100,10 @@ export default function AccountPage() {
                                         type="completed"
                                         tasks={(jobsCompleted as any) ?? []}
                                         loading={jobsCompletedLoading}
-                                        setOpenDrawer={setOpenDrawer}
-                                        setDrawerData={setDrawerData}
                                     />
                                 </div>
                             </>
                         )}
-                    <TaskDetailsDrawer
-                        taskId={drawerData?.taskId}
-                        type={drawerData?.type}
-                        open={openDrawer}
-                        setOpen={setOpenDrawer}
-                    />
                 </Container>
             </Layout>
         </>

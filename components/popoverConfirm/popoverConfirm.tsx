@@ -1,39 +1,22 @@
 import React from 'react';
 import { Popover, Stack, Button } from 'rsuite';
 
-type PopoverConfirmProps = {
-    handleClick: () => void;
-    loading: boolean;
-    triggerRef: any;
-};
-
-export const PopoverConfirm = React.forwardRef(
-    ({ handleClick, loading, triggerRef }: any, ref: any) => {
-        const closePopoverConfirm = () => triggerRef?.current?.close();
-
-        return (
-            <Popover title="Are you sure?" ref={ref}>
-                <Stack spacing="5px">
-                    <Button
-                        appearance="primary"
-                        size="sm"
-                        loading={loading}
-                        onClick={() => {
-                            handleClick();
-                            closePopoverConfirm();
-                        }}
-                    >
-                        Yes
-                    </Button>
-                    <Button
-                        size="sm"
-                        disabled={loading}
-                        onClick={closePopoverConfirm}
-                    >
-                        Cancel
-                    </Button>
-                </Stack>
-            </Popover>
-        );
-    }
+export const popoverConfirm = (handleClick: () => void, ref: any) => (
+    <Popover title="Are you sure?">
+        <Stack spacing="5px">
+            <Button
+                appearance="primary"
+                size="sm"
+                onClick={() => {
+                    handleClick();
+                    ref?.current?.close();
+                }}
+            >
+                Yes
+            </Button>
+            <Button size="sm" onClick={() => ref?.current?.close()}>
+                Cancel
+            </Button>
+        </Stack>
+    </Popover>
 );

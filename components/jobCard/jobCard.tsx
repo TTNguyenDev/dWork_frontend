@@ -1,66 +1,47 @@
-import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { Grid, Row, Col, Button, Panel, Stack } from 'rsuite';
-import { AccountTypes } from '../../models/types/accountType';
+import React from 'react';
+import { Grid, Row, Col, Panel, Stack } from 'rsuite';
 import { Job } from '../../models/types/jobType';
-import { RootState } from '../../store';
 // @ts-ignore
 import ReactReadMoreReadLess from 'react-read-more-read-less';
 import classes from './jobCard.module.less';
 import Countdown, { zeroPad } from 'react-countdown';
-import { SubmitWorkModal } from '../submitWorkModal';
 import { BsClock, BsPeopleFill } from 'react-icons/bs';
 import Avatar from 'react-avatar';
+import { SubmitWorkButton } from '../submitWorkButton';
+import { useRouter } from 'next/router';
 
 interface JobCardProps {
-    job: Job;
-    handleViewDetails: (payload: { taskId: string }) => void;
+    task: Job;
 }
 
-export const JobCard: React.FunctionComponent<JobCardProps> = ({
-    job,
-    handleViewDetails,
-}) => {
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+export const JobCard: React.FunctionComponent<JobCardProps> = ({ task }) => {
+    const router = useRouter();
 
-    const auth = useSelector((state: RootState) => state.auth);
-    const profile = useSelector((state: RootState) => state.profile);
-
-    const registerBtnDisabled = useMemo(() => {
-        return !!job.proposals.find((p) => p.accountId === auth.data.userId);
-    }, [job, auth.data.userId]);
-
-    const registerBtnHide = useMemo(() => {
-        return (
-            profile.data.info?.type === AccountTypes.REQUESTER ||
-            job.availableUntil < Date.now() ||
-            job.proposals.length >= job.maxParticipants
-        );
-    }, [profile.data.info]);
+    const handleViewDetails = () => {
+        router.push(`task/${task.taskId}`);
+    };
 
     return (
         <>
             <Panel
                 bordered
                 style={{ cursor: 'pointer' }}
-                onClick={() => handleViewDetails({ taskId: job.taskId })}
+                onClick={handleViewDetails}
             >
                 <Grid
                     fluid
                     className={classes.root}
                     style={{
                         opacity:
-                            job.availableUntil < Date.now() ||
-                            job.proposals.length >= job.maxParticipants
+                            task.availableUntil < Date.now() ||
+                            task.proposals.length >= task.maxParticipants
                                 ? 0.5
                                 : 1,
                     }}
                 >
                     <Row gutter={16}>
                         <Col xs={24} sm={24} md={16}>
-                            <h5 className={classes.title}>{job.title}</h5>
+                            <h5 className={classes.title}>{task.title}</h5>
                         </Col>
                         <Col
                             xs={24}
@@ -70,7 +51,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
                         >
                             <div
                                 className={classes.price}
-                            >{`${job.price} Ⓝ`}</div>
+                            >{`${task.price} Ⓝ`}</div>
                         </Col>
                     </Row>
                     <Row gutter={16} style={{ marginBottom: 10 }}>
@@ -88,7 +69,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
                                     readMoreClassName={classes.read_more}
                                     readLessClassName={classes.read_less}
                                 >
-                                    {job.description.replace(
+                                    {task.description.replace(
                                         /<(.|\n)*?>/g,
                                         ' '
                                     )}
@@ -101,21 +82,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
                             md={8}
                             style={{ textAlign: 'right' }}
                         >
-                            {!registerBtnHide && (
-                                <Button
-                                    appearance="primary"
-                                    size="sm"
-                                    onClick={(e) => {
-                                        handleOpen();
-                                        e.stopPropagation();
-                                    }}
-                                    disabled={registerBtnDisabled}
-                                >
-                                    {registerBtnDisabled
-                                        ? 'Submitted'
-                                        : 'Submit now'}
-                                </Button>
-                            )}
+                            <SubmitWorkButton task={task} />
                         </Col>
                     </Row>
                     <Row gutter={16}>
@@ -130,10 +97,10 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
                                         size="1.5em"
                                         textSizeRatio={1.75}
                                         round
-                                        name={job.owner}
+                                        name={task.owner}
                                     />
                                     <div className={classes.owner}>
-                                        {job.owner}
+                                        {task.owner}
                                     </div>
                                 </Stack>
                                 <Stack
@@ -150,10 +117,10 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
                                     >
                                         <BsPeopleFill />
                                     </div>
-                                    {`${job.proposals.length}/${job.maxParticipants} Applicants`}
+                                    {`${task.proposals.length}/${task.maxParticipants} Applicants`}
                                 </Stack>
                                 <div style={{ marginBottom: 5 }} />
-                                {job.availableUntil < Date.now() ? (
+                                {task.availableUntil < Date.now() ? (
                                     <div style={{ color: 'red' }}>Expired</div>
                                 ) : (
                                     <Stack
@@ -171,7 +138,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
                                             <BsClock />
                                         </div>
                                         <Countdown
-                                            date={job.availableUntil}
+                                            date={task.availableUntil}
                                             renderer={({
                                                 hours,
                                                 minutes,
@@ -189,13 +156,6 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({
                     </Row>
                 </Grid>
             </Panel>
-
-            <SubmitWorkModal
-                taskId={job.taskId}
-                open={open}
-                handleOpen={handleOpen}
-                handleClose={handleClose}
-            />
         </>
     );
 };

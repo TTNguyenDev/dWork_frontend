@@ -1,25 +1,28 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Table, Button, Stack } from 'rsuite';
 import { Job, JobType } from '../../models/types/jobType';
 import { MdDone } from 'react-icons/md';
 import { BlockChainConnector } from '../../utils/blockchain';
 import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
+import { useRouter } from 'next/router';
 
 interface TasksTableProps {
     type: JobType;
     tasks: Job[];
     loading: boolean;
-    setOpenDrawer: (open: boolean) => void;
-    setDrawerData: (payload: { taskId: string; type: JobType }) => void;
 }
 
 export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
     type,
     tasks,
     loading,
-    setOpenDrawer,
-    setDrawerData,
 }) => {
+    const router = useRouter();
+
+    const handleViewBtnClick = useCallback((taskId: string) => {
+        router.push(`/task/${taskId}`);
+    }, []);
+
     return (
         <Table data={tasks as any} loading={loading} hover autoHeight>
             <Table.Column width={50}>
@@ -76,13 +79,9 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
                             <Stack spacing={5}>
                                 <Button
                                     size="xs"
-                                    onClick={() => {
-                                        setDrawerData({
-                                            taskId: task.taskId,
-                                            type,
-                                        });
-                                        setOpenDrawer(true);
-                                    }}
+                                    onClick={() =>
+                                        handleViewBtnClick(task.taskId)
+                                    }
                                 >
                                     View
                                 </Button>

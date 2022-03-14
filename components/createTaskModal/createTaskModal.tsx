@@ -1,18 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import {
-    Modal,
-    Button,
-    Form,
-    InputNumber,
-    Input,
-    DateRangePicker,
-    DatePicker,
-} from 'rsuite';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Modal, Button, Form, DatePicker } from 'rsuite';
 import { useCreateTask } from '../../hooks/useCreateTask';
 import { ModalsController } from '../../utils/modalsController';
 import { Editor } from '../editor';
 import { TextField } from '../textField';
-import classes from './createTaskModal.module.less';
 import * as dateFns from 'date-fns';
 
 type createTaskModalProps = {};
