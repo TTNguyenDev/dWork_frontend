@@ -23,6 +23,8 @@ const ViewMethods: string[] = [
 ];
 
 const ChangeMethods: string[] = [
+    'storage_deposit',
+    'storage_balance_of',
     'register',
     'new_task',
     'submit_proposal',
@@ -35,6 +37,8 @@ const ChangeMethods: string[] = [
 
 type ContractMethodType<K = any> = (...args: any) => K;
 type ContractMethodsType = {
+    storage_deposit: ContractMethodType;
+    storage_balance_of: ContractMethodType;
     available_tasks: ContractMethodType;
     current_tasks: ContractMethodType;
     completed_tasks: ContractMethodType;

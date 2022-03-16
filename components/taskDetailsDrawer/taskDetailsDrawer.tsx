@@ -172,7 +172,6 @@ export const TaskDetailsDrawer: React.FunctionComponent<
                                             key={p.accountId}
                                             data={p}
                                             task={task}
-                                            setOpen={setOpen}
                                         />
                                     ))}
                                 </Grid>
