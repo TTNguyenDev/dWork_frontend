@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+    FormHTMLAttributes,
+    useCallback,
+    useEffect,
+    useState,
+} from 'react';
 import { Modal, Button, Form, DatePicker } from 'rsuite';
 import { useCreateTask } from '../../hooks/useCreateTask';
 import { ModalsController } from '../../utils/modalsController';
@@ -21,14 +26,21 @@ export const CreateTaskModal: React.FunctionComponent<
         });
     }, []);
 
-    const { model, createTaskLoading, handleFormChange, handleFormSubmit } =
-        useCreateTask();
+    const {
+        model,
+        createTaskLoading,
+        formValue,
+        handleFormChange,
+        handleFormSubmit,
+    } = useCreateTask();
 
-    const [descValue, setDescValue] = useState<string>('');
-    const [durationValue, setDurationValue] = useState<number>(0);
+    const [description, setDescription] = useState<string>();
+    const [duration, setDuration] = useState<number>();
 
     const handleEditorChange = useCallback((value: string) => {
-        setDescValue(value);
+        if (!value?.replace(/<(.|\n)*?>/g, '').trim())
+            setDescription(undefined);
+        else setDescription(value);
     }, []);
 
     return (
@@ -48,13 +60,9 @@ export const CreateTaskModal: React.FunctionComponent<
                 fluid
                 onChange={handleFormChange}
                 onSubmit={async (payload) => {
-                    await handleFormSubmit(
-                        payload,
-                        descValue,
-                        durationValue,
-                        handleClose
-                    );
+                    await handleFormSubmit(payload, handleClose);
                 }}
+                formValue={{ ...formValue, duration, description }}
             >
                 <Modal.Body>
                     <TextField name="title" label="Title" />
@@ -63,57 +71,63 @@ export const CreateTaskModal: React.FunctionComponent<
                         label="Bounty prize Ⓝ"
                         type="number"
                         style={{ width: 'unset' }}
+                        checkTrigger="change"
                     />
                     <TextField
                         name="maxParticipants"
                         label="Max participants"
                         type="number"
                         style={{ width: 'unset' }}
+                        checkTrigger="change"
                     />
-                    {/* <TextField
-                        name="duration"
-                        label="Duration"
-                        type="number"
-                        style={{ width: 'unset' }}
-                    /> */}
-                    <label className="rs-form-control-label">Deadline</label>
-                    <DatePicker
-                        onChange={(value) => {
-                            setDurationValue(
-                                (value as Date).getTime() - Date.now()
-                            );
-                        }}
-                        format="yyyy-MM-dd HH:mm"
-                        style={{ width: '100%' }}
-                        disabledDate={(date) =>
-                            dateFns.isBefore(
-                                date!,
-                                dateFns.subDays(new Date(), 1)
-                            )
-                        }
-                        disabledHours={(hour, date) => {
-                            if (
-                                dateFns.getDate(date) ===
-                                dateFns.getDate(new Date())
-                            ) {
-                                return hour < dateFns.getHours(new Date());
+                    <Form.Group controlId="duration">
+                        <Form.ControlLabel>{'Deadline'}</Form.ControlLabel>
+                        <DatePicker
+                            onChange={(value) => {
+                                setDuration(
+                                    (value as Date).getTime() - Date.now()
+                                );
+                            }}
+                            format="yyyy-MM-dd HH:mm"
+                            style={{ width: '100%', marginBottom: -15 }}
+                            disabledDate={(date) =>
+                                dateFns.isBefore(
+                                    date!,
+                                    dateFns.subDays(new Date(), 1)
+                                )
                             }
+                            disabledHours={(hour, date) => {
+                                if (
+                                    dateFns.getDate(date) ===
+                                    dateFns.getDate(new Date())
+                                ) {
+                                    return hour < dateFns.getHours(new Date());
+                                }
 
-                            return false;
-                        }}
-                        disabledMinutes={(minute, date) => {
-                            if (
-                                dateFns.getDate(date) ===
-                                    dateFns.getDate(new Date()) &&
-                                dateFns.getHours(date) ===
-                                    dateFns.getHours(new Date())
-                            ) {
-                                return minute < dateFns.getMinutes(new Date());
-                            }
+                                return false;
+                            }}
+                            disabledMinutes={(minute, date) => {
+                                if (
+                                    dateFns.getDate(date) ===
+                                        dateFns.getDate(new Date()) &&
+                                    dateFns.getHours(date) ===
+                                        dateFns.getHours(new Date())
+                                ) {
+                                    return (
+                                        minute < dateFns.getMinutes(new Date())
+                                    );
+                                }
 
-                            return false;
-                        }}
-                    />
+                                return false;
+                            }}
+                        />
+                        <Form.Control
+                            name="duration"
+                            value={duration}
+                            style={{ display: 'none' }}
+                            checkTrigger="change"
+                        />
+                    </Form.Group>
                     <div style={{ marginBottom: 15 }} />
                     <Editor
                         onChange={handleEditorChange}
@@ -122,13 +136,12 @@ export const CreateTaskModal: React.FunctionComponent<
                         }}
                         placeholder="Description"
                     />
-                    {/* <TextField
+                    <Form.Control
                         name="description"
-                        label="Description"
-                        type="textarea"
-                        rows={5}
-                        value="asdasdasdsa"
-                    /> */}
+                        value={description}
+                        style={{ display: 'none' }}
+                        checkTrigger="change"
+                    />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
