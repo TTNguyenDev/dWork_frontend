@@ -1,15 +1,14 @@
-import React, {
-    FormHTMLAttributes,
-    useCallback,
-    useEffect,
-    useState,
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Modal, Button, Form, DatePicker } from 'rsuite';
 import { useCreateTask } from '../../hooks/useCreateTask';
 import { ModalsController } from '../../utils/modalsController';
 import { Editor } from '../editor';
 import { TextField } from '../textField';
 import * as dateFns from 'date-fns';
+import CreatableSelect from 'react-select/creatable';
+import { useQuery } from 'react-query';
+import { CategoryService } from '../../services/categoryService';
+import { useCreateCategory } from '../../hooks/useCreateCategory';
 
 type createTaskModalProps = {};
 
@@ -30,18 +29,31 @@ export const CreateTaskModal: React.FunctionComponent<
         model,
         createTaskLoading,
         formValue,
+        setFormValue,
         handleFormChange,
         handleFormSubmit,
     } = useCreateTask();
 
     const [description, setDescription] = useState<string>();
-    const [duration, setDuration] = useState<number>();
+
+    useEffect(() => {
+        setFormValue({
+            ...formValue,
+            description,
+        });
+    }, [description]);
 
     const handleEditorChange = useCallback((value: string) => {
         if (!value?.replace(/<(.|\n)*?>/g, '').trim())
             setDescription(undefined);
         else setDescription(value);
     }, []);
+
+    const categoriesQuery = useQuery('categories', () =>
+        CategoryService.fetchCategories()
+    );
+
+    const { createCategoryLoading, handleCreateCategory } = useCreateCategory();
 
     return (
         <Modal
@@ -62,7 +74,7 @@ export const CreateTaskModal: React.FunctionComponent<
                 onSubmit={async (payload) => {
                     await handleFormSubmit(payload, handleClose);
                 }}
-                formValue={{ ...formValue, duration, description }}
+                formValue={formValue}
             >
                 <Modal.Body>
                     <TextField name="title" label="Title" />
@@ -81,12 +93,14 @@ export const CreateTaskModal: React.FunctionComponent<
                         checkTrigger="change"
                     />
                     <Form.Group controlId="duration">
-                        <Form.ControlLabel>{'Deadline'}</Form.ControlLabel>
+                        <Form.ControlLabel>Deadline</Form.ControlLabel>
                         <DatePicker
                             onChange={(value) => {
-                                setDuration(
-                                    (value as Date).getTime() - Date.now()
-                                );
+                                setFormValue({
+                                    ...formValue,
+                                    duration:
+                                        (value as Date).getTime() - Date.now(),
+                                });
                             }}
                             format="yyyy-MM-dd HH:mm"
                             style={{ width: '100%', marginBottom: -15 }}
@@ -123,12 +137,47 @@ export const CreateTaskModal: React.FunctionComponent<
                         />
                         <Form.Control
                             name="duration"
-                            value={duration}
                             style={{ display: 'none' }}
                             checkTrigger="change"
                         />
                     </Form.Group>
-                    <div style={{ marginBottom: 15 }} />
+                    <Form.Group controlId="categoryId">
+                        <Form.ControlLabel>Category</Form.ControlLabel>
+                        <div style={{ marginBottom: -15 }}>
+                            <CreatableSelect
+                                isClearable
+                                onChange={async (payload: any) => {
+                                    if (
+                                        payload &&
+                                        payload.value !== null &&
+                                        payload.__isNew__
+                                    )
+                                        await handleCreateCategory({
+                                            topicName: payload!.value,
+                                        });
+                                    setFormValue({
+                                        ...formValue,
+                                        categoryId: payload?.value.replaceAll(
+                                            ' ',
+                                            '_'
+                                        ),
+                                    });
+                                }}
+                                options={categoriesQuery.data?.map((item) => ({
+                                    value: item.id,
+                                    label: item.name,
+                                }))}
+                                isLoading={categoriesQuery.isLoading}
+                                isDisabled={createCategoryLoading}
+                                placeholder="Choose category"
+                            />
+                        </div>
+                        <Form.Control
+                            name="categoryId"
+                            style={{ display: 'none' }}
+                            checkTrigger="change"
+                        />
+                    </Form.Group>
                     <Editor
                         onChange={handleEditorChange}
                         style={{
@@ -138,7 +187,6 @@ export const CreateTaskModal: React.FunctionComponent<
                     />
                     <Form.Control
                         name="description"
-                        value={description}
                         style={{ display: 'none' }}
                         checkTrigger="change"
                     />
@@ -148,6 +196,7 @@ export const CreateTaskModal: React.FunctionComponent<
                         appearance="primary"
                         type="submit"
                         loading={createTaskLoading}
+                        disabled={createCategoryLoading}
                     >
                         Create
                     </Button>

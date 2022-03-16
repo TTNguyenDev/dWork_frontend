@@ -196,13 +196,31 @@ export default function TaskDetailsPage() {
                                 {task.proposals.length ? (
                                     <>
                                         <Grid fluid>
-                                            {task.proposals.map((p) => (
-                                                <ProposalItem
-                                                    key={p.accountId}
-                                                    data={p}
-                                                    task={task}
-                                                />
-                                            ))}
+                                            {task.owner ===
+                                                BlockChainConnector.instance
+                                                    .account.accountId &&
+                                                task.proposals.map((p) => (
+                                                    <ProposalItem
+                                                        key={p.accountId}
+                                                        data={p}
+                                                        task={task}
+                                                    />
+                                                ))}
+                                            {task.proposals
+                                                .filter(
+                                                    (p) =>
+                                                        p.accountId ===
+                                                        BlockChainConnector
+                                                            .instance.account
+                                                            .accountId
+                                                )
+                                                .map((p) => (
+                                                    <ProposalItem
+                                                        key={p.accountId}
+                                                        data={p}
+                                                        task={task}
+                                                    />
+                                                ))}
                                         </Grid>
                                         <div style={{ marginBottom: 15 }} />
                                     </>

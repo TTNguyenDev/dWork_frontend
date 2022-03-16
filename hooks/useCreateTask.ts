@@ -13,6 +13,7 @@ const model = Schema.Model({
         'Max participants is a required field'
     ),
     duration: NumberType().isRequired('Deadline is a required field'),
+    categoryId: StringType().isRequired('Category is a required field'),
     description: StringType().isRequired('Description is a required field'),
 });
 
@@ -22,6 +23,7 @@ export type UseCreateTaskOutput = {
     handleFormChange: (payload: any) => void;
     handleFormSubmit: (isValid: boolean, afterSubmit: () => void) => void;
     formValue: any;
+    setFormValue: (payload: any) => void;
 };
 
 export const useCreateTask = (): UseCreateTaskOutput => {
@@ -68,5 +70,6 @@ export const useCreateTask = (): UseCreateTaskOutput => {
         handleFormChange,
         handleFormSubmit,
         formValue,
+        setFormValue,
     };
 };
