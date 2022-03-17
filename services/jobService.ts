@@ -162,6 +162,7 @@ export class JobService {
                 isApproved: p.is_approved,
             })),
             availableUntil: Number.parseInt(raw.available_until.substr(0, 13)),
+            categoryId: raw.category_id,
         };
     }
 }

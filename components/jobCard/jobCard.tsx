@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Row, Col, Panel, Stack } from 'rsuite';
+import { Grid, Row, Col, Panel, Stack, Badge } from 'rsuite';
 import { Job } from '../../models/types/jobType';
 // @ts-ignore
 import ReactReadMoreReadLess from 'react-read-more-read-less';
@@ -39,6 +39,15 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ task }) => {
                                 : 1,
                     }}
                 >
+                    <Row gutter={16} style={{ marginBottom: 10 }}>
+                        <Col xs={24} sm={24} md={24}>
+                            <Badge
+                                content={task.categoryId}
+                                color="blue"
+                                style={{ padding: '2px 5px', fontWeight: 600 }}
+                            />
+                        </Col>
+                    </Row>
                     <Row gutter={16}>
                         <Col xs={24} sm={24} md={16}>
                             <h5 className={classes.title}>{task.title}</h5>
