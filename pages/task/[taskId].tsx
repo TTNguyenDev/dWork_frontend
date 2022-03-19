@@ -2,28 +2,16 @@ import React from 'react';
 import Header from 'next/head';
 import { Layout } from '../../components/layout';
 import classes from './task.module.less';
-import {
-    Button,
-    Col,
-    Container,
-    Divider,
-    Grid,
-    Panel,
-    Row,
-    Stack,
-} from 'rsuite';
+import { Button, Col, Container, Grid, Row } from 'rsuite';
 import { Loader } from '../../components/loader';
 import { useQuery } from 'react-query';
-import { ProposalItem } from '../../components/proposalItem';
-import { SubmitWorkButton } from '../../components/submitWorkButton';
 import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
 import { JobService } from '../../services/jobService';
-import { BlockChainConnector } from '../../utils/blockchain';
-import Avatar from 'react-avatar';
-import * as dateFns from 'date-fns';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { Wrapper } from '../../components/wrapper';
+import { AccountService } from '../../services/accountService';
+import { AccountInfoCard } from '../../components/accountInfoCard';
 
 export default function TaskDetailsPage() {
     const router = useRouter();
@@ -60,7 +48,12 @@ export default function TaskDetailsPage() {
                     <div>
                         <Grid fluid>
                             <Row gutter={30}>
-                                <Col xs={24} sm={24} md={18}>
+                                <Col
+                                    xs={24}
+                                    sm={24}
+                                    md={17}
+                                    style={{ marginBottom: 20 }}
+                                >
                                     <div className={classes.left}>
                                         {isLoading || !task ? (
                                             <Loader />
@@ -243,9 +236,10 @@ export default function TaskDetailsPage() {
                                                 >
                                                     Description
                                                 </h6>
-                                                <div style={{ maxWidth: 800 }}>
+                                                <div>
                                                     <div
                                                         className="ql-editor"
+                                                        style={{ padding: 0 }}
                                                         dangerouslySetInnerHTML={{
                                                             __html: task.description,
                                                         }}
@@ -255,17 +249,24 @@ export default function TaskDetailsPage() {
                                         )}
                                     </div>
                                 </Col>
-                                <Col xs={24} sm={24} md={6}>
+                                <Col xs={24} sm={24} md={7}>
                                     <Wrapper
                                         className={classes.owner_info}
                                         style={{ marginBottom: 20 }}
                                     >
-                                        Owner info
+                                        {task && (
+                                            <AccountInfoCard
+                                                accountId={task.owner}
+                                            />
+                                        )}
                                     </Wrapper>
                                     <Button
                                         appearance="primary"
                                         size="lg"
-                                        style={{ width: '100%' }}
+                                        style={{
+                                            width: '100%',
+                                            marginBottom: 20,
+                                        }}
                                     >
                                         Submit Now
                                     </Button>
