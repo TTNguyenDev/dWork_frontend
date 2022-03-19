@@ -38,7 +38,7 @@ export const Header: React.FunctionComponent<HeaderProps> = ({ activeKey }) => {
                         {accountType === AccountTypes.REQUESTER && (
                             <Button
                                 appearance="primary"
-                                size="xs"
+                                style={{ marginRight: 30 }}
                                 onClick={
                                     ModalsController.controller
                                         .openCreateTaskModal
@@ -53,7 +53,7 @@ export const Header: React.FunctionComponent<HeaderProps> = ({ activeKey }) => {
                                     >
                                         <BsPlusLg />
                                     </div>
-                                    <div>NEW</div>
+                                    <div>NEW TASK</div>
                                 </Stack>
                             </Button>
                         )}
