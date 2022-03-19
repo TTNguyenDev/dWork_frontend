@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties, HTMLProps } from 'react';
 import { Button } from 'rsuite';
 import { Job } from '../../models/types/jobType';
 import { useSubmitBtn } from '../../hooks/useSubmitBtn';
@@ -6,11 +6,12 @@ import { SubmitWorkModal } from '../submitWorkModal';
 
 type SubmitWorkButtonProps = {
     task: Job;
+    style?: CSSProperties;
 };
 
 export const SubmitWorkButton: React.FunctionComponent<
     SubmitWorkButtonProps
-> = ({ task }) => {
+> = ({ task, style }) => {
     const [openSubmitModal, setOpenSubmitModal] = React.useState(false);
     const handleOpenSubmitModal = () => setOpenSubmitModal(true);
     const handleCloseSubmitModal = () => setOpenSubmitModal(false);
@@ -22,11 +23,12 @@ export const SubmitWorkButton: React.FunctionComponent<
         <>
             <Button
                 appearance="primary"
-                size="sm"
+                size="lg"
                 onClick={handleBtnSubmitClick}
                 disabled={submitBtnDisabled}
+                style={style}
             >
-                {submitBtnDisabled ? 'Submitted' : 'Submit now'}
+                {submitBtnDisabled ? 'Submitted' : 'Submit Now'}
             </Button>
             <div onClick={(e) => e.stopPropagation()}>
                 <SubmitWorkModal

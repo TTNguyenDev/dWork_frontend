@@ -15,6 +15,7 @@ import classes from './categoriesListBadge.module.less';
 import Select from 'react-select';
 import { useQuery } from 'react-query';
 import { CategoryService } from '../../services/categoryService';
+import { useSwipeable } from 'react-swipeable';
 
 type CategoriesListBadgeProps = {};
 

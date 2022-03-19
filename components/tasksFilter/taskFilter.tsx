@@ -47,6 +47,7 @@ export const TaskFilter: React.FunctionComponent<TaskFilterProps> = ({}) => {
                         styles={{
                             control: (base) => ({
                                 ...base,
+                                minWidth: 120,
                                 fontWeight: 600,
                                 border: 'none',
                                 background: '#f7f7fa',
@@ -57,7 +58,7 @@ export const TaskFilter: React.FunctionComponent<TaskFilterProps> = ({}) => {
                         }}
                     />
                 </div>
-                <div>
+                <div className={classes.list_category}>
                     <CategoriesListBadge />
                 </div>
                 <div>
@@ -101,7 +102,7 @@ const Panel = React.forwardRef(({ style, ...props }: any, ref) => {
             }}
         >
             <FlexboxGrid align="bottom">
-                <FlexboxGrid.Item colspan={6}>
+                <FlexboxGrid.Item as={Col} colspan={24} md={6}>
                     <div className={classes.item_filter}>
                         <div className={classes.item_filter_label}>Tags</div>
                         <InputGroup inside>
@@ -112,7 +113,7 @@ const Panel = React.forwardRef(({ style, ...props }: any, ref) => {
                         </InputGroup>
                     </div>
                 </FlexboxGrid.Item>
-                <FlexboxGrid.Item colspan={6}>
+                <FlexboxGrid.Item as={Col} colspan={24} md={6}>
                     <div className={classes.item_filter}>
                         <div className={classes.item_filter_label}>
                             Category
@@ -143,8 +144,12 @@ const Panel = React.forwardRef(({ style, ...props }: any, ref) => {
                         />
                     </div>
                 </FlexboxGrid.Item>
-                <FlexboxGrid.Item colspan={6}></FlexboxGrid.Item>
-                <FlexboxGrid.Item colspan={6}>
+                <FlexboxGrid.Item
+                    as={Col}
+                    colspan={24}
+                    md={6}
+                ></FlexboxGrid.Item>
+                <FlexboxGrid.Item as={Col} colspan={24} md={6}>
                     <div
                         className={classes.item_filter}
                         style={{

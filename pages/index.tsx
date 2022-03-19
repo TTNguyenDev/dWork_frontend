@@ -29,10 +29,6 @@ export default function Home() {
         hasNextPage,
     } = useHomePage();
 
-    const categoriesQuery = useQuery('categories', () =>
-        CategoryService.fetchCategories()
-    );
-
     return (
         <>
             <Header>
@@ -137,80 +133,6 @@ export default function Home() {
                                 Tasks
                             </h3>
                             <div className={classes.wrapper}>
-                                {/* <div className={classes.sidebar}>
-                                    <div
-                                        style={{
-                                            fontSize: '1.25em',
-                                            fontWeight: 600,
-                                            marginBottom: 15,
-                                        }}
-                                    >
-                                        Filters
-                                    </div>
-                                    <div className={classes.search_wrapper}>
-                                        <InputGroup
-                                            inside
-                                            style={{
-                                                flex: 1,
-                                                marginRight: 5,
-                                                maxWidth: 400,
-                                            }}
-                                        >
-                                            <InputGroup.Addon>
-                                                <BsSearch size={13} />
-                                            </InputGroup.Addon>
-                                            <Input
-                                                style={{ borderRadius: 20 }}
-                                                placeholder="Search keyword"
-                                            />
-                                        </InputGroup>
-                                    </div>
-                                    <Divider />
-                                    <div className={classes.filter_item}>
-                                        <div
-                                            className={
-                                                classes.filter_item_title
-                                            }
-                                        >
-                                            Category
-                                        </div>
-                                        <CreatableSelect
-                                            isClearable
-                                            isMulti
-                                            options={categoriesQuery.data?.map(
-                                                (item) => ({
-                                                    value: item.id,
-                                                    label: item.name,
-                                                })
-                                            )}
-                                            isLoading={
-                                                categoriesQuery.isLoading
-                                            }
-                                            placeholder="Choose category"
-                                        />
-                                    </div>
-                                    <div
-                                        style={{
-                                            padding: 15,
-                                            display: 'flex',
-                                            position: 'absolute',
-                                            bottom: 0,
-                                            left: 0,
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <Button
-                                            appearance="primary"
-                                            style={{ width: '100%' }}
-                                        >
-                                            Apply
-                                        </Button>
-                                        <div style={{ width: 10 }} />
-                                        <Button style={{ width: '100%' }}>
-                                            Clear
-                                        </Button>
-                                    </div>
-                                </div> */}
                                 <div className={classes.top}>
                                     <TaskFilter />
                                 </div>

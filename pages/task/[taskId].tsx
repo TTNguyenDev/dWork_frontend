@@ -12,6 +12,8 @@ import moment from 'moment';
 import { Wrapper } from '../../components/wrapper';
 import { AccountService } from '../../services/accountService';
 import { AccountInfoCard } from '../../components/accountInfoCard';
+import { SubmitWorkButton } from '../../components/submitWorkButton';
+import { TasksTable } from '../../components/tasksTable';
 
 export default function TaskDetailsPage() {
     const router = useRouter();
@@ -260,7 +262,7 @@ export default function TaskDetailsPage() {
                                             />
                                         )}
                                     </Wrapper>
-                                    <Button
+                                    {/* <Button
                                         appearance="primary"
                                         size="lg"
                                         style={{
@@ -269,7 +271,13 @@ export default function TaskDetailsPage() {
                                         }}
                                     >
                                         Submit Now
-                                    </Button>
+                                    </Button> */}
+                                    {task && (
+                                        <SubmitWorkButton
+                                            task={task}
+                                            style={{ width: '100%' }}
+                                        />
+                                    )}
                                 </Col>
                             </Row>
                         </Grid>
