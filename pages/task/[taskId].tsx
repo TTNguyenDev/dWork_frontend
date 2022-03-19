@@ -22,6 +22,8 @@ import { BlockChainConnector } from '../../utils/blockchain';
 import Avatar from 'react-avatar';
 import * as dateFns from 'date-fns';
 import { useRouter } from 'next/router';
+import moment from 'moment';
+import { Wrapper } from '../../components/wrapper';
 
 export default function TaskDetailsPage() {
     const router = useRouter();
@@ -52,108 +54,107 @@ export default function TaskDetailsPage() {
             </Header>
             <Layout activeKey="one">
                 <Container className={classes.container}>
-                    <h3 style={{ marginBottom: 30 }}>
+                    <h3 className={classes.title}>
                         {task ? task.title : taskId}
                     </h3>
-
-                    {isLoading || !task ? (
-                        <Loader />
-                    ) : (
-                        <>
-                            <div>
-                                <Grid fluid>
-                                    <Row>
-                                        <Col xs={24} sm={24} md={8}>
-                                            <h6 style={{ marginBottom: 5 }}>
-                                                ID
-                                            </h6>
-                                            <p style={{ marginBottom: 15 }}>
-                                                {task.taskId}
-                                            </p>
-                                        </Col>
-                                        <Col xs={24} sm={24} md={8}>
-                                            <h6 style={{ marginBottom: 5 }}>
-                                                Title
-                                            </h6>
-                                            <p style={{ marginBottom: 15 }}>
-                                                {task.title}
-                                            </p>
-                                        </Col>
-                                        <Col xs={24} sm={24} md={8}>
-                                            <h6 style={{ marginBottom: 5 }}>
-                                                Owner
-                                            </h6>
-                                            <Stack
-                                                style={{ color: '#555' }}
-                                                spacing={5}
-                                            >
-                                                <Avatar
-                                                    size="1.5em"
-                                                    textSizeRatio={1.75}
-                                                    round
-                                                    name={task.owner}
-                                                />
-                                                <div>{task.owner}</div>
-                                            </Stack>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col xs={24} sm={24} md={8}>
-                                            <h6 style={{ marginBottom: 5 }}>
-                                                Bounty prize
-                                            </h6>
-                                            <p
-                                                style={{ marginBottom: 15 }}
-                                            >{`${task.price} Ⓝ`}</p>
-                                        </Col>
-                                        <Col xs={24} sm={24} md={8}>
-                                            <h6 style={{ marginBottom: 5 }}>
-                                                Deadline
-                                            </h6>
-                                            <div style={{ marginBottom: 15 }}>
-                                                <span
-                                                    style={{
-                                                        color:
-                                                            task.availableUntil >=
-                                                            Date.now()
-                                                                ? 'green'
-                                                                : 'red',
-                                                    }}
-                                                >
-                                                    {dateFns.format(
-                                                        task.availableUntil,
-                                                        'yyyy-MM-dd HH:mm'
-                                                    )}
-                                                </span>
-                                            </div>
-                                        </Col>
-                                        <Col xs={24} sm={24} md={8}>
-                                            <h6 style={{ marginBottom: 5 }}>
-                                                Max participants
-                                            </h6>
-                                            <p style={{ marginBottom: 15 }}>
-                                                {task.maxParticipants}
-                                            </p>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col xs={24}>
-                                            <h6 style={{ marginBottom: 5 }}>
-                                                Description
-                                            </h6>
-
-                                            <div
-                                                className="ql-editor"
-                                                dangerouslySetInnerHTML={{
-                                                    __html: task.description,
-                                                }}
-                                                style={{
-                                                    padding: 0,
-                                                }}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row>
+                    <div>
+                        <Grid fluid>
+                            <Row gutter={30}>
+                                <Col xs={24} sm={24} md={18}>
+                                    <div className={classes.left}>
+                                        {isLoading || !task ? (
+                                            <Loader />
+                                        ) : (
+                                            <div style={{ margin: '0 -7.5px' }}>
+                                                <Grid fluid>
+                                                    <Row gutter={15}>
+                                                        <Col
+                                                            xs={12}
+                                                            sm={8}
+                                                            md={8}
+                                                        >
+                                                            <Wrapper
+                                                                className={[
+                                                                    classes.info_card,
+                                                                    classes.bg_gr_purple,
+                                                                ].join(' ')}
+                                                            >
+                                                                <h6
+                                                                    className={
+                                                                        classes.info_card_title
+                                                                    }
+                                                                >
+                                                                    Bounty prize
+                                                                </h6>
+                                                                <p
+                                                                    className={
+                                                                        classes.info_card_content
+                                                                    }
+                                                                >
+                                                                    {`${task.price} NEAR`}
+                                                                </p>
+                                                            </Wrapper>
+                                                        </Col>
+                                                        <Col
+                                                            xs={12}
+                                                            sm={8}
+                                                            md={8}
+                                                        >
+                                                            <Wrapper
+                                                                className={[
+                                                                    classes.info_card,
+                                                                    classes.bg_gr_blue,
+                                                                ].join(' ')}
+                                                            >
+                                                                <h6
+                                                                    className={
+                                                                        classes.info_card_title
+                                                                    }
+                                                                >
+                                                                    Applicants
+                                                                </h6>
+                                                                <p
+                                                                    className={
+                                                                        classes.info_card_content
+                                                                    }
+                                                                >
+                                                                    {`${task.proposals.length}/${task.maxParticipants}`}
+                                                                </p>
+                                                            </Wrapper>
+                                                        </Col>
+                                                        <Col
+                                                            xs={24}
+                                                            sm={8}
+                                                            md={8}
+                                                        >
+                                                            <Wrapper
+                                                                className={[
+                                                                    classes.info_card,
+                                                                    classes.bg_gr_green,
+                                                                ].join(' ')}
+                                                            >
+                                                                <h6
+                                                                    className={
+                                                                        classes.info_card_title
+                                                                    }
+                                                                >
+                                                                    Deadline
+                                                                </h6>
+                                                                <div
+                                                                    className={
+                                                                        classes.info_card_content
+                                                                    }
+                                                                >
+                                                                    {moment(
+                                                                        task.availableUntil
+                                                                    ).format(
+                                                                        'DD/MM/YYYY hh:mm'
+                                                                    )}
+                                                                </div>
+                                                            </Wrapper>
+                                                        </Col>
+                                                    </Row>
+                                                    {/* <Row>
                                         <Col xs={24}>
                                             <div
                                                 style={{
@@ -186,10 +187,10 @@ export default function TaskDetailsPage() {
                                                 <SubmitWorkButton task={task} />
                                             </div>
                                         </Col>
-                                    </Row>
-                                </Grid>
-                                <Divider />
-                                <h6
+                                    </Row> */}
+                                                </Grid>
+                                                {/* <Divider /> */}
+                                                {/* <h6
                                     style={{ marginBottom: 5 }}
                                 >{`Proposals (${task.proposals.length})`}</h6>
                                 <div style={{ marginBottom: 15 }} />
@@ -226,10 +227,52 @@ export default function TaskDetailsPage() {
                                     </>
                                 ) : (
                                     'Empty'
-                                )}
-                            </div>
-                        </>
-                    )}
+                                )} */}
+                                            </div>
+                                        )}
+                                        {isLoading || !task ? (
+                                            <Loader />
+                                        ) : (
+                                            <Wrapper
+                                                className={classes.task_desc}
+                                            >
+                                                <h6
+                                                    className={
+                                                        classes.task_desc_title
+                                                    }
+                                                >
+                                                    Description
+                                                </h6>
+                                                <div style={{ maxWidth: 800 }}>
+                                                    <div
+                                                        className="ql-editor"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: task.description,
+                                                        }}
+                                                    />
+                                                </div>
+                                            </Wrapper>
+                                        )}
+                                    </div>
+                                </Col>
+                                <Col xs={24} sm={24} md={6}>
+                                    <Wrapper
+                                        className={classes.owner_info}
+                                        style={{ marginBottom: 20 }}
+                                    >
+                                        Owner info
+                                    </Wrapper>
+                                    <Button
+                                        appearance="primary"
+                                        size="lg"
+                                        style={{ width: '100%' }}
+                                    >
+                                        Submit Now
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Grid>
+                    </div>
                 </Container>
             </Layout>
         </>

@@ -17,6 +17,7 @@ import Select from 'react-select';
 import { CategoriesListBadge } from '../categoriesListBadge';
 import { useQuery } from 'react-query';
 import { CategoryService } from '../../services/categoryService';
+import { Wrapper } from '../wrapper';
 
 type TaskFilterProps = {};
 
@@ -25,7 +26,7 @@ export const TaskFilter: React.FunctionComponent<TaskFilterProps> = ({}) => {
     const handleToggle = () => setShow(!show);
 
     return (
-        <div className={classes.root}>
+        <Wrapper className={classes.root}>
             <div className={classes.top}>
                 <div>
                     <Select
@@ -81,7 +82,7 @@ export const TaskFilter: React.FunctionComponent<TaskFilterProps> = ({}) => {
             <Animation.Collapse className={classes.bottom} in={show}>
                 {(props, ref) => <Panel {...props} ref={ref} />}
             </Animation.Collapse>
-        </div>
+        </Wrapper>
     );
 };
 
@@ -89,8 +90,6 @@ const Panel = React.forwardRef(({ style, ...props }: any, ref) => {
     const categoriesQuery = useQuery('categories', () =>
         CategoryService.fetchCategories()
     );
-
-    console.log(categoriesQuery.data);
 
     return (
         <div

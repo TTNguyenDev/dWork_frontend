@@ -1,76 +1,90 @@
 .container {
     max-width: var(--container-max-width);
     margin: auto;
-    margin-top: 30px;
     padding: 0 15px;
 }
 
 .title {
     margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    font-size: 1.75em;
-    font-weight: 600;
-    text-align: center;
+    margin-bottom: 1.5em;
+    font-size: 2em;
+    font-weight: 800;
+    color: var(--primary-heading-color);
 }
 
-.logo {
-    width: 100px;
-}
-
-.card_intro_wrapper {
-    align-items: stretch;
-}
-
-.card_intro {
-    height: 100%;
-    padding: 1em;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-
-    &_body {
-        text-align: center;
-    }
-
-    &_logo {
-        width: 150px;
-        height: 150px;
-        margin-bottom: 1em;
-        border-radius: 100%;
-        background: #ddd;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-
-        img {
-            width: 65%;
-        }
-    }
+.info_card {
+    padding: 20px;
+    margin-bottom: 15px;
 
     &_title {
-        margin-bottom: 0.5em;
+        margin-bottom: 15px;
+        font-size: 0.95em;
+        font-weight: 600;
+        color: #eee;
+    }
+
+    &_content {
+        font-size: 1em;
+        font-weight: 800;
+        color: #fff;
+    }
+}
+
+.bg_gr_purple {
+    background: #8e2de2 !important;
+    background: -webkit-linear-gradient(
+        to right,
+        rgba(74, 0, 224, 0.8),
+        rgba(142, 45, 226, 0.8)
+    ) !important;
+    background: linear-gradient(
+        to right,
+        rgba(74, 0, 224, 0.8),
+        rgba(142, 45, 226, 0.8)
+    ) !important;
+}
+
+.bg_gr_blue {
+    background: #0052d4 !important;
+    background: -webkit-linear-gradient(
+        to left,
+        rgba(111, 177, 252, 0.8),
+        rgba(67, 100, 247, 0.8),
+        rgba(0, 82, 212, 0.8)
+    ) !important;
+    background: linear-gradient(
+        to left,
+        rgba(111, 177, 252, 0.8),
+        rgba(67, 100, 247, 0.8),
+        rgba(0, 82, 212, 0.8)
+    ) !important;
+}
+
+.bg_gr_green {
+    background: #00b09b !important;
+    background: -webkit-linear-gradient(
+        to left,
+        rgba(110, 195, 209, 0.8),
+        rgba(0, 159, 255, 0.8)
+    ) !important;
+    background: linear-gradient(
+        to left,
+        rgba(110, 195, 209, 0.8),
+        rgba(0, 159, 255, 0.8)
+    ) !important;
+}
+
+.task_desc {
+    padding: 20px;
+
+    &_title {
         font-size: 1.25em;
-    }
-
-    &_desc {
-        display: block;
-        margin-bottom: 1em;
-        text-align: center;
-    }
-
-    &_button {
-        display: block;
-        margin-top: auto;
+        font-weight: 800;
+        margin-bottom: 20px;
+        color: var(--primary-heading-color);
     }
 }
 
-.list_jobs_wrapper {
-    max-width: 800px;
-    width: 100%;
-    margin: auto;
-}
-
-.list_tasks_nav {
-    max-width: 150px;
+.owner_info {
+    padding: 20px;
 }
