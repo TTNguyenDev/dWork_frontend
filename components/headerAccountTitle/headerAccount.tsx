@@ -21,7 +21,7 @@ export const HeaderAccountTitle: React.FunctionComponent<
             {accountType === AccountTypes.REQUESTER && (
                 <Badge color="cyan" content="REQUESTER" />
             )}
-            <div className={classes.title}>{title}</div>
+            {/* <div className={classes.title}>{title}</div> */}
             <Avatar
                 round
                 src={avatarSrc}
