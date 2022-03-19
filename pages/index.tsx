@@ -2,13 +2,15 @@ import React from 'react';
 import Header from 'next/head';
 import { Layout } from '../components/layout';
 import classes from './index.module.less';
-import { Button, Col, Container, FlexboxGrid, Stack } from 'rsuite';
+import { Button, Col, Container, FlexboxGrid } from 'rsuite';
 import createTaskLogo from '../assets/logos/create-task.png';
 import makeMoneyLogo from '../assets/logos/make-money.png';
 import { useHomePage } from '../hooks/useHomePage';
 import { Loader } from '../components/loader';
-import { JobCard } from '../components/jobCard';
-import { Job } from '../models/types/jobType';
+import { useQuery } from 'react-query';
+import { CategoryService } from '../services/categoryService';
+import { ListTasks } from '../components/listTasks';
+import { TaskFilter } from '../components/tasksFilter';
 
 export default function Home() {
     const {
@@ -26,6 +28,10 @@ export default function Home() {
         isFetchingNextPage,
         hasNextPage,
     } = useHomePage();
+
+    const categoriesQuery = useQuery('categories', () =>
+        CategoryService.fetchCategories()
+    );
 
     return (
         <>
@@ -125,45 +131,95 @@ export default function Home() {
                                 style={{
                                     marginBottom: 15,
                                     textAlign: 'center',
+                                    display: 'none',
                                 }}
                             >
                                 Tasks
                             </h3>
-                            <div className={classes.search_wrapper}></div>
-                            <div className={classes.list_jobs_wrapper}>
-                                {listJobsLoading ? (
-                                    <Loader />
-                                ) : (
-                                    <Stack
-                                        direction="column"
-                                        alignItems="stretch"
-                                        spacing={30}
-                                        className={classes.list_jobs}
+                            <div className={classes.wrapper}>
+                                {/* <div className={classes.sidebar}>
+                                    <div
+                                        style={{
+                                            fontSize: '1.25em',
+                                            fontWeight: 600,
+                                            marginBottom: 15,
+                                        }}
                                     >
-                                        {(!jobs || !jobs.length) && (
-                                            <div>No jobs</div>
-                                        )}
-                                        {jobs &&
-                                            !!jobs.length &&
-                                            jobs.map((job: Job) => (
-                                                <JobCard
-                                                    task={job}
-                                                    key={job.taskId}
-                                                />
-                                            ))}
-                                        <div style={{ textAlign: 'center' }}>
-                                            <Button
-                                                size="lg"
-                                                appearance="primary"
-                                                onClick={fetchNextPage}
-                                                loading={isFetchingNextPage}
-                                                disabled={!hasNextPage}
-                                            >
-                                                View More
-                                            </Button>
+                                        Filters
+                                    </div>
+                                    <div className={classes.search_wrapper}>
+                                        <InputGroup
+                                            inside
+                                            style={{
+                                                flex: 1,
+                                                marginRight: 5,
+                                                maxWidth: 400,
+                                            }}
+                                        >
+                                            <InputGroup.Addon>
+                                                <BsSearch size={13} />
+                                            </InputGroup.Addon>
+                                            <Input
+                                                style={{ borderRadius: 20 }}
+                                                placeholder="Search keyword"
+                                            />
+                                        </InputGroup>
+                                    </div>
+                                    <Divider />
+                                    <div className={classes.filter_item}>
+                                        <div
+                                            className={
+                                                classes.filter_item_title
+                                            }
+                                        >
+                                            Category
                                         </div>
-                                    </Stack>
-                                )}
+                                        <CreatableSelect
+                                            isClearable
+                                            isMulti
+                                            options={categoriesQuery.data?.map(
+                                                (item) => ({
+                                                    value: item.id,
+                                                    label: item.name,
+                                                })
+                                            )}
+                                            isLoading={
+                                                categoriesQuery.isLoading
+                                            }
+                                            placeholder="Choose category"
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            padding: 15,
+                                            display: 'flex',
+                                            position: 'absolute',
+                                            bottom: 0,
+                                            left: 0,
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <Button
+                                            appearance="primary"
+                                            style={{ width: '100%' }}
+                                        >
+                                            Apply
+                                        </Button>
+                                        <div style={{ width: 10 }} />
+                                        <Button style={{ width: '100%' }}>
+                                            Clear
+                                        </Button>
+                                    </div>
+                                </div> */}
+                                <div className={classes.top}>
+                                    <TaskFilter />
+                                </div>
+                                <div className={classes.main}>
+                                    <ListTasks
+                                        tasks={jobs}
+                                        isLoading={listJobsLoading}
+                                    />
+                                </div>
                             </div>
                             <div style={{ marginBottom: 50 }} />
                         </>

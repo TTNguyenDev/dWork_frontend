@@ -1,14 +1,11 @@
 import React from 'react';
-import { Grid, Row, Col, Panel, Stack, Badge } from 'rsuite';
+import { Grid, Row, Col, Panel, Stack } from 'rsuite';
 import { Job } from '../../models/types/jobType';
-// @ts-ignore
-import ReactReadMoreReadLess from 'react-read-more-read-less';
 import classes from './jobCard.module.less';
-import Countdown, { zeroPad } from 'react-countdown';
-import { BsClock, BsPeopleFill } from 'react-icons/bs';
-import Avatar from 'react-avatar';
-import { SubmitWorkButton } from '../submitWorkButton';
 import { useRouter } from 'next/router';
+import moment from 'moment';
+import randomColor from 'randomcolor';
+import { BsClock, BsPeople } from 'react-icons/bs';
 
 interface JobCardProps {
     task: Job;
@@ -21,145 +18,87 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ task }) => {
         router.push(`task/${task.taskId}`);
     };
 
+    const bgBadgeCategory = React.useMemo(
+        () =>
+            randomColor({
+                luminosity: 'dark',
+            }),
+        []
+    );
+
     return (
         <>
-            <Panel
-                bordered
-                style={{ cursor: 'pointer' }}
-                onClick={handleViewDetails}
-            >
-                <Grid
-                    fluid
-                    className={classes.root}
-                    style={{
-                        opacity:
-                            task.availableUntil < Date.now() ||
-                            task.proposals.length >= task.maxParticipants
-                                ? 0.5
-                                : 1,
-                    }}
-                >
-                    <Row gutter={16} style={{ marginBottom: 10 }}>
+            <Panel className={classes.root} onClick={handleViewDetails}>
+                <Grid fluid>
+                    <Row gutter={16} style={{ marginBottom: 15 }}>
                         <Col xs={24} sm={24} md={24}>
-                            <Badge
-                                content={task.categoryId}
-                                color="blue"
-                                style={{ padding: '2px 5px', fontWeight: 600 }}
-                            />
+                            <Stack justifyContent="space-between">
+                                <div
+                                    className={classes.badge_category}
+                                    style={{
+                                        background: bgBadgeCategory,
+                                    }}
+                                >
+                                    {task.categoryId.replaceAll('_', ' ')}
+                                </div>
+                                <div
+                                    className={classes.price}
+                                >{`${task.price} NEAR`}</div>
+                            </Stack>
                         </Col>
                     </Row>
-                    <Row gutter={16}>
-                        <Col xs={24} sm={24} md={16}>
+                    <Row gutter={16} style={{ marginBottom: 15, height: 100 }}>
+                        <Col
+                            xs={24}
+                            sm={24}
+                            md={24}
+                            style={{ marginBottom: 10 }}
+                        >
                             <h5 className={classes.title}>{task.title}</h5>
                         </Col>
-                        <Col
-                            xs={24}
-                            sm={24}
-                            md={8}
-                            style={{ textAlign: 'right', fontSize: '1.05em' }}
-                        >
-                            <div
-                                className={classes.price}
-                            >{`${task.price} Ⓝ`}</div>
-                        </Col>
-                    </Row>
-                    <Row gutter={16} style={{ marginBottom: 10 }}>
-                        <Col xs={24} sm={24} md={16}>
-                            <div
-                                style={{
-                                    marginBottom: 15,
-                                    wordBreak: 'break-word',
-                                }}
-                            >
-                                <ReactReadMoreReadLess
-                                    charLimit={180}
-                                    readMoreText={''}
-                                    readLessText={''}
-                                    readMoreClassName={classes.read_more}
-                                    readLessClassName={classes.read_less}
-                                >
-                                    {task.description.replace(
-                                        /<(.|\n)*?>/g,
-                                        ' '
-                                    )}
-                                </ReactReadMoreReadLess>
+                        <Col xs={24} sm={24} md={24}>
+                            <div className={classes.desc}>
+                                {task.description.replace(/<(.|\n)*?>/g, ' ')}
                             </div>
                         </Col>
-                        <Col
-                            xs={24}
-                            sm={24}
-                            md={8}
-                            style={{ textAlign: 'right' }}
-                        >
-                            <SubmitWorkButton task={task} />
-                        </Col>
                     </Row>
-                    <Row gutter={16}>
+                    <Row gutter={16} style={{ marginBottom: 5 }}>
                         <Col xs={24} sm={24} md={24}>
-                            <Stack spacing={15} style={{ flexWrap: 'wrap' }}>
+                            <Stack justifyContent="space-between">
                                 <Stack
-                                    className={classes.owner}
-                                    style={{ color: '#555' }}
-                                    spacing={5}
-                                >
-                                    <Avatar
-                                        size="1.5em"
-                                        textSizeRatio={1.75}
-                                        round
-                                        name={task.owner}
-                                    />
-                                    <div className={classes.owner}>
-                                        {task.owner}
-                                    </div>
-                                </Stack>
-                                <Stack
-                                    justifyContent="flex-end"
-                                    alignItems="center"
-                                    spacing={5}
-                                    className={classes.applicants}
+                                    className={classes.info_item}
+                                    spacing={10}
                                 >
                                     <div
                                         style={{
                                             display: 'flex',
                                             alignItems: 'center',
+                                            color: '#000',
                                         }}
                                     >
-                                        <BsPeopleFill />
+                                        <BsClock size={16} />
                                     </div>
-                                    {`${task.proposals.length}/${task.maxParticipants} Applicants`}
+                                    <div>{`${moment(task.availableUntil).format(
+                                        'DD/MM/YYYY hh:mm'
+                                    )}`}</div>
                                 </Stack>
-                                <div style={{ marginBottom: 5 }} />
-                                {task.availableUntil < Date.now() ? (
-                                    <div style={{ color: 'red' }}>Expired</div>
-                                ) : (
-                                    <Stack
-                                        justifyContent="flex-end"
-                                        alignItems="center"
-                                        spacing={5}
-                                        className={classes.countdown}
+                                <Stack
+                                    className={classes.info_item}
+                                    spacing={10}
+                                >
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            color: '#000',
+                                        }}
                                     >
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            <BsClock />
-                                        </div>
-                                        <Countdown
-                                            date={task.availableUntil}
-                                            renderer={({
-                                                hours,
-                                                minutes,
-                                                seconds,
-                                            }) =>
-                                                `${zeroPad(hours)}:${zeroPad(
-                                                    minutes
-                                                )}:${zeroPad(seconds)}`
-                                            }
-                                        />
-                                    </Stack>
-                                )}
+                                        <BsPeople size={16} />
+                                    </div>
+                                    <div>
+                                        {`${task.proposals.length}/${task.maxParticipants}`}
+                                    </div>
+                                </Stack>
                             </Stack>
                         </Col>
                     </Row>

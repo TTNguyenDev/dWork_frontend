@@ -76,7 +76,7 @@ export class JobService {
         const res = await BlockChainConnector.instance.contract.available_tasks(
             {
                 from_index: 0,
-                limit: 50,
+                limit: 12,
             }
         );
 
