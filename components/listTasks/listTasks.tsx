@@ -5,15 +5,20 @@ import { Job } from '../../models/types/jobType';
 import { JobCard } from '../jobCard';
 import { Loader } from '../loader';
 import { Optional } from '../../common';
+import { CardCreateTask } from '../cardCreateTask';
 
 type ListTasksProps = {
     tasks: Optional<Job[]>;
     isLoading: boolean;
+    isCreatable?: boolean;
+    gridBreakpoints?: Record<string, number>;
 };
 
 export const ListTasks: React.FunctionComponent<ListTasksProps> = ({
     tasks,
     isLoading,
+    isCreatable,
+    gridBreakpoints,
 }) => {
     return (
         <div className={classes.root}>
@@ -22,16 +27,34 @@ export const ListTasks: React.FunctionComponent<ListTasksProps> = ({
                     <Loader />
                 ) : (
                     <FlexboxGrid className={classes.list_jobs}>
-                        {(!tasks || !tasks.length) && <div>No tasks</div>}
+                        {!isCreatable && (!tasks || !tasks.length) && (
+                            <div>No tasks</div>
+                        )}
+                        {isCreatable && (
+                            <FlexboxGrid.Item
+                                as={Col}
+                                lg={gridBreakpoints?.lg ?? 6}
+                                md={gridBreakpoints?.md ?? 8}
+                                sm={gridBreakpoints?.sm ?? 12}
+                                xs={gridBreakpoints?.xs ?? 24}
+                                colspan={24}
+                                style={{
+                                    padding: '0 10px',
+                                    marginBottom: 20,
+                                }}
+                            >
+                                <CardCreateTask />
+                            </FlexboxGrid.Item>
+                        )}
                         {tasks &&
                             !!tasks.length &&
                             tasks.map((job: Job) => (
                                 <FlexboxGrid.Item
                                     as={Col}
-                                    lg={6}
-                                    md={8}
-                                    sm={12}
-                                    xs={24}
+                                    lg={gridBreakpoints?.lg ?? 6}
+                                    md={gridBreakpoints?.md ?? 8}
+                                    sm={gridBreakpoints?.sm ?? 12}
+                                    xs={gridBreakpoints?.xs ?? 24}
                                     colspan={24}
                                     style={{
                                         padding: '0 10px',

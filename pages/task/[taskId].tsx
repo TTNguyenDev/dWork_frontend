@@ -262,16 +262,6 @@ export default function TaskDetailsPage() {
                                             />
                                         )}
                                     </Wrapper>
-                                    {/* <Button
-                                        appearance="primary"
-                                        size="lg"
-                                        style={{
-                                            width: '100%',
-                                            marginBottom: 20,
-                                        }}
-                                    >
-                                        Submit Now
-                                    </Button> */}
                                     {task && (
                                         <SubmitWorkButton
                                             task={task}

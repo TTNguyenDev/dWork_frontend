@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Badge, Stack } from 'rsuite';
 import { AccountTypes } from '../../models/types/accountType';
 import classes from './headerAccountTitle.module.less';
@@ -13,6 +13,20 @@ interface HeaderAccountTitleProps {
 export const HeaderAccountTitle: React.FunctionComponent<
     HeaderAccountTitleProps
 > = ({ accountType, avatarSrc, title, ...props }) => {
+    const avatar = useMemo(
+        () => (
+            <Avatar
+                round
+                src={avatarSrc}
+                alt={title}
+                name={title}
+                size="35"
+                textSizeRatio={1.75}
+            />
+        ),
+        [avatarSrc, title]
+    );
+
     return (
         <Stack className={classes.root} spacing="0.75em" {...props}>
             {/* {accountType === AccountTypes.WORKER && (
@@ -22,14 +36,7 @@ export const HeaderAccountTitle: React.FunctionComponent<
                 <Badge color="cyan" content="REQUESTER" />
             )} */}
             {/* <div className={classes.title}>{title}</div> */}
-            <Avatar
-                round
-                src={avatarSrc}
-                alt={title}
-                name={title}
-                size="35"
-                textSizeRatio={1.75}
-            />
+            {avatar}
         </Stack>
     );
 };

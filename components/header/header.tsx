@@ -38,7 +38,7 @@ export const Header: React.FunctionComponent<HeaderProps> = ({ activeKey }) => {
                         {accountType === AccountTypes.REQUESTER && (
                             <Button
                                 appearance="primary"
-                                style={{ marginRight: 30 }}
+                                style={{ marginRight: 20 }}
                                 onClick={
                                     ModalsController.controller
                                         .openCreateTaskModal
