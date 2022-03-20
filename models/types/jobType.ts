@@ -1,6 +1,4 @@
-import BN from 'bn.js';
-
-export enum JobStatus {
+export enum TaskStatus {
     READY_FOR_APPLY = 'ReadyForApply',
     FOUND_WORKER = 'FoundWorker',
     WORKER_SUBMITTED = 'WorkSubmitted',
@@ -15,7 +13,8 @@ export type Proposal = {
     isApproved: boolean;
 };
 
-export type Job = {
+export type Task = {
+    id: number;
     taskId: string;
     owner: string;
     title: string;
@@ -27,4 +26,4 @@ export type Job = {
     categoryId: string;
 };
 
-export type JobType = 'available' | 'processing' | 'completed' | 'pending';
+export type TaskType = 'available' | 'processing' | 'completed' | 'pending';

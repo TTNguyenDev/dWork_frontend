@@ -1,17 +1,20 @@
 import React from 'react';
 import classes from './listTasks.module.less';
 import { Button, Col, FlexboxGrid } from 'rsuite';
-import { Job } from '../../models/types/jobType';
+import { Task } from '../../models/types/jobType';
 import { JobCard } from '../jobCard';
 import { Loader } from '../loader';
 import { Optional } from '../../common';
 import { CardCreateTask } from '../cardCreateTask';
 
 type ListTasksProps = {
-    tasks: Optional<Job[]>;
+    tasks: Optional<Task[]>;
     isLoading: boolean;
     isCreatable?: boolean;
     gridBreakpoints?: Record<string, number>;
+    fetchNextPage: any;
+    isFetchingNextPage: boolean;
+    hasNextPage: Optional<boolean>;
 };
 
 export const ListTasks: React.FunctionComponent<ListTasksProps> = ({
@@ -19,6 +22,10 @@ export const ListTasks: React.FunctionComponent<ListTasksProps> = ({
     isLoading,
     isCreatable,
     gridBreakpoints,
+
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
 }) => {
     return (
         <div className={classes.root}>
@@ -28,7 +35,7 @@ export const ListTasks: React.FunctionComponent<ListTasksProps> = ({
                 ) : (
                     <FlexboxGrid className={classes.list_jobs}>
                         {!isCreatable && (!tasks || !tasks.length) && (
-                            <div>No tasks</div>
+                            <div className={classes.empty_list}>No tasks</div>
                         )}
                         {isCreatable && (
                             <FlexboxGrid.Item
@@ -48,8 +55,9 @@ export const ListTasks: React.FunctionComponent<ListTasksProps> = ({
                         )}
                         {tasks &&
                             !!tasks.length &&
-                            tasks.map((job: Job) => (
+                            tasks.map((task: Task) => (
                                 <FlexboxGrid.Item
+                                    key={task.id}
                                     as={Col}
                                     lg={gridBreakpoints?.lg ?? 6}
                                     md={gridBreakpoints?.md ?? 8}
@@ -61,22 +69,24 @@ export const ListTasks: React.FunctionComponent<ListTasksProps> = ({
                                         marginBottom: 20,
                                     }}
                                 >
-                                    <JobCard task={job} key={job.taskId} />
+                                    <JobCard task={task} key={task.taskId} />
                                 </FlexboxGrid.Item>
                             ))}
                     </FlexboxGrid>
                 )}
-                {/* <div style={{ textAlign: 'center' }}>
-                    <Button
-                        size="md"
-                        appearance="primary"
-                        onClick={fetchNextPage}
-                        loading={isFetchingNextPage}
-                        disabled={!hasNextPage}
-                    >
-                        View More
-                    </Button>
-                </div> */}
+                {tasks && !!tasks.length && (
+                    <div style={{ textAlign: 'center' }}>
+                        <Button
+                            size="md"
+                            appearance="primary"
+                            onClick={fetchNextPage}
+                            loading={isFetchingNextPage}
+                            disabled={!hasNextPage}
+                        >
+                            View More
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
     );

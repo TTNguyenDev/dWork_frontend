@@ -11,6 +11,8 @@ import { useQuery } from 'react-query';
 import { CategoryService } from '../services/categoryService';
 import { ListTasks } from '../components/listTasks';
 import { TaskFilter } from '../components/tasksFilter';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 export default function Home() {
     const {
@@ -27,7 +29,12 @@ export default function Home() {
         fetchNextPage,
         isFetchingNextPage,
         hasNextPage,
+        filter,
+        setTaskFilter,
+        applyTaskFilter,
     } = useHomePage();
+
+    const app = useSelector((state: RootState) => state.app);
 
     return (
         <>
@@ -35,118 +42,157 @@ export default function Home() {
                 <title>Home</title>
             </Header>
             <Layout activeKey="one">
-                <Container className={classes.container}>
-                    {(authLoading ||
-                        (!authLoading && logged && profileLoading)) && (
-                        <Loader />
-                    )}
-                    {((!authLoading && !profileLoading && !profileInfo) ||
-                        (!authLoading && !logged)) && (
-                        <>
-                            <h1 className={classes.title}>
-                                Get Started with dWork
-                            </h1>
-                            <FlexboxGrid
-                                justify="center"
-                                className={classes.card_intro_wrapper}
-                            >
-                                <FlexboxGrid.Item as={Col} colspan={24} md={6}>
-                                    <section className={classes.card_intro}>
-                                        <div
-                                            className={classes.card_intro_logo}
-                                        >
-                                            <img src={createTaskLogo.src} />
-                                        </div>
-                                        <h3
-                                            className={classes.card_intro_title}
-                                        >
-                                            Create Task
-                                        </h3>
-                                        <div
-                                            className={classes.card_intro_desc}
-                                        >
-                                            Human intelligence through an API.
-                                            Access a global, on-demand, 24/7
-                                            workforce.
-                                        </div>
-                                        <Button
-                                            appearance="primary"
-                                            className={classes.card_intro_btn}
-                                            loading={createTaskBtnLoading}
-                                            onClick={handleCreateTaskBtnClick}
-                                        >
-                                            Create a Requester account
-                                        </Button>
-                                    </section>
-                                </FlexboxGrid.Item>
-                                <FlexboxGrid.Item as={Col} colspan={24} md={6}>
-                                    <section className={classes.card_intro}>
-                                        <div
-                                            className={classes.card_intro_body}
-                                        >
+                {app.data.cacheReady ? (
+                    <Container className={classes.container}>
+                        {(authLoading ||
+                            (!authLoading && logged && profileLoading)) && (
+                            <Loader />
+                        )}
+                        {((!authLoading && !profileLoading && !profileInfo) ||
+                            (!authLoading && !logged)) && (
+                            <>
+                                <h1 className={classes.title}>
+                                    Get Started with dWork
+                                </h1>
+                                <FlexboxGrid
+                                    justify="center"
+                                    className={classes.card_intro_wrapper}
+                                >
+                                    <FlexboxGrid.Item
+                                        as={Col}
+                                        colspan={24}
+                                        md={6}
+                                    >
+                                        <section className={classes.card_intro}>
                                             <div
                                                 className={
                                                     classes.card_intro_logo
                                                 }
                                             >
-                                                <img src={makeMoneyLogo.src} />
+                                                <img src={createTaskLogo.src} />
                                             </div>
                                             <h3
                                                 className={
                                                     classes.card_intro_title
                                                 }
                                             >
-                                                Make Money
+                                                Create Task
                                             </h3>
                                             <div
                                                 className={
                                                     classes.card_intro_desc
                                                 }
                                             >
-                                                Make money in your spare time.
-                                                Get paid for completing simple
-                                                tasks.
+                                                Human intelligence through an
+                                                API. Access a global, on-demand,
+                                                24/7 workforce.
                                             </div>
-                                        </div>
-                                        <Button
-                                            appearance="primary"
-                                            className={classes.card_intro_btn}
-                                            loading={makeMoneyBtnLoading}
-                                            onClick={handleMakeMoneyBtnClick}
-                                        >
-                                            Create a Worker account
-                                        </Button>
-                                    </section>
-                                </FlexboxGrid.Item>
-                            </FlexboxGrid>
-                        </>
-                    )}
-                    {!authLoading && !profileLoading && profileInfo && (
-                        <>
-                            <h3
-                                style={{
-                                    marginBottom: 15,
-                                    textAlign: 'center',
-                                    display: 'none',
-                                }}
-                            >
-                                Tasks
-                            </h3>
-                            <div className={classes.wrapper}>
-                                <div className={classes.top}>
-                                    <TaskFilter />
+                                            <Button
+                                                appearance="primary"
+                                                className={
+                                                    classes.card_intro_btn
+                                                }
+                                                loading={createTaskBtnLoading}
+                                                onClick={
+                                                    handleCreateTaskBtnClick
+                                                }
+                                            >
+                                                Create a Requester account
+                                            </Button>
+                                        </section>
+                                    </FlexboxGrid.Item>
+                                    <FlexboxGrid.Item
+                                        as={Col}
+                                        colspan={24}
+                                        md={6}
+                                    >
+                                        <section className={classes.card_intro}>
+                                            <div
+                                                className={
+                                                    classes.card_intro_body
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        classes.card_intro_logo
+                                                    }
+                                                >
+                                                    <img
+                                                        src={makeMoneyLogo.src}
+                                                    />
+                                                </div>
+                                                <h3
+                                                    className={
+                                                        classes.card_intro_title
+                                                    }
+                                                >
+                                                    Make Money
+                                                </h3>
+                                                <div
+                                                    className={
+                                                        classes.card_intro_desc
+                                                    }
+                                                >
+                                                    Make money in your spare
+                                                    time. Get paid for
+                                                    completing simple tasks.
+                                                </div>
+                                            </div>
+                                            <Button
+                                                appearance="primary"
+                                                className={
+                                                    classes.card_intro_btn
+                                                }
+                                                loading={makeMoneyBtnLoading}
+                                                onClick={
+                                                    handleMakeMoneyBtnClick
+                                                }
+                                            >
+                                                Create a Worker account
+                                            </Button>
+                                        </section>
+                                    </FlexboxGrid.Item>
+                                </FlexboxGrid>
+                            </>
+                        )}
+                        {!authLoading && !profileLoading && profileInfo && (
+                            <>
+                                <h3
+                                    style={{
+                                        marginBottom: 15,
+                                        textAlign: 'center',
+                                        display: 'none',
+                                    }}
+                                >
+                                    Tasks
+                                </h3>
+                                <div className={classes.wrapper}>
+                                    <div className={classes.top}>
+                                        <TaskFilter
+                                            filter={filter}
+                                            setTaskFilter={setTaskFilter}
+                                            applyTaskFilter={applyTaskFilter}
+                                        />
+                                    </div>
+                                    <div className={classes.main}>
+                                        <ListTasks
+                                            tasks={jobs}
+                                            isLoading={listJobsLoading}
+                                            fetchNextPage={fetchNextPage}
+                                            isFetchingNextPage={
+                                                isFetchingNextPage
+                                            }
+                                            hasNextPage={hasNextPage}
+                                        />
+                                    </div>
                                 </div>
-                                <div className={classes.main}>
-                                    <ListTasks
-                                        tasks={jobs}
-                                        isLoading={listJobsLoading}
-                                    />
-                                </div>
-                            </div>
-                            <div style={{ marginBottom: 50 }} />
-                        </>
-                    )}
-                </Container>
+                                <div style={{ marginBottom: 50 }} />
+                            </>
+                        )}
+                    </Container>
+                ) : (
+                    <Loader />
+                )}
             </Layout>
         </>
     );

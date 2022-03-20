@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { JobService } from '../services/jobService';
+import { TaskService } from '../services/jobService';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 
@@ -19,7 +19,7 @@ export const useRejectWork = (): UseRejectWorkOutput => {
     const handleRejectWork = useCallback(async (payload) => {
         setRejectWorkLoading(true);
         try {
-            await JobService.rejectWork(payload);
+            await TaskService.rejectWork(payload);
             queryClient.invalidateQueries('jobsAvailable');
             queryClient.invalidateQueries('jobsProcessing');
             queryClient.invalidateQueries('jobsCompleted');

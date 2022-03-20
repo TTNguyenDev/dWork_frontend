@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { NearConfig } from '../config';
 import { CONTRACT_NAME } from '../constants';
@@ -9,6 +10,8 @@ import { RootState } from '../store';
 
 export const useApp = () => {
     const dispatch = useDispatch();
+    const queryClient = useQueryClient();
+
     const app = useSelector((state: RootState) => state.app);
     const auth = useSelector((state: RootState) => state.auth);
 
@@ -32,6 +35,7 @@ export const useApp = () => {
     useEffect(() => {
         if (!app.data.ready) return;
 
+        dispatch(AppModel.asyncActions.cache());
         dispatch(AuthModel.actions.checkLoginStatus());
     }, [app.data.ready]);
 
@@ -40,4 +44,8 @@ export const useApp = () => {
 
         dispatch(ProfileModel.asyncActions.fetchProfile());
     }, [auth.data.logged]);
+
+    useEffect(() => {
+        if (app.data.cacheReady) queryClient.invalidateQueries();
+    }, [app.data.cacheReady]);
 };

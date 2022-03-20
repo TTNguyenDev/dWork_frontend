@@ -1,15 +1,15 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Nullable, Optional } from '../common';
 import { Account } from '../models/types/accountType';
-import { Job } from '../models/types/jobType';
+import { Task } from '../models/types/jobType';
 import { AccountService } from '../services/accountService';
 import { RootState } from '../store';
 import { useListJobs } from './useListJobs';
 import { toast } from 'react-toastify';
 import { ModalsController } from '../utils/modalsController';
-import { JobService } from '../services/jobService';
-import { useQuery } from 'react-query';
+import { TaskService } from '../services/jobService';
+import { useQuery, useQueryClient } from 'react-query';
 import { BlockChainConnector } from '../utils/blockchain';
 
 export type UseHomePageOutput = {
@@ -22,17 +22,20 @@ export type UseHomePageOutput = {
     makeMoneyBtnLoading: boolean;
     handleCreateTaskBtnClick: () => void;
     handleMakeMoneyBtnClick: () => void;
-    jobs: Optional<Job[]>;
+    jobs: Optional<Task[]>;
     listJobsLoading: boolean;
     jobsAvailableLoading: boolean;
-    jobsAvailable: Optional<Job[]>;
+    jobsAvailable: Optional<Task[]>;
     jobsProcessingLoading: boolean;
-    jobsProcessing: Optional<Job[]>;
+    jobsProcessing: Optional<Task[]>;
     jobsCompletedLoading: boolean;
-    jobsCompleted: Optional<Job[]>;
+    jobsCompleted: Optional<Task[]>;
     fetchNextPage: () => Promise<void>;
     isFetchingNextPage: boolean;
     hasNextPage: Optional<boolean>;
+    filter: any;
+    setTaskFilter: (payload: Record<string, any>) => void;
+    applyTaskFilter: () => void;
 };
 
 export const useHomePage = (): UseHomePageOutput => {
@@ -45,24 +48,27 @@ export const useHomePage = (): UseHomePageOutput => {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
+        filter,
+        setTaskFilter,
+        applyTaskFilter,
     } = useListJobs();
 
     const { isLoading: jobsAvailableLoading, data: jobsAvailable } = useQuery<
-        Job[]
+        Task[]
     >('jobsAvailable', async () => {
-        const res = await JobService.fetchAvailableJobs();
+        const res = await TaskService.fetchAvailableJobs();
         return res.filter(
             (r) => r.owner === BlockChainConnector.instance.account.accountId
         );
     });
 
     const { isLoading: jobsProcessingLoading, data: jobsProcessing } = useQuery<
-        Job[]
-    >('jobsProcessing', () => JobService.fetchJobByAccountId());
+        Task[]
+    >('jobsProcessing', () => TaskService.fetchJobByAccountId());
 
     const { isLoading: jobsCompletedLoading, data: jobsCompleted } = useQuery<
-        Job[]
-    >('jobsCompleted', () => JobService.fetchJobCompletedByAccountId());
+        Task[]
+    >('jobsCompleted', () => TaskService.fetchJobCompletedByAccountId());
 
     const [createTaskBtnLoading, setCreateTaskBtnLoading] =
         useState<boolean>(false);
@@ -130,5 +136,8 @@ export const useHomePage = (): UseHomePageOutput => {
         fetchNextPage,
         isFetchingNextPage,
         hasNextPage,
+        filter,
+        setTaskFilter,
+        applyTaskFilter,
     };
 };

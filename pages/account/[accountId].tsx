@@ -5,7 +5,7 @@ import classes from './account.module.less';
 import { Button, Col, Container, Divider, Row, Stack } from 'rsuite';
 import { useHomePage } from '../../hooks/useHomePage';
 import { Loader } from '../../components/loader';
-import { JobType } from '../../models/types/jobType';
+import { TaskType } from '../../models/types/jobType';
 import { AccountTypes } from '../../models/types/accountType';
 import { TasksTable } from '../../components/tasksTable';
 import { ListTasks } from '../../components/listTasks';

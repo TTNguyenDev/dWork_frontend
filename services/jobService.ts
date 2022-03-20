@@ -1,7 +1,10 @@
-import { Job } from '../models/types/jobType';
+import { Task } from '../models/types/jobType';
 import { BlockChainConnector } from '../utils/blockchain';
 import { utils } from 'near-api-js';
 import BN from 'bn.js';
+import { db } from '../db';
+
+export const FETCH_TASKS_LIMIT = 12;
 
 export type CreateTaskInput = {
     title: string;
@@ -11,7 +14,7 @@ export type CreateTaskInput = {
     duration: number;
     categoryId: string;
 };
-export class JobService {
+export class TaskService {
     static async createTask(payload: CreateTaskInput): Promise<void> {
         const maxParticipants = Number.parseInt(payload.maxParticipants);
         await BlockChainConnector.instance.contract.new_task(
@@ -72,7 +75,7 @@ export class JobService {
         });
     }
 
-    static async fetchAvailableJobs(): Promise<Job[]> {
+    static async fetchAvailableJobs(): Promise<Task[]> {
         const res = await BlockChainConnector.instance.contract.available_tasks(
             {
                 from_index: 0,
@@ -81,30 +84,65 @@ export class JobService {
         );
 
         return res.map((raw: any) =>
-            JobService.mapToModel({
+            TaskService.mapToModel({
                 task_id: raw[0],
                 ...raw[1],
             })
         );
     }
 
-    static async fetchAvailableJobsInfinity({ pageParam = 0 }): Promise<Job[]> {
-        const res = await BlockChainConnector.instance.contract.available_tasks(
-            {
-                from_index: pageParam,
-                limit: 10,
+    static async fetchAvailableJobsInfinity({
+        offset = 0,
+        filter,
+    }: {
+        offset?: number;
+        filter?: {
+            categories?: string[];
+            title?: string;
+        };
+        sort?: string;
+    }): Promise<Task[]> {
+        // const res = await BlockChainConnector.instance.contract.available_tasks(
+        //     {
+        //         from_index: pageParam,
+        //         limit: 10,
+        //     }
+        // );
+
+        // return res.map((raw: any) =>
+        //     TaskService.mapToModel({
+        //         task_id: raw[0],
+        //         ...raw[1],
+        //     })
+        // );
+        const query = db.tasks.toCollection();
+
+        if (filter) {
+            if (filter.categories) {
+                query.filter((item) =>
+                    filter.categories!.includes(item.categoryId)
+                );
             }
-        );
 
-        return res.map((raw: any) =>
-            JobService.mapToModel({
-                task_id: raw[0],
-                ...raw[1],
-            })
-        );
+            if (filter.categories) {
+                query.filter((item) =>
+                    filter.categories!.includes(item.categoryId)
+                );
+            }
+        }
+
+        const res = await query
+            .offset(offset)
+            .limit(FETCH_TASKS_LIMIT)
+            .toArray();
+
+        console.log(filter);
+        console.log(res);
+
+        return res;
     }
 
-    static async fetchJobByAccountId(accountId?: string): Promise<Job[]> {
+    static async fetchJobByAccountId(accountId?: string): Promise<Task[]> {
         const res = await BlockChainConnector.instance.contract.current_tasks({
             account_id:
                 accountId ?? BlockChainConnector.instance.account.accountId,
@@ -113,7 +151,7 @@ export class JobService {
         });
 
         return res.map((raw: any) =>
-            JobService.mapToModel({
+            TaskService.mapToModel({
                 task_id: raw[0],
                 ...raw[1],
             })
@@ -122,7 +160,7 @@ export class JobService {
 
     static async fetchJobCompletedByAccountId(
         accountId?: string
-    ): Promise<Job[]> {
+    ): Promise<Task[]> {
         const res = await BlockChainConnector.instance.contract.completed_tasks(
             {
                 account_id:
@@ -133,14 +171,14 @@ export class JobService {
         );
 
         return res.map((raw: any) =>
-            JobService.mapToModel({
+            TaskService.mapToModel({
                 task_id: raw[0],
                 ...raw[1],
             })
         );
     }
 
-    static async fetchJobById(taskId?: string): Promise<Job> {
+    static async fetchTaskById(taskId?: string): Promise<Task> {
         const res = await BlockChainConnector.instance.contract.task_by_id({
             task_id: taskId,
         });
@@ -148,15 +186,19 @@ export class JobService {
         return this.mapToModel({ ...res, task_id: taskId });
     }
 
-    private static mapToModel(raw: any): Job {
+    private static mapToModel(raw: any): Task {
+        const arr = raw.task_id.split('_');
+        const id = Number.parseInt(arr[arr.length - 1]);
+
         return {
+            id,
             taskId: raw.task_id,
             owner: raw.owner,
             title: raw.title,
             description: raw.description,
             maxParticipants: raw.max_participants,
             price: utils.format.formatNearAmount(raw.price),
-            proposals: raw.proposals.map((p: any) => ({
+            proposals: raw.proposals?.map((p: any) => ({
                 accountId: p.account_id,
                 proofOfWork: p.proof_of_work,
                 isApproved: p.is_approved,
@@ -164,5 +206,60 @@ export class JobService {
             availableUntil: Number.parseInt(raw.available_until.substr(0, 13)),
             categoryId: raw.category_id,
         };
+    }
+
+    static async fetchAndCacheTasks(): Promise<void> {
+        const firstRecord = (
+            await db.tasks.toCollection().reverse().sortBy('id')
+        )[0];
+
+        console.log('firstRecord', firstRecord);
+        console.log(
+            'allRecords',
+            await db.tasks.toCollection().reverse().sortBy('id')
+        );
+
+        const LIMIT = 20;
+        let currentIndex = 0;
+        let isCompleted = false;
+
+        while (!isCompleted) {
+            const res =
+                await BlockChainConnector.instance.contract.available_tasks({
+                    from_index: currentIndex,
+                    limit: LIMIT,
+                });
+
+            if (res.length === 0) {
+                isCompleted = true;
+                break;
+            }
+
+            const data: Task[] = res.map((raw: any) =>
+                TaskService.mapToModel({
+                    task_id: raw[0],
+                    ...raw[1],
+                    proposals: [],
+                })
+            );
+
+            if (firstRecord) {
+                const firstRecordIndex = data.findIndex(
+                    (item) => item.id === firstRecord.id
+                );
+
+                if (firstRecordIndex !== -1) {
+                    await db.tasks.bulkAdd(data.slice(0, firstRecordIndex));
+                    isCompleted = true;
+                    break;
+                }
+            }
+
+            await db.tasks.bulkAdd(data);
+
+            currentIndex += LIMIT;
+
+            console.log(data);
+        }
     }
 }

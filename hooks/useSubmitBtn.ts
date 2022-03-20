@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { AccountTypes } from '../models/types/accountType';
-import { Job } from '../models/types/jobType';
+import { Task } from '../models/types/jobType';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
 export type UseSubmitBtnInput = {
-    task: Job;
+    task: Task;
     onModalOpen: () => void;
 };
 

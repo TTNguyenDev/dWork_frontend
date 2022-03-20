@@ -6,7 +6,7 @@ import { Button, Col, Container, Grid, Row } from 'rsuite';
 import { Loader } from '../../components/loader';
 import { useQuery } from 'react-query';
 import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
-import { JobService } from '../../services/jobService';
+import { TaskService } from '../../services/jobService';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { Wrapper } from '../../components/wrapper';
@@ -24,7 +24,7 @@ export default function TaskDetailsPage() {
 
     const { data: task, isLoading } = useQuery(
         taskId,
-        () => JobService.fetchJobById(taskId),
+        () => TaskService.fetchTaskById(taskId),
         {
             enabled: !!taskId,
         }

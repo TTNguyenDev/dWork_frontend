@@ -1,11 +1,11 @@
 import React, { CSSProperties, HTMLProps } from 'react';
 import { Button } from 'rsuite';
-import { Job } from '../../models/types/jobType';
+import { Task } from '../../models/types/jobType';
 import { useSubmitBtn } from '../../hooks/useSubmitBtn';
 import { SubmitWorkModal } from '../submitWorkModal';
 
 type SubmitWorkButtonProps = {
-    task: Job;
+    task: Task;
     style?: CSSProperties;
 };
 

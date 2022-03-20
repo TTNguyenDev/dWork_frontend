@@ -1,27 +1,18 @@
 import React from 'react';
-import { BsFilter, BsSearch } from 'react-icons/bs';
-import {
-    Animation,
-    Button,
-    Col,
-    Dropdown,
-    Grid,
-    Input,
-    InputGroup,
-    Row,
-    Stack,
-} from 'rsuite';
+import { Button, Stack } from 'rsuite';
 import classes from './categoriesListBadge.module.less';
-import Select from 'react-select';
 import { useQuery } from 'react-query';
 import { CategoryService } from '../../services/categoryService';
-import { useSwipeable } from 'react-swipeable';
+import { Optional } from '../../common';
 
-type CategoriesListBadgeProps = {};
+type CategoriesListBadgeProps = {
+    categoryActive: Optional<string>;
+    setCategoryActive: (categoryId: string) => void;
+};
 
 export const CategoriesListBadge: React.FunctionComponent<
     CategoriesListBadgeProps
-> = ({}) => {
+> = ({ categoryActive, setCategoryActive }) => {
     const categoriesQuery = useQuery('categories', () =>
         CategoryService.fetchCategories()
     );
@@ -33,12 +24,19 @@ export const CategoriesListBadge: React.FunctionComponent<
             <Button
                 className={classes.category_badge}
                 appearance="subtle"
-                active
+                active={!categoryActive}
+                onClick={() => setCategoryActive('')}
             >
                 All
             </Button>
             {categoriesQuery.data?.map((category) => (
-                <Button className={classes.category_badge} appearance="subtle">
+                <Button
+                    key={category.id}
+                    className={classes.category_badge}
+                    appearance="subtle"
+                    active={categoryActive === category.id}
+                    onClick={() => setCategoryActive(category.id)}
+                >
                     {category.name}
                 </Button>
             ))}

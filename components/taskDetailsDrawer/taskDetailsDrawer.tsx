@@ -1,18 +1,18 @@
 import React from 'react';
 import { Button, Col, Divider, Drawer, Grid, Panel, Row, Stack } from 'rsuite';
-import { JobType } from '../../models/types/jobType';
+import { TaskType } from '../../models/types/jobType';
 import { BlockChainConnector } from '../../utils/blockchain';
 import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
 import Avatar from 'react-avatar';
 import * as dateFns from 'date-fns';
 import { useQuery } from 'react-query';
-import { JobService } from '../../services/jobService';
+import { TaskService } from '../../services/jobService';
 import { Loader } from '../loader';
 import { ProposalItem } from '../proposalItem';
 import { SubmitWorkButton } from '../submitWorkButton';
 interface TaskDetailsDrawerProps {
     taskId?: string;
-    type?: JobType;
+    type?: TaskType;
     open: boolean;
     setOpen: (open: boolean) => void;
 }
@@ -25,7 +25,7 @@ export const TaskDetailsDrawer: React.FunctionComponent<
 
     const { data: task, isLoading } = useQuery(
         taskId!,
-        () => JobService.fetchJobById(taskId!),
+        () => TaskService.fetchTaskById(taskId!),
         {
             enabled: !!taskId,
         }

@@ -6,17 +6,17 @@ import {
 } from '@reduxjs/toolkit';
 import { Nullable, StateWithLoading } from '../common';
 import { AccountService } from '../services/accountService';
-import { JobService } from '../services/jobService';
+import { TaskService } from '../services/jobService';
 import { AppThunk, Model } from '../store';
 import { Account } from './types/accountType';
-import { Job } from './types/jobType';
+import { Task } from './types/jobType';
 
 export type ProfileState = {
     data: StateWithLoading<{
         info: Nullable<Account>;
     }>;
     jobsJoined: StateWithLoading<{
-        jobs: Job[];
+        jobs: Task[];
     }>;
 };
 
@@ -52,7 +52,7 @@ const profile = createSlice({
         getJobsJoinedStarted(state) {
             state.jobsJoined.loading = true;
         },
-        getJobsJoinedSuccess(state, action: PayloadAction<Job[]>) {
+        getJobsJoinedSuccess(state, action: PayloadAction<Task[]>) {
             state.jobsJoined.jobs = action.payload;
             state.jobsJoined.loading = false;
         },
@@ -90,7 +90,7 @@ const asyncActions: {
         dispatch(profile.actions.getJobsJoinedStarted());
 
         try {
-            const res = await JobService.fetchJobByAccountId(auth.data.userId);
+            const res = await TaskService.fetchJobByAccountId(auth.data.userId);
             dispatch(profile.actions.getJobsJoinedSuccess(res));
         } catch (error: any) {
             console.error('fetchJobsJoined', error);

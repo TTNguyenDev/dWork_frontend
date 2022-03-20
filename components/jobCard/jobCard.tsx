@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Row, Col, Panel, Stack } from 'rsuite';
-import { Job } from '../../models/types/jobType';
+import { Task } from '../../models/types/jobType';
 import classes from './jobCard.module.less';
 import { useRouter } from 'next/router';
 import moment from 'moment';
@@ -9,7 +9,7 @@ import { BsClock, BsPeople } from 'react-icons/bs';
 import { Wrapper } from '../wrapper';
 
 interface JobCardProps {
-    task: Job;
+    task: Task;
 }
 
 export const JobCard: React.FunctionComponent<JobCardProps> = ({ task }) => {

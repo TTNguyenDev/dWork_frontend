@@ -2,14 +2,14 @@ import React from 'react';
 import { Badge, Button, Col, Panel, Row, Stack, Whisper } from 'rsuite';
 import { useRejectWork } from '../../hooks/useRejectWork';
 import { useApproveWork } from '../../hooks/useApproveWork';
-import { Job, Proposal } from '../../models/types/jobType';
+import { Task, Proposal } from '../../models/types/jobType';
 import { BlockChainConnector } from '../../utils/blockchain';
 import Avatar from 'react-avatar';
 import { popoverConfirm } from '../popoverConfirm';
 
 type ProposalItemProps = {
     data: Proposal;
-    task: Job;
+    task: Task;
 };
 
 export const ProposalItem = ({ data, task }: ProposalItemProps) => {

@@ -19,11 +19,24 @@ import { useQuery } from 'react-query';
 import { CategoryService } from '../../services/categoryService';
 import { Wrapper } from '../wrapper';
 
-type TaskFilterProps = {};
+type TaskFilterProps = {
+    filter: any;
+    setTaskFilter: (payload: Record<string, any>) => void;
+    applyTaskFilter: () => void;
+};
 
-export const TaskFilter: React.FunctionComponent<TaskFilterProps> = ({}) => {
+export const TaskFilter: React.FunctionComponent<TaskFilterProps> = ({
+    filter,
+    setTaskFilter,
+    applyTaskFilter,
+}) => {
     const [show, setShow] = React.useState(false);
     const handleToggle = () => setShow(!show);
+
+    const setCategoryActive = (categoryId: string) => {
+        setTaskFilter({ categories: [categoryId] });
+        applyTaskFilter();
+    };
 
     return (
         <Wrapper className={classes.root}>
@@ -59,7 +72,12 @@ export const TaskFilter: React.FunctionComponent<TaskFilterProps> = ({}) => {
                     />
                 </div>
                 <div className={classes.list_category}>
-                    <CategoriesListBadge />
+                    <CategoriesListBadge
+                        categoryActive={
+                            filter.categories ? filter.categories[0] : undefined
+                        }
+                        setCategoryActive={setCategoryActive}
+                    />
                 </div>
                 <div>
                     <Button

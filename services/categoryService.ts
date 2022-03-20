@@ -14,7 +14,7 @@ export class CategoryService {
     static async fetchCategories(): Promise<Category[]> {
         const res = await BlockChainConnector.instance.contract.categories({
             from_index: 0,
-            limit: 50,
+            limit: 20,
         });
 
         return res.map((raw: any) => CategoryService.mapToModel(raw));
