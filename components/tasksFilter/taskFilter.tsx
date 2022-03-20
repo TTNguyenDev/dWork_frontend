@@ -70,7 +70,13 @@ export const TaskFilter: React.FunctionComponent<TaskFilterProps> = ({
                     <Select
                         options={SORT_SELECT_OPTIONS}
                         isSearchable={false}
-                        defaultValue={SORT_SELECT_OPTIONS[0]}
+                        defaultValue={
+                            filter?.sort
+                                ? SORT_SELECT_OPTIONS.find(
+                                      (o) => o.value === filter.sort
+                                  )
+                                : SORT_SELECT_OPTIONS[0]
+                        }
                         components={{
                             IndicatorSeparator: () => null,
                         }}

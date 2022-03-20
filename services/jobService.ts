@@ -137,7 +137,7 @@ export class TaskService {
                 break;
             case TaskSortTypes.NEWEST:
             default:
-                query = db.tasks.orderBy('id');
+                query = db.tasks.orderBy('id').reverse();
         }
 
         if (filter) {
