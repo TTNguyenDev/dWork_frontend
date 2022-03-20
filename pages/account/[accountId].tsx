@@ -2,7 +2,7 @@ import React from 'react';
 import Header from 'next/head';
 import { Layout } from '../../components/layout';
 import classes from './account.module.less';
-import { Col, Container, Divider, Row } from 'rsuite';
+import { Button, Col, Container, Divider, Row, Stack } from 'rsuite';
 import { useHomePage } from '../../hooks/useHomePage';
 import { Loader } from '../../components/loader';
 import { JobType } from '../../models/types/jobType';
@@ -13,6 +13,7 @@ import { TaskFilter } from '../../components/tasksFilter';
 import { AccountInfoCard } from '../../components/accountInfoCard';
 import { Wrapper } from '../../components/wrapper';
 import { BlockChainConnector } from '../../utils/blockchain';
+import { AccountTasksFilter } from '../../components/accountTasksFilter';
 
 export default function AccountPage() {
     const {
@@ -52,25 +53,50 @@ export default function AccountPage() {
                                             accountId={profileInfo.accountId}
                                         />
                                     )}
+                                    <Divider />
+                                    <Stack
+                                        direction="column"
+                                        spacing={5}
+                                        alignItems="stretch"
+                                        style={{
+                                            padding: 10,
+                                        }}
+                                    >
+                                        <Button
+                                            style={{ width: '100%' }}
+                                            appearance="subtle"
+                                            active
+                                        >
+                                            Tasks
+                                        </Button>
+                                        <Button
+                                            style={{ width: '100%' }}
+                                            appearance="subtle"
+                                        >
+                                            Settings
+                                        </Button>
+                                    </Stack>
                                 </Wrapper>
                             </div>
                         </Col>
                         <Col xs={24} sm={24} md={19}>
-                            <div className={classes.top}>
-                                <TaskFilter />
-                            </div>
-                            <div className={classes.main}>
-                                <ListTasks
-                                    isCreatable
-                                    tasks={jobsAvailable}
-                                    isLoading={jobsAvailableLoading}
-                                    gridBreakpoints={{
-                                        lg: 8,
-                                        md: 8,
-                                        sm: 12,
-                                        xs: 24,
-                                    }}
-                                />
+                            <div className={classes.wrapper}>
+                                <div className={classes.top}>
+                                    <AccountTasksFilter />
+                                </div>
+                                <div className={classes.main}>
+                                    <ListTasks
+                                        isCreatable
+                                        tasks={jobsAvailable}
+                                        isLoading={jobsAvailableLoading}
+                                        gridBreakpoints={{
+                                            lg: 8,
+                                            md: 8,
+                                            sm: 12,
+                                            xs: 24,
+                                        }}
+                                    />
+                                </div>
                             </div>
                         </Col>
                     </Row>
