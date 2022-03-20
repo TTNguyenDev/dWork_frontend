@@ -14,6 +14,13 @@ export type CreateTaskInput = {
     duration: number;
     categoryId: string;
 };
+
+export enum TaskSortTypes {
+    NEWEST = 'newest',
+    OLDEST = 'oldest',
+    HIGH_PRICE = 'high_price',
+    LOW_PRICE = 'low_price',
+}
 export class TaskService {
     static async createTask(payload: CreateTaskInput): Promise<void> {
         const maxParticipants = Number.parseInt(payload.maxParticipants);
@@ -97,10 +104,10 @@ export class TaskService {
     }: {
         offset?: number;
         filter?: {
+            sort?: string;
             categories?: string[];
             title?: string;
         };
-        sort?: string;
     }): Promise<Task[]> {
         // const res = await BlockChainConnector.instance.contract.available_tasks(
         //     {
@@ -115,7 +122,23 @@ export class TaskService {
         //         ...raw[1],
         //     })
         // );
-        const query = db.tasks.toCollection();
+
+        let query;
+
+        switch (filter?.sort) {
+            case TaskSortTypes.HIGH_PRICE:
+                query = db.tasks.orderBy('price').reverse();
+                break;
+            case TaskSortTypes.LOW_PRICE:
+                query = db.tasks.orderBy('price');
+                break;
+            case TaskSortTypes.OLDEST:
+                query = db.tasks.orderBy('id');
+                break;
+            case TaskSortTypes.NEWEST:
+            default:
+                query = db.tasks.orderBy('id');
+        }
 
         if (filter) {
             if (filter.categories) {
@@ -124,9 +147,11 @@ export class TaskService {
                 );
             }
 
-            if (filter.categories) {
+            if (filter.title) {
                 query.filter((item) =>
-                    filter.categories!.includes(item.categoryId)
+                    item.title
+                        .toLocaleLowerCase()
+                        .includes(filter.title!.toLowerCase())
                 );
             }
         }
@@ -197,7 +222,7 @@ export class TaskService {
             title: raw.title,
             description: raw.description,
             maxParticipants: raw.max_participants,
-            price: utils.format.formatNearAmount(raw.price),
+            price: Number(utils.format.formatNearAmount(raw.price)),
             proposals: raw.proposals?.map((p: any) => ({
                 accountId: p.account_id,
                 proofOfWork: p.proof_of_work,

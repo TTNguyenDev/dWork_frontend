@@ -7,8 +7,6 @@ import createTaskLogo from '../assets/logos/create-task.png';
 import makeMoneyLogo from '../assets/logos/make-money.png';
 import { useHomePage } from '../hooks/useHomePage';
 import { Loader } from '../components/loader';
-import { useQuery } from 'react-query';
-import { CategoryService } from '../services/categoryService';
 import { ListTasks } from '../components/listTasks';
 import { TaskFilter } from '../components/tasksFilter';
 import { useSelector } from 'react-redux';

@@ -8,7 +8,7 @@ type Task = {
     title: string;
     description: string;
     maxParticipants: number;
-    price: string;
+    price: number;
     availableUntil: number;
     categoryId: string;
     proposals: Proposal[];
@@ -22,7 +22,7 @@ export class MySubClassedDexie extends Dexie {
     constructor() {
         super('myDatabase');
         this.version(1).stores({
-            tasks: '++id', // Primary key and indexed props
+            tasks: 'id, price', // Primary key and indexed props
         });
     }
 }

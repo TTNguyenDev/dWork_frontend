@@ -12,7 +12,6 @@ export const useTaskFilter = (): TaskFilterOutput => {
 
     const [filter, setFilter] = useState({});
     const tempFilter = useRef({});
-    tempFilter.current = router.query;
 
     useEffect(() => {
         if (router.isReady) setFilter(router.query);
@@ -20,7 +19,7 @@ export const useTaskFilter = (): TaskFilterOutput => {
 
     const setTaskFilter = useCallback(
         (payload: Record<string, any>) => {
-            console.log(payload);
+            console.log(tempFilter.current);
             tempFilter.current = { ...tempFilter.current, ...payload };
         },
         [tempFilter.current]

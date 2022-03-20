@@ -20,7 +20,7 @@ export type Task = {
     title: string;
     description: string;
     maxParticipants: number;
-    price: string;
+    price: number;
     proposals: Proposal[];
     availableUntil: number;
     categoryId: string;
