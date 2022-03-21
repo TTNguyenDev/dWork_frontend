@@ -1,10 +1,10 @@
-import { Task } from '../models/types/jobType';
+import { Task, TaskStatus } from '../models/types/jobType';
 import { BlockChainConnector } from '../utils/blockchain';
 import { utils } from 'near-api-js';
 import BN from 'bn.js';
 import { db } from '../db';
 
-export const FETCH_TASKS_LIMIT = 12;
+export const FETCH_TASKS_LIMIT = 1;
 
 export type CreateTaskInput = {
     title: string;
@@ -21,6 +21,7 @@ export enum TaskSortTypes {
     HIGH_PRICE = 'high_price',
     LOW_PRICE = 'low_price',
 }
+
 export class TaskService {
     static async createTask(payload: CreateTaskInput): Promise<void> {
         const maxParticipants = Number.parseInt(payload.maxParticipants);
@@ -98,31 +99,21 @@ export class TaskService {
         );
     }
 
-    static async fetchAvailableJobsInfinity({
+    static async fetchJobsInfinity({
         offset = 0,
+        fromBlockId,
         filter,
     }: {
         offset?: number;
         filter?: {
+            status?: TaskStatus;
             sort?: string;
             categories?: string[];
             title?: string;
+            owner?: string;
         };
+        fromBlockId?: number;
     }): Promise<Task[]> {
-        // const res = await BlockChainConnector.instance.contract.available_tasks(
-        //     {
-        //         from_index: pageParam,
-        //         limit: 10,
-        //     }
-        // );
-
-        // return res.map((raw: any) =>
-        //     TaskService.mapToModel({
-        //         task_id: raw[0],
-        //         ...raw[1],
-        //     })
-        // );
-
         let query;
 
         switch (filter?.sort) {
@@ -154,17 +145,67 @@ export class TaskService {
                         .includes(filter.title!.toLowerCase())
                 );
             }
+
+            if (filter.owner) {
+                query.filter((item) => item.owner === filter.owner);
+            }
         }
 
-        const res = await query
-            .offset(offset)
-            .limit(FETCH_TASKS_LIMIT)
-            .toArray();
+        const queryRes = await query.toArray();
 
-        console.log(filter);
-        console.log(res);
+        if (filter?.status === TaskStatus.AVAILABLE) {
+            const ids = queryRes.map((q) => q.taskId);
 
-        return res;
+            let isCompleted = false;
+
+            let offset = 0;
+            if (fromBlockId) {
+                offset = queryRes.findIndex((q) => q.id === fromBlockId) + 1;
+            }
+
+            const LIMIT = 20;
+
+            let availableTasks: Task[] = [];
+
+            while (!isCompleted) {
+                const batchIds = ids.slice(offset, (offset += LIMIT));
+                const res =
+                    await BlockChainConnector.instance.contract.tasks_by_ids({
+                        ids: batchIds,
+                    });
+
+                const tasks: Task[] = res
+                    .map((raw: any, index: number) =>
+                        TaskService.mapToModel({
+                            task_id: raw[0],
+                            ...raw[1],
+                        })
+                    )
+                    .filter(
+                        (item: Task) =>
+                            item.proposals.filter((p) => p.isApproved).length <
+                                item.maxParticipants &&
+                            item.availableUntil > Date.now()
+                    );
+
+                const validTasks = tasks.slice(
+                    0,
+                    FETCH_TASKS_LIMIT - availableTasks.length
+                );
+
+                availableTasks = [...availableTasks, ...validTasks];
+
+                if (
+                    availableTasks.length === FETCH_TASKS_LIMIT ||
+                    offset > ids.length - 1
+                )
+                    isCompleted = true;
+            }
+
+            return availableTasks;
+        }
+
+        return queryRes;
     }
 
     static async fetchJobByAccountId(accountId?: string): Promise<Task[]> {
@@ -238,7 +279,6 @@ export class TaskService {
             await db.tasks.toCollection().reverse().sortBy('id')
         )[0];
 
-        console.log('firstRecord', firstRecord);
         console.log(
             'allRecords',
             await db.tasks.toCollection().reverse().sortBy('id')

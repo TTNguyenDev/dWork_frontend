@@ -20,6 +20,8 @@ const ViewMethods: string[] = [
     'completed_tasks',
     'user_info',
     'task_by_id',
+    'categories',
+    'tasks_by_ids',
 ];
 
 const ChangeMethods: string[] = [
@@ -34,7 +36,6 @@ const ChangeMethods: string[] = [
     'reject_work',
     'mark_task_as_completed',
     'new_category',
-    'categories',
 ];
 
 type ContractMethodType<K = any> = (...args: any) => K;
@@ -56,6 +57,7 @@ type ContractMethodsType = {
     task_by_id: ContractMethodType;
     new_category: ContractMethodType;
     categories: ContractMethodType;
+    tasks_by_ids: ContractMethodType;
 };
 
 export class NearConnector {

@@ -15,7 +15,6 @@ import Select from 'react-select';
 import { useQuery } from 'react-query';
 import { CategoryService } from '../../services/categoryService';
 import { Wrapper } from '../wrapper';
-import * as dateFns from 'date-fns';
 
 type AccountTasksFilterProps = {};
 

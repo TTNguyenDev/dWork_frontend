@@ -11,17 +11,17 @@ export const StatusBadge: React.FunctionComponent<StatusBadgeProps> = ({
 }) => {
     return (
         <Badge
-            color={
-                status === TaskStatus.READY_FOR_APPLY
-                    ? 'green'
-                    : status === TaskStatus.FOUND_WORKER
-                    ? 'cyan'
-                    : status === TaskStatus.WORKER_SUBMITTED
-                    ? 'blue'
-                    : status === TaskStatus.PAYOUT
-                    ? 'violet'
-                    : 'blue'
-            }
+            // color={
+            //     status === TaskStatus.READY_FOR_APPLY
+            //         ? 'green'
+            //         : status === TaskStatus.FOUND_WORKER
+            //         ? 'cyan'
+            //         : status === TaskStatus.WORKER_SUBMITTED
+            //         ? 'blue'
+            //         : status === TaskStatus.PAYOUT
+            //         ? 'violet'
+            //         : 'blue'
+            // }
             content={status}
         />
     );

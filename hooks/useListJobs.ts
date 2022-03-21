@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useInfiniteQuery, useQuery, useQueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useInfiniteQuery, useQueryClient } from 'react-query';
 import { Optional } from '../common';
 import { Task } from '../models/types/jobType';
 import { FETCH_TASKS_LIMIT, TaskService } from '../services/jobService';
-import { RootState } from '../store';
-import { useTaskFilter } from './useTaskFilter';
+import { TaskFilterInput, useTaskFilter } from './useTaskFilter';
+
+export type UseListJobsInput = TaskFilterInput;
 
 export type UseListJobsOutput = {
     loading: boolean;
@@ -18,8 +18,8 @@ export type UseListJobsOutput = {
     applyTaskFilter: () => void;
 };
 
-export const useListJobs = (): UseListJobsOutput => {
-    const { filter, setTaskFilter, applyTaskFilter } = useTaskFilter();
+export const useListJobs = (payload?: UseListJobsInput): UseListJobsOutput => {
+    const { filter, setTaskFilter, applyTaskFilter } = useTaskFilter(payload);
 
     const {
         data,
@@ -31,15 +31,20 @@ export const useListJobs = (): UseListJobsOutput => {
         status,
     } = useInfiniteQuery(
         ['jobs', filter],
-        ({ pageParam }) =>
-            TaskService.fetchAvailableJobsInfinity({
-                offset: pageParam,
+        ({ pageParam: { offset, fromBlockId } = {} }) =>
+            TaskService.fetchJobsInfinity({
+                offset,
+                fromBlockId,
                 filter,
             }),
         {
             getNextPageParam: (lastPage, pages) => {
                 if (lastPage.length < FETCH_TASKS_LIMIT) return undefined;
-                return FETCH_TASKS_LIMIT * pages.length;
+                console.log(lastPage[0].id);
+                return {
+                    offset: FETCH_TASKS_LIMIT * pages.length,
+                    fromBlockId: lastPage[lastPage.length - 1].id,
+                };
             },
         }
     );

@@ -1,10 +1,7 @@
 export enum TaskStatus {
-    READY_FOR_APPLY = 'ReadyForApply',
-    FOUND_WORKER = 'FoundWorker',
-    WORKER_SUBMITTED = 'WorkSubmitted',
-    PAYOUT = 'Payout',
-    DELETED = 'Deleted',
-    PENDING = 'Pending',
+    AVAILABLE = 'available',
+    COMPLETED = 'completed',
+    EXPIRED = 'expired',
 }
 
 export type Proposal = {

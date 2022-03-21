@@ -3,6 +3,7 @@ import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { NearConfig } from '../config';
 import { CONTRACT_NAME } from '../constants';
+import { db } from '../db';
 import { AppModel } from '../models/appModel';
 import { AuthModel } from '../models/authModel';
 import { ProfileModel } from '../models/profileModel';
@@ -22,6 +23,7 @@ export const useApp = () => {
         if (NearConfig.contractName !== localStorage.getItem(CONTRACT_NAME)) {
             localStorage.clear();
             localStorage.setItem(CONTRACT_NAME, NearConfig.contractName);
+            db.delete();
         }
 
         // Set default theme

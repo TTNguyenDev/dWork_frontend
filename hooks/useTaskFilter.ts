@@ -1,5 +1,10 @@
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { TaskStatus } from '../models/types/jobType';
+
+export type TaskFilterInput = {
+    defaultFilter?: any;
+};
 
 export type TaskFilterOutput = {
     filter: any;
@@ -7,14 +12,21 @@ export type TaskFilterOutput = {
     applyTaskFilter: () => void;
 };
 
-export const useTaskFilter = (): TaskFilterOutput => {
+export const useTaskFilter = ({
+    defaultFilter,
+}: TaskFilterInput = {}): TaskFilterOutput => {
     const router = useRouter();
 
     const [filter, setFilter] = useState({});
     const tempFilter = useRef({});
 
     useEffect(() => {
-        if (router.isReady) setFilter(router.query);
+        if (router.isReady)
+            setFilter({
+                status: TaskStatus.AVAILABLE,
+                ...(defaultFilter || {}),
+                ...router.query,
+            });
     }, [router.query]);
 
     const setTaskFilter = useCallback(

@@ -14,20 +14,30 @@ import { AccountInfoCard } from '../../components/accountInfoCard';
 import { Wrapper } from '../../components/wrapper';
 import { BlockChainConnector } from '../../utils/blockchain';
 import { AccountTasksFilter } from '../../components/accountTasksFilter';
+import { useListJobs } from '../../hooks/useListJobs';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import { useRouter } from 'next/router';
 
 export default function AccountPage() {
+    const router = useRouter();
+
+    const accountId = router.query.accountId as string;
+
+    const profile = useSelector((state: RootState) => state.profile);
+
     const {
-        authLoading,
-        logged,
-        profileLoading,
-        profileInfo,
-        jobsAvailableLoading,
-        jobsAvailable,
-        jobsProcessingLoading,
-        jobsProcessing,
-        jobsCompletedLoading,
-        jobsCompleted,
-    } = useHomePage();
+        loading: listJobsLoading,
+        jobs,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        filter,
+        setTaskFilter,
+        applyTaskFilter,
+    } = useListJobs({
+        defaultFilter: { owner: accountId },
+    });
 
     return (
         <>
@@ -48,9 +58,11 @@ export default function AccountPage() {
                                     className={classes.owner_info}
                                     style={{ marginBottom: 20 }}
                                 >
-                                    {profileInfo && (
+                                    {profile.data.info && (
                                         <AccountInfoCard
-                                            accountId={profileInfo.accountId}
+                                            accountId={
+                                                profile.data.info.accountId
+                                            }
                                         />
                                     )}
                                     <Divider />
@@ -87,14 +99,17 @@ export default function AccountPage() {
                                 <div className={classes.main}>
                                     <ListTasks
                                         isCreatable
-                                        tasks={jobsAvailable}
-                                        isLoading={jobsAvailableLoading}
+                                        tasks={jobs}
+                                        isLoading={listJobsLoading}
                                         gridBreakpoints={{
                                             lg: 8,
                                             md: 8,
                                             sm: 12,
                                             xs: 24,
                                         }}
+                                        fetchNextPage={fetchNextPage}
+                                        isFetchingNextPage={isFetchingNextPage}
+                                        hasNextPage={hasNextPage}
                                     />
                                 </div>
                             </div>
@@ -108,8 +123,8 @@ export default function AccountPage() {
                     )} */}
                     {/* {!authLoading &&
                         !profileLoading &&
-                        profileInfo &&
-                        profileInfo.type === AccountTypes.WORKER && (
+                        profile.data.info &&
+                        profile.data.info.type === AccountTypes.WORKER && (
                             <>
                                 <h5 style={{ marginBottom: 15 }}>
                                     Processing Tasks
@@ -136,8 +151,8 @@ export default function AccountPage() {
                         )}
                     {!authLoading &&
                         !profileLoading &&
-                        profileInfo &&
-                        profileInfo.type === AccountTypes.REQUESTER && (
+                        profile.data.info &&
+                        profile.data.info.type === AccountTypes.REQUESTER && (
                             <>
                                 <Divider />
                                 <h5 style={{ marginBottom: 15 }}>
