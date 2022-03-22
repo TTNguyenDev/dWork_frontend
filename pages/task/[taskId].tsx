@@ -296,7 +296,7 @@ export default function TaskDetailsPage() {
                                                                 cursor: 'pointer',
                                                             }),
                                                         }}
-                                                        onChange={(item) =>
+                                                        onChange={(item: any) =>
                                                             setFilterStatus(
                                                                 item.value
                                                             )
