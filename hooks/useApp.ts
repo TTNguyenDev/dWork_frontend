@@ -19,19 +19,28 @@ export const useApp = () => {
     useEffect(() => {
         window.Buffer = window.Buffer || Buffer;
 
-        // Remove old contract data
-        if (NearConfig.contractName !== localStorage.getItem(CONTRACT_NAME)) {
-            localStorage.clear();
-            localStorage.setItem(CONTRACT_NAME, NearConfig.contractName);
-            db.delete();
-        }
+        (async () => {
+            // Remove old contract data
+            if (
+                NearConfig.contractName !== localStorage.getItem(CONTRACT_NAME)
+            ) {
+                await Promise.all([
+                    db.tasks.clear(),
+                    db.accountTasks.clear(),
+                    db.accountCompletedTasks.clear(),
+                ]);
+                console.log('closed');
+                localStorage.clear();
+                localStorage.setItem(CONTRACT_NAME, NearConfig.contractName);
+            }
 
-        // Set default theme
-        const html = document.querySelector('html')!;
-        html.dataset.theme = 'light';
+            // Set default theme
+            const html = document.querySelector('html')!;
+            html.dataset.theme = 'light';
 
-        // Init app
-        dispatch(AppModel.asyncActions.init());
+            // Init app
+            dispatch(AppModel.asyncActions.init());
+        })();
     }, []);
 
     useEffect(() => {
@@ -44,6 +53,7 @@ export const useApp = () => {
     useEffect(() => {
         if (!auth.data.logged) return;
 
+        dispatch(AppModel.asyncActions.accountTasksCache());
         dispatch(ProfileModel.asyncActions.fetchProfile());
     }, [auth.data.logged]);
 

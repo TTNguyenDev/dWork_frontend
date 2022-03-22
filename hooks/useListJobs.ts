@@ -13,13 +13,15 @@ export type UseListJobsOutput = {
     isFetchingNextPage: boolean;
     hasNextPage: Optional<boolean>;
     fetchNextPage: () => Promise<any>;
+    filterReady: boolean;
     filter: any;
     setTaskFilter: (payload: Record<string, any>) => void;
     applyTaskFilter: () => void;
 };
 
 export const useListJobs = (payload?: UseListJobsInput): UseListJobsOutput => {
-    const { filter, setTaskFilter, applyTaskFilter } = useTaskFilter(payload);
+    const { filterReady, filter, setTaskFilter, applyTaskFilter } =
+        useTaskFilter(payload);
 
     const {
         data,
@@ -40,7 +42,6 @@ export const useListJobs = (payload?: UseListJobsInput): UseListJobsOutput => {
         {
             getNextPageParam: (lastPage, pages) => {
                 if (lastPage.length < FETCH_TASKS_LIMIT) return undefined;
-                console.log(lastPage[0].id);
                 return {
                     offset: FETCH_TASKS_LIMIT * pages.length,
                     fromBlockId: lastPage[lastPage.length - 1].id,
@@ -68,6 +69,7 @@ export const useListJobs = (payload?: UseListJobsInput): UseListJobsOutput => {
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,
+        filterReady,
         filter,
         setTaskFilter,
         applyTaskFilter,

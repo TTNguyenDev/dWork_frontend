@@ -4,7 +4,7 @@ import { utils } from 'near-api-js';
 import BN from 'bn.js';
 import { db } from '../db';
 
-export const FETCH_TASKS_LIMIT = 1;
+export const FETCH_TASKS_LIMIT = 4;
 
 export type CreateTaskInput = {
     title: string;
@@ -274,57 +274,79 @@ export class TaskService {
         };
     }
 
-    static async fetchAndCacheTasks(): Promise<void> {
-        const firstRecord = (
-            await db.tasks.toCollection().reverse().sortBy('id')
-        )[0];
+    static async fetchAndCacheTasks(
+        type?: 'available' | 'account' | 'account_completed'
+    ): Promise<void> {
+        let fetchTasks;
+        let table;
 
-        console.log(
-            'allRecords',
-            await db.tasks.toCollection().reverse().sortBy('id')
-        );
+        switch (type) {
+            case 'account':
+                fetchTasks =
+                    BlockChainConnector.instance.contract.current_tasks;
+                table = db.accountTasks;
+                break;
+            case 'account_completed':
+                fetchTasks =
+                    BlockChainConnector.instance.contract.completed_tasks;
+                table = db.accountCompletedTasks;
+                break;
+            case 'available':
+            default:
+                fetchTasks =
+                    BlockChainConnector.instance.contract.available_tasks;
+                table = db.tasks;
+                break;
+        }
+
+        const firstRecord = (
+            await table.toCollection().reverse().sortBy('id')
+        )[0];
 
         const LIMIT = 20;
         let currentIndex = 0;
         let isCompleted = false;
 
         while (!isCompleted) {
-            const res =
-                await BlockChainConnector.instance.contract.available_tasks({
+            try {
+                const res = await fetchTasks({
                     from_index: currentIndex,
                     limit: LIMIT,
+                    account_id: BlockChainConnector.instance.account.accountId,
                 });
 
-            if (res.length === 0) {
-                isCompleted = true;
-                break;
-            }
-
-            const data: Task[] = res.map((raw: any) =>
-                TaskService.mapToModel({
-                    task_id: raw[0],
-                    ...raw[1],
-                    proposals: [],
-                })
-            );
-
-            if (firstRecord) {
-                const firstRecordIndex = data.findIndex(
-                    (item) => item.id === firstRecord.id
-                );
-
-                if (firstRecordIndex !== -1) {
-                    await db.tasks.bulkAdd(data.slice(0, firstRecordIndex));
+                if (res.length === 0) {
                     isCompleted = true;
                     break;
                 }
+
+                const data: Task[] = res.map((raw: any) =>
+                    TaskService.mapToModel({
+                        task_id: raw[0],
+                        ...raw[1],
+                        proposals: [],
+                    })
+                );
+
+                if (firstRecord) {
+                    const firstRecordIndex = data.findIndex(
+                        (item) => item.id === firstRecord.id
+                    );
+
+                    if (firstRecordIndex !== -1) {
+                        await table.bulkAdd(data.slice(0, firstRecordIndex));
+                        isCompleted = true;
+                        break;
+                    }
+                }
+
+                await table.bulkAdd(data);
+
+                currentIndex += LIMIT;
+            } catch (err) {
+                console.error('fetchAndCacheTasks' + ' ' + type, err);
+                isCompleted = true;
             }
-
-            await db.tasks.bulkAdd(data);
-
-            currentIndex += LIMIT;
-
-            console.log(data);
         }
     }
 }

@@ -5,6 +5,7 @@ import {
     Reducer,
 } from '@reduxjs/toolkit';
 import { Nullable, StateWithLoading } from '../common';
+import { db } from '../db';
 import { AuthService } from '../services/authService';
 import { AppThunk, Model } from '../store';
 import { BlockChainConnector } from '../utils/blockchain';
@@ -13,10 +14,9 @@ export type AuthState = {
     data: StateWithLoading<{
         logged: boolean;
         userId: Nullable<string>;
-    }>
-    login: StateWithLoading,
-    logout: StateWithLoading
-
+    }>;
+    login: StateWithLoading;
+    logout: StateWithLoading;
 };
 
 const initialState: AuthState = {
@@ -30,7 +30,7 @@ const initialState: AuthState = {
     },
     logout: {
         loading: false,
-    }
+    },
 };
 
 const topics = createSlice({
@@ -62,13 +62,13 @@ const topics = createSlice({
             state.logout.loading = false;
         },
         checkLoginStatus(state) {
-            state.data.logged = !!BlockChainConnector.instance.account.accountId;
+            state.data.logged =
+                !!BlockChainConnector.instance.account.accountId;
             state.data.userId = BlockChainConnector.instance.account.accountId;
             state.data.loading = false;
-        }
+        },
     },
 });
-
 
 const asyncActions: {
     logIn: () => AppThunk;
@@ -81,9 +81,14 @@ const asyncActions: {
     logOut: () => async (dispatch) => {
         dispatch(topics.actions.logOutStart());
         await AuthService.logOut();
+        await Promise.all([
+            db.tasks.clear(),
+            db.accountTasks.clear(),
+            db.accountCompletedTasks.clear(),
+        ]);
         window.location.replace('/');
-    }
-}
+    },
+};
 
 export const AuthModel: Model<
     typeof topics.actions,

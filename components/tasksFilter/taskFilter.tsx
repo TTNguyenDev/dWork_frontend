@@ -20,7 +20,7 @@ type TaskFilterProps = {
     applyTaskFilter: () => void;
 };
 
-const SORT_SELECT_OPTIONS = [
+export const SORT_SELECT_OPTIONS = [
     {
         label: 'Newest',
         value: 'newest',

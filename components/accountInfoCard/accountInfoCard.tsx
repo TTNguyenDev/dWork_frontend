@@ -22,8 +22,6 @@ export const AccountInfoCard: React.FunctionComponent<AccountInfoCardProps> = ({
         }
     );
 
-    console.log(account);
-
     return (
         <div className={classes.root}>
             <div className={classes.avatar}>

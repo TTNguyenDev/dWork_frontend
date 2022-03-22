@@ -32,6 +32,7 @@ export default function AccountPage() {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
+        filterReady,
         filter,
         setTaskFilter,
         applyTaskFilter,
@@ -95,6 +96,7 @@ export default function AccountPage() {
                             <div className={classes.wrapper}>
                                 <div className={classes.top}>
                                     <AccountTasksFilter
+                                        filterReady={filterReady}
                                         filter={filter}
                                         setTaskFilter={setTaskFilter}
                                         applyTaskFilter={applyTaskFilter}

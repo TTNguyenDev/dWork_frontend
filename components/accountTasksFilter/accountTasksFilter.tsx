@@ -16,6 +16,9 @@ import { useQuery } from 'react-query';
 import { CategoryService } from '../../services/categoryService';
 import { Wrapper } from '../wrapper';
 import { TaskStatus } from '../../models/types/jobType';
+import { SORT_SELECT_OPTIONS } from '../tasksFilter';
+import { Category } from '../../models/types/categoryType';
+import { useRouter } from 'next/router';
 
 const TASK_STATUS_SELECT_OPTIONS = [
     {
@@ -33,6 +36,7 @@ const TASK_STATUS_SELECT_OPTIONS = [
 ];
 
 type AccountTasksFilterProps = {
+    filterReady: boolean;
     filter: any;
     setTaskFilter: (payload: Record<string, any>) => void;
     applyTaskFilter: () => void;
@@ -40,9 +44,24 @@ type AccountTasksFilterProps = {
 
 export const AccountTasksFilter: React.FunctionComponent<
     AccountTasksFilterProps
-> = ({ filter, setTaskFilter, applyTaskFilter }) => {
+> = ({ filterReady, filter, setTaskFilter, applyTaskFilter }) => {
     const [show, setShow] = React.useState(false);
     const handleToggle = () => setShow(!show);
+
+    const timeoutSearchInputRef = React.useRef<NodeJS.Timeout>();
+    const handleSearchInputChange = React.useCallback((value) => {
+        if (timeoutSearchInputRef.current !== undefined)
+            clearTimeout(timeoutSearchInputRef.current);
+
+        timeoutSearchInputRef.current = setTimeout(() => {
+            setTaskFilter({ title: value });
+            applyTaskFilter();
+        }, 200);
+    }, []);
+
+    const router = useRouter();
+
+    if (!filterReady) return null;
 
     return (
         <Wrapper className={classes.root}>
@@ -51,7 +70,11 @@ export const AccountTasksFilter: React.FunctionComponent<
                     <InputGroup.Addon>
                         <BsSearch />
                     </InputGroup.Addon>
-                    <Input placeholder="Search" />
+                    <Input
+                        placeholder="Search"
+                        onChange={handleSearchInputChange}
+                        defaultValue={filter.title}
+                    />
                 </InputGroup>
                 <div>
                     <Stack spacing={15}>
@@ -95,7 +118,15 @@ export const AccountTasksFilter: React.FunctionComponent<
                 </div>
             </div>
             <Animation.Collapse className={classes.bottom} in={show}>
-                {(props, ref) => <Panel {...props} ref={ref} />}
+                {(props, ref) => (
+                    <Panel
+                        {...props}
+                        ref={ref}
+                        filter={filter}
+                        setTaskFilter={setTaskFilter}
+                        applyTaskFilter={applyTaskFilter}
+                    />
+                )}
             </Animation.Collapse>
         </Wrapper>
     );
@@ -103,19 +134,9 @@ export const AccountTasksFilter: React.FunctionComponent<
 
 const Panel = React.forwardRef(
     ({ style, filter, setTaskFilter, applyTaskFilter, ...props }: any, ref) => {
-        const filterRef = useRef({});
+        const filterRef = useRef({ ...filter });
         const categoriesQuery = useQuery('categories', () =>
             CategoryService.fetchCategories()
-        );
-
-        const handleSearchInputChange = useCallback(
-            (value) => {
-                filterRef.current = {
-                    ...filterRef.current,
-                    title: value,
-                };
-            },
-            [filterRef.current]
         );
 
         const handleCategorySelectChange = useCallback(
@@ -128,16 +149,26 @@ const Panel = React.forwardRef(
             [filterRef.current]
         );
 
+        const handleSortSelectChange = useCallback(({ value }) => {
+            filterRef.current = {
+                ...filterRef.current,
+                sort: value,
+            };
+        }, []);
+
         const handleApplyButtonClick = useCallback(() => {
             setTaskFilter(filterRef.current);
             applyTaskFilter();
         }, [filterRef.current]);
 
-        const handleSortSelectChange = useCallback(({ value }) => {
-            console.log(value);
-            setTaskFilter({ sort: value });
-            applyTaskFilter();
-        }, []);
+        const categorySelectOptions = React.useMemo(
+            () =>
+                categoriesQuery.data?.map((item) => ({
+                    value: item.id,
+                    label: item.name,
+                })),
+            [categoriesQuery.data]
+        );
 
         return (
             <div
@@ -165,10 +196,17 @@ const Panel = React.forwardRef(
                             <Select
                                 isClearable
                                 isMulti
-                                options={categoriesQuery.data?.map((item) => ({
-                                    value: item.id,
-                                    label: item.name,
-                                }))}
+                                options={categorySelectOptions}
+                                defaultValue={
+                                    filter.categories
+                                        ? categorySelectOptions?.filter(
+                                              (item) =>
+                                                  filter.categories.includes(
+                                                      item.value
+                                                  )
+                                          )
+                                        : undefined
+                                }
                                 isLoading={categoriesQuery.isLoading}
                                 placeholder="Select"
                                 components={{
@@ -185,6 +223,7 @@ const Panel = React.forwardRef(
                                         cursor: 'pointer',
                                     }),
                                 }}
+                                onChange={handleCategorySelectChange}
                             />
                         </div>
                     </FlexboxGrid.Item>
@@ -195,17 +234,15 @@ const Panel = React.forwardRef(
                                 Sort By
                             </div>
                             <Select
-                                options={[
-                                    {
-                                        label: 'Newest',
-                                        value: 'newest',
-                                    },
-                                ]}
+                                options={SORT_SELECT_OPTIONS}
                                 isSearchable={false}
-                                defaultValue={{
-                                    label: 'Newest',
-                                    value: 'newest',
-                                }}
+                                defaultValue={
+                                    filter.sort
+                                        ? SORT_SELECT_OPTIONS.find(
+                                              (o) => o.value === filter.sort
+                                          )
+                                        : SORT_SELECT_OPTIONS[0]
+                                }
                                 components={{
                                     IndicatorSeparator: () => null,
                                 }}
@@ -220,6 +257,7 @@ const Panel = React.forwardRef(
                                         cursor: 'pointer',
                                     }),
                                 }}
+                                onChange={handleSortSelectChange}
                             />
                         </div>
                     </FlexboxGrid.Item>
@@ -244,6 +282,7 @@ const Panel = React.forwardRef(
                             <Button
                                 appearance="primary"
                                 style={{ width: '100%' }}
+                                onClick={handleApplyButtonClick}
                             >
                                 Apply
                             </Button>

@@ -15,14 +15,16 @@ type Task = {
 };
 
 export class MySubClassedDexie extends Dexie {
-    // 'tasks' is added by dexie when declaring the stores()
-    // We just tell the typing system this is the case
     tasks!: Table<Task>;
+    accountTasks!: Table<Task>;
+    accountCompletedTasks!: Table<Task>;
 
     constructor() {
-        super('myDatabase');
+        super('d_work');
         this.version(1).stores({
-            tasks: 'id, price', // Primary key and indexed props
+            tasks: 'id, price',
+            accountTasks: 'id, price',
+            accountCompletedTasks: 'id, price',
         });
     }
 }
