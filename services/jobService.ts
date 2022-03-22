@@ -4,7 +4,7 @@ import { utils } from 'near-api-js';
 import BN from 'bn.js';
 import { db } from '../db';
 
-export const FETCH_TASKS_LIMIT = 4;
+export const FETCH_TASKS_LIMIT = 1;
 
 export type CreateTaskInput = {
     title: string;
@@ -192,6 +192,9 @@ export class TaskService {
             }
         }
 
+        if (filter?.type === 'account')
+            query.offset(offset).limit(FETCH_TASKS_LIMIT);
+
         const queryRes = await query.toArray();
 
         if (
@@ -312,6 +315,7 @@ export class TaskService {
                 accountId: p.account_id,
                 proofOfWork: p.proof_of_work,
                 isApproved: p.is_approved,
+                isRejected: p.is_reject,
             })),
             availableUntil: Number.parseInt(raw.available_until.substr(0, 13)),
             categoryId: raw.category_id,

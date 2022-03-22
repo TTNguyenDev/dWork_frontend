@@ -11,14 +11,9 @@ import { AccountTasksFilter } from '../../components/accountTasksFilter';
 import { useListJobs } from '../../hooks/useListJobs';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { useRouter } from 'next/router';
 import { TaskStatus } from '../../models/types/jobType';
 
 export default function AccountPage() {
-    const router = useRouter();
-
-    const accountId = router.query.accountId as string;
-
     const profile = useSelector((state: RootState) => state.profile);
 
     const {
@@ -33,10 +28,6 @@ export default function AccountPage() {
         applyTaskFilter,
     } = useListJobs({
         defaultFilter: {
-            owner:
-                profile.data.info?.type === AccountTypes.REQUESTER
-                    ? accountId
-                    : undefined,
             type: 'account',
             status: TaskStatus.AVAILABLE,
             maxAvailableUntil: '',
@@ -68,6 +59,7 @@ export default function AccountPage() {
                                             accountId={
                                                 profile.data.info.accountId
                                             }
+                                            editable
                                         />
                                     )}
                                     <Divider />
@@ -128,80 +120,6 @@ export default function AccountPage() {
                             </div>
                         </Col>
                     </Row>
-                    {/* <h3 style={{ marginBottom: 30 }}>My Account</h3> */}
-
-                    {/* {(authLoading ||
-                        (!authLoading && logged && profileLoading)) && (
-                        <Loader />
-                    )} */}
-                    {/* {!authLoading &&
-                        !profileLoading &&
-                        profile.data.info &&
-                        profile.data.info.type === AccountTypes.WORKER && (
-                            <>
-                                <h5 style={{ marginBottom: 15 }}>
-                                    Processing Tasks
-                                </h5>
-                                <div>
-                                    <TasksTable
-                                        type="processing"
-                                        tasks={(jobsProcessing as any) ?? []}
-                                        loading={jobsProcessingLoading}
-                                    />
-                                </div>
-                                <Divider />
-                                <h5 style={{ marginBottom: 15 }}>
-                                    Completed Tasks
-                                </h5>
-                                <div>
-                                    <TasksTable
-                                        type="completed"
-                                        tasks={(jobsCompleted as any) ?? []}
-                                        loading={jobsCompletedLoading}
-                                    />
-                                </div>
-                            </>
-                        )}
-                    {!authLoading &&
-                        !profileLoading &&
-                        profile.data.info &&
-                        profile.data.info.type === AccountTypes.REQUESTER && (
-                            <>
-                                <Divider />
-                                <h5 style={{ marginBottom: 15 }}>
-                                    Available Tasks
-                                </h5>
-                                <div>
-                                    <TasksTable
-                                        type="available"
-                                        tasks={(jobsAvailable as any) ?? []}
-                                        loading={jobsAvailableLoading}
-                                    />
-                                </div>
-                                <Divider />
-                                <h5 style={{ marginBottom: 15 }}>
-                                    Processing Tasks
-                                </h5>
-                                <div>
-                                    <TasksTable
-                                        type="processing"
-                                        tasks={(jobsProcessing as any) ?? []}
-                                        loading={jobsProcessingLoading}
-                                    />
-                                </div>
-                                <Divider />
-                                <h5 style={{ marginBottom: 15 }}>
-                                    Completed Tasks
-                                </h5>
-                                <div>
-                                    <TasksTable
-                                        type="completed"
-                                        tasks={(jobsCompleted as any) ?? []}
-                                        loading={jobsCompletedLoading}
-                                    />
-                                </div>
-                            </>
-                        )} */}
                 </Container>
             </Layout>
         </>

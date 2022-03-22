@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Header from 'next/head';
 import { Layout } from '../../components/layout';
 import classes from './task.module.less';
-import { Button, Col, Container, Grid, Row } from 'rsuite';
+import { Button, Col, Container, Grid, Row, Stack } from 'rsuite';
 import { Loader } from '../../components/loader';
 import { useQuery } from 'react-query';
 import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
@@ -10,14 +10,37 @@ import { TaskService } from '../../services/jobService';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { Wrapper } from '../../components/wrapper';
-import { AccountService } from '../../services/accountService';
 import { AccountInfoCard } from '../../components/accountInfoCard';
 import { SubmitWorkButton } from '../../components/submitWorkButton';
-import { TasksTable } from '../../components/tasksTable';
+import Select from 'react-select';
+import { ProposalItem } from '../../components/proposalItem';
+import { BlockChainConnector } from '../../utils/blockchain';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
+
+const PROPOSAL_STATUS_SELECT_OPTIONS = [
+    {
+        label: 'All',
+        value: 'all',
+    },
+    {
+        label: 'Pending',
+        value: 'pending',
+    },
+    {
+        label: 'Approved',
+        value: 'approved',
+    },
+    {
+        label: 'Rejected',
+        value: 'rejected',
+    },
+];
 
 export default function TaskDetailsPage() {
     const router = useRouter();
     const taskId = router.query.taskId as string;
+    const profile = useSelector((state: RootState) => state.profile);
 
     const { markATaskAsCompletedLoading, handleMarkATaskAsCompleted } =
         useMarkATaskAsCompleted();
@@ -37,6 +60,28 @@ export default function TaskDetailsPage() {
                   task.proposals.filter((p) => p.isApproved).length)
         : undefined;
 
+    const markCompleteButton = React.useMemo(() => {
+        if (profile.data.info && taskId)
+            return (
+                task?.owner === profile.data.info.accountId &&
+                isNotAvailable && (
+                    <Button
+                        appearance="primary"
+                        loading={markATaskAsCompletedLoading}
+                        onClick={() =>
+                            handleMarkATaskAsCompleted({
+                                taskId: taskId,
+                            })
+                        }
+                    >
+                        Mark task as completed
+                    </Button>
+                )
+            );
+
+        return null;
+    }, [taskId, profile.data.info]);
+
     return (
         <>
             <Header>
@@ -44,9 +89,12 @@ export default function TaskDetailsPage() {
             </Header>
             <Layout activeKey="one">
                 <Container className={classes.container}>
-                    <h3 className={classes.title}>
-                        {task ? task.title : taskId}
-                    </h3>
+                    <Stack justifyContent="space-between" alignItems="center">
+                        <h3 className={classes.title}>
+                            {task ? task.title : taskId}
+                        </h3>
+                        {markCompleteButton}
+                    </Stack>
                     <div>
                         <Grid fluid>
                             <Row gutter={30}>
@@ -149,95 +197,28 @@ export default function TaskDetailsPage() {
                                                             </Wrapper>
                                                         </Col>
                                                     </Row>
-                                                    {/* <Row>
-                                        <Col xs={24}>
-                                            <div
-                                                style={{
-                                                    marginTop: 15,
-                                                    textAlign: 'right',
-                                                }}
-                                            >
-                                                {task.owner ===
-                                                    BlockChainConnector.instance
-                                                        .account.accountId &&
-                                                    isNotAvailable && (
-                                                        <Button
-                                                            size="sm"
-                                                            appearance="primary"
-                                                            loading={
-                                                                markATaskAsCompletedLoading
-                                                            }
-                                                            onClick={() =>
-                                                                handleMarkATaskAsCompleted(
-                                                                    {
-                                                                        taskId: task.taskId,
-                                                                    }
-                                                                )
-                                                            }
-                                                        >
-                                                            Mark task as
-                                                            completed
-                                                        </Button>
-                                                    )}
-                                                <SubmitWorkButton task={task} />
-                                            </div>
-                                        </Col>
-                                    </Row> */}
                                                 </Grid>
-                                                {/* <Divider /> */}
-                                                {/* <h6
-                                    style={{ marginBottom: 5 }}
-                                >{`Proposals (${task.proposals.length})`}</h6>
-                                <div style={{ marginBottom: 15 }} />
-                                {task.proposals.length ? (
-                                    <>
-                                        <Grid fluid>
-                                            {task.owner ===
-                                                BlockChainConnector.instance
-                                                    .account.accountId &&
-                                                task.proposals.map((p) => (
-                                                    <ProposalItem
-                                                        key={p.accountId}
-                                                        data={p}
-                                                        task={task}
-                                                    />
-                                                ))}
-                                            {task.proposals
-                                                .filter(
-                                                    (p) =>
-                                                        p.accountId ===
-                                                        BlockChainConnector
-                                                            .instance.account
-                                                            .accountId
-                                                )
-                                                .map((p) => (
-                                                    <ProposalItem
-                                                        key={p.accountId}
-                                                        data={p}
-                                                        task={task}
-                                                    />
-                                                ))}
-                                        </Grid>
-                                        <div style={{ marginBottom: 15 }} />
-                                    </>
-                                ) : (
-                                    'Empty'
-                                )} */}
                                             </div>
                                         )}
                                         {isLoading || !task ? (
                                             <Loader />
                                         ) : (
                                             <Wrapper
-                                                className={classes.task_desc}
+                                                className={classes.task_section}
                                             >
-                                                <h6
+                                                <div
                                                     className={
-                                                        classes.task_desc_title
+                                                        classes.task_section_header
                                                     }
                                                 >
-                                                    Description
-                                                </h6>
+                                                    <h6
+                                                        className={
+                                                            classes.task_section_title
+                                                        }
+                                                    >
+                                                        Description
+                                                    </h6>
+                                                </div>
                                                 <div>
                                                     <div
                                                         className="ql-editor"
@@ -246,6 +227,85 @@ export default function TaskDetailsPage() {
                                                             __html: task.description,
                                                         }}
                                                     />
+                                                </div>
+                                            </Wrapper>
+                                        )}
+                                        {isLoading || !task ? (
+                                            <Loader />
+                                        ) : (
+                                            <Wrapper
+                                                className={classes.task_section}
+                                            >
+                                                <div
+                                                    className={
+                                                        classes.task_section_header
+                                                    }
+                                                >
+                                                    <h6
+                                                        className={
+                                                            classes.task_section_title
+                                                        }
+                                                    >
+                                                        Proposals
+                                                    </h6>
+                                                    {/* <Select
+                                                        options={
+                                                            PROPOSAL_STATUS_SELECT_OPTIONS
+                                                        }
+                                                        isSearchable={false}
+                                                        defaultValue={
+                                                            PROPOSAL_STATUS_SELECT_OPTIONS[0]
+                                                        }
+                                                        components={{
+                                                            IndicatorSeparator:
+                                                                () => null,
+                                                        }}
+                                                        styles={{
+                                                            control: (
+                                                                base
+                                                            ) => ({
+                                                                ...base,
+                                                                minWidth: 120,
+                                                                fontWeight: 600,
+                                                                border: 'none',
+                                                                background:
+                                                                    '#f7f7fa',
+                                                                color: '#575757',
+                                                                borderRadius: 6,
+                                                                cursor: 'pointer',
+                                                            }),
+                                                        }}
+                                                    /> */}
+                                                </div>
+                                                <div>
+                                                    {task.proposals.length ? (
+                                                        <>
+                                                            <Grid fluid>
+                                                                {task.proposals.map(
+                                                                    (p) => (
+                                                                        <ProposalItem
+                                                                            key={
+                                                                                p.accountId
+                                                                            }
+                                                                            data={
+                                                                                p
+                                                                            }
+                                                                            task={
+                                                                                task
+                                                                            }
+                                                                        />
+                                                                    )
+                                                                )}
+                                                            </Grid>
+                                                            <div
+                                                                style={{
+                                                                    marginBottom: 15,
+                                                                }}
+                                                            />
+                                                        </>
+                                                    ) : (
+                                                        'Empty'
+                                                    )}
                                                 </div>
                                             </Wrapper>
                                         )}

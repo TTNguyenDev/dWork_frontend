@@ -9,11 +9,13 @@ import classes from './accountBio.module.less';
 interface AccountBioProps {
     accountId: string;
     bio?: string;
+    editable?: boolean;
 }
 
 export const AccountBio: React.FunctionComponent<AccountBioProps> = ({
     accountId,
     bio,
+    editable,
 }) => {
     const queryClient = useQueryClient();
     const [isEditing, setIsEditing] = React.useState(false);
@@ -22,7 +24,8 @@ export const AccountBio: React.FunctionComponent<AccountBioProps> = ({
 
     return (
         <div className={classes.root}>
-            {accountId === BlockChainConnector.instance.account.accountId ? (
+            {editable &&
+            accountId === BlockChainConnector.instance.account.accountId ? (
                 !isEditing ? (
                     <>
                         {bio && <div className={classes.bio}>{bio}</div>}

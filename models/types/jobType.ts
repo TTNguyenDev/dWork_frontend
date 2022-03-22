@@ -8,6 +8,7 @@ export type Proposal = {
     accountId: string;
     proofOfWork: string;
     isApproved: boolean;
+    isRejected: boolean;
 };
 
 export type Task = {

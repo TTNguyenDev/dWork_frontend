@@ -9,10 +9,12 @@ import { AccountTypes } from '../../models/types/accountType';
 
 type AccountInfoCardProps = {
     accountId: string;
+    editable?: boolean;
 };
 
 export const AccountInfoCard: React.FunctionComponent<AccountInfoCardProps> = ({
     accountId,
+    editable,
 }) => {
     const { data: account, isLoading } = useQuery(
         accountId,
@@ -35,7 +37,11 @@ export const AccountInfoCard: React.FunctionComponent<AccountInfoCardProps> = ({
             </div>
             <div className={classes.username}>{accountId}</div>
             <div>
-                <AccountBio accountId={accountId} bio={account?.bio} />
+                <AccountBio
+                    accountId={accountId}
+                    bio={account?.bio}
+                    editable={editable}
+                />
             </div>
             <FlexboxGrid align="middle">
                 <FlexboxGrid.Item colspan={8}>
