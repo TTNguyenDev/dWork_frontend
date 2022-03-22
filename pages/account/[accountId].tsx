@@ -94,11 +94,18 @@ export default function AccountPage() {
                         <Col xs={24} sm={24} md={19}>
                             <div className={classes.wrapper}>
                                 <div className={classes.top}>
-                                    <AccountTasksFilter />
+                                    <AccountTasksFilter
+                                        filter={filter}
+                                        setTaskFilter={setTaskFilter}
+                                        applyTaskFilter={applyTaskFilter}
+                                    />
                                 </div>
                                 <div className={classes.main}>
                                     <ListTasks
-                                        isCreatable
+                                        isCreatable={
+                                            profile.data.info?.type ===
+                                            AccountTypes.REQUESTER
+                                        }
                                         tasks={jobs}
                                         isLoading={listJobsLoading}
                                         gridBreakpoints={{

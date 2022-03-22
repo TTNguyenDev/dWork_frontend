@@ -7,6 +7,8 @@ import moment from 'moment';
 import randomColor from 'randomcolor';
 import { BsClock, BsPeople } from 'react-icons/bs';
 import { Wrapper } from '../wrapper';
+import { TaskService } from '../../services/jobService';
+import { useQuery } from 'react-query';
 
 interface JobCardProps {
     task: Task;
@@ -25,6 +27,14 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ task }) => {
                 luminosity: 'dark',
             }),
         []
+    );
+
+    const taskQuery = useQuery(
+        task.taskId,
+        () => TaskService.fetchTaskById(task.taskId),
+        {
+            enabled: !!task.taskId,
+        }
     );
 
     return (
@@ -104,7 +114,9 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ task }) => {
                                             <BsPeople size={16} />
                                         </div>
                                         <div>
-                                            {`${task.proposals.length}/${task.maxParticipants}`}
+                                            {taskQuery.data
+                                                ? `${taskQuery.data?.proposals.length}/${taskQuery.data?.maxParticipants}`
+                                                : '......'}
                                         </div>
                                     </Stack>
                                 </Stack>

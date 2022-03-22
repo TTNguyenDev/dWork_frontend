@@ -5,6 +5,7 @@ import { FlexboxGrid } from 'rsuite';
 import { useQuery } from 'react-query';
 import { AccountService } from '../../services/accountService';
 import { AccountBio } from '../accountBio';
+import { AccountTypes } from '../../models/types/accountType';
 
 type AccountInfoCardProps = {
     accountId: string;
@@ -50,7 +51,11 @@ export const AccountInfoCard: React.FunctionComponent<AccountInfoCardProps> = ({
                     <div className={classes.item_info}>
                         <div className={classes.item_info_value}>
                             {account
-                                ? `${account.completedJobs.length}/${account.currentRequests}`
+                                ? `${account.completedJobs.length}${
+                                      account.type === AccountTypes.REQUESTER
+                                          ? `/${account.currentRequests}`
+                                          : ''
+                                  }`
                                 : '...'}
                         </div>
                         <div className={classes.item_info_label}>Tasks</div>

@@ -4,19 +4,14 @@ import {
     Animation,
     Button,
     Col,
-    Dropdown,
     FlexboxGrid,
-    Grid,
     Input,
     InputGroup,
-    Row,
     Stack,
 } from 'rsuite';
 import classes from './taskFilter.module.less';
 import Select from 'react-select';
 import { CategoriesListBadge } from '../categoriesListBadge';
-import { useQuery } from 'react-query';
-import { CategoryService } from '../../services/categoryService';
 import { Wrapper } from '../wrapper';
 
 type TaskFilterProps = {
@@ -139,10 +134,6 @@ export const TaskFilter: React.FunctionComponent<TaskFilterProps> = ({
 
 const Panel = React.forwardRef(
     ({ style, filter, setTaskFilter, applyTaskFilter, ...props }: any, ref) => {
-        // const categoriesQuery = useQuery('categories', () =>
-        //     CategoryService.fetchCategories()
-        // );
-
         const filterRef = useRef({});
 
         const handleSearchInputChange = useCallback(

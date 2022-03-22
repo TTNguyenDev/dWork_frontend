@@ -1,5 +1,4 @@
-import { Account } from 'near-api-js';
-import React, { useRef } from 'react';
+import React from 'react';
 import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { Button, Input, Stack } from 'rsuite';
