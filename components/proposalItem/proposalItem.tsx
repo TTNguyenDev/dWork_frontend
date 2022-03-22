@@ -21,59 +21,65 @@ export const ProposalItem = ({ data, task }: ProposalItemProps) => {
     const popoverConfirmRef =
         React.useRef<{ open: () => void; close: () => void }>();
 
-    const [isExpand, setIsExpand] = React.useState(false);
+    const [isExpand, setIsExpand] = React.useState(true);
     const handleToggle = () => setIsExpand(!isExpand);
 
     return (
         <Row key={data.accountId} style={{ marginBottom: 15 }}>
             <Col xs={24} sm={24} md={24}>
-                <Panel bordered onClick={handleToggle}>
-                    <Stack justifyContent="space-between" alignItems="center">
+                <Panel bordered>
+                    <div onClick={handleToggle} style={{ cursor: 'pointer' }}>
                         <Stack
-                            style={{
-                                color: '#555',
-                            }}
-                            spacing={5}
+                            justifyContent="space-between"
+                            alignItems="center"
                         >
-                            <Avatar
-                                size="1.5em"
-                                textSizeRatio={1.75}
-                                round
-                                name={data.accountId}
+                            <Stack
+                                style={{
+                                    color: '#555',
+                                }}
+                                spacing={5}
+                            >
+                                <Avatar
+                                    size="1.5em"
+                                    textSizeRatio={1.75}
+                                    round
+                                    name={data.accountId}
+                                />
+                                <div>{data.accountId}</div>
+                                {data.isApproved && (
+                                    <Badge
+                                        color="green"
+                                        content="Approved"
+                                        style={{
+                                            padding: '2px 10px',
+                                            borderRadius: 20,
+                                            fontWeight: 700,
+                                        }}
+                                    />
+                                )}
+                                {data.isRejected && (
+                                    <Badge
+                                        color="red"
+                                        content="Rejected"
+                                        style={{
+                                            padding: '2px 10px',
+                                            borderRadius: 20,
+                                            fontWeight: 700,
+                                        }}
+                                    />
+                                )}
+                            </Stack>
+                            <BsChevronDown
+                                size={18}
+                                style={{
+                                    cursor: 'pointer',
+                                    transform: isExpand ? 'rotate(180deg)' : '',
+                                }}
+                                onClick={handleToggle}
                             />
-                            <div>{data.accountId}</div>
-                            {data.isApproved && (
-                                <Badge
-                                    color="green"
-                                    content="Approved"
-                                    style={{
-                                        padding: '2px 10px',
-                                        borderRadius: 20,
-                                        fontWeight: 700,
-                                    }}
-                                />
-                            )}
-                            {data.isRejected && (
-                                <Badge
-                                    color="red"
-                                    content="Rejected"
-                                    style={{
-                                        padding: '2px 10px',
-                                        borderRadius: 20,
-                                        fontWeight: 700,
-                                    }}
-                                />
-                            )}
                         </Stack>
-                        <BsChevronDown
-                            size={18}
-                            style={{
-                                cursor: 'pointer',
-                                transform: isExpand ? 'rotate(180deg)' : '',
-                            }}
-                            onClick={handleToggle}
-                        />
-                    </Stack>
+                    </div>
+
                     <div
                         className={classes.proof}
                         style={{

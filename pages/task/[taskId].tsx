@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Header from 'next/head';
 import { Layout } from '../../components/layout';
 import classes from './task.module.less';
@@ -17,6 +17,7 @@ import { ProposalItem } from '../../components/proposalItem';
 import { BlockChainConnector } from '../../utils/blockchain';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
+import { Proposal } from '../../models/types/jobType';
 
 const PROPOSAL_STATUS_SELECT_OPTIONS = [
     {
@@ -81,6 +82,30 @@ export default function TaskDetailsPage() {
 
         return null;
     }, [taskId, profile.data.info]);
+
+    const [filterStatus, setFilterStatus] = useState('all');
+
+    const proposal: Proposal[] = useMemo(() => {
+        console.log(filterStatus);
+        if (task?.proposals && profile.data.info) {
+            return task.proposals.filter((p) => {
+                if (task?.owner === profile.data.info?.accountId) {
+                    switch (filterStatus) {
+                        case 'pending':
+                            return !p.isApproved && !p.isRejected;
+                        case 'approved':
+                            return p.isApproved;
+                        case 'rejected':
+                            return p.isRejected;
+                        default:
+                            return true;
+                    }
+                } else return p.accountId === profile.data.info?.accountId;
+            });
+        }
+
+        return [];
+    }, [task, profile.data.info, filterStatus]);
 
     return (
         <>
@@ -200,9 +225,7 @@ export default function TaskDetailsPage() {
                                                 </Grid>
                                             </div>
                                         )}
-                                        {isLoading || !task ? (
-                                            <Loader />
-                                        ) : (
+                                        {isLoading || !task ? null : (
                                             <Wrapper
                                                 className={classes.task_section}
                                             >
@@ -230,9 +253,7 @@ export default function TaskDetailsPage() {
                                                 </div>
                                             </Wrapper>
                                         )}
-                                        {isLoading || !task ? (
-                                            <Loader />
-                                        ) : (
+                                        {isLoading || !task ? null : (
                                             <Wrapper
                                                 className={classes.task_section}
                                             >
@@ -248,7 +269,7 @@ export default function TaskDetailsPage() {
                                                     >
                                                         Proposals
                                                     </h6>
-                                                    {/* <Select
+                                                    <Select
                                                         options={
                                                             PROPOSAL_STATUS_SELECT_OPTIONS
                                                         }
@@ -275,13 +296,18 @@ export default function TaskDetailsPage() {
                                                                 cursor: 'pointer',
                                                             }),
                                                         }}
-                                                    /> */}
+                                                        onChange={(item) =>
+                                                            setFilterStatus(
+                                                                item.value
+                                                            )
+                                                        }
+                                                    />
                                                 </div>
                                                 <div>
-                                                    {task.proposals.length ? (
+                                                    {proposal.length ? (
                                                         <>
                                                             <Grid fluid>
-                                                                {task.proposals.map(
+                                                                {proposal.map(
                                                                     (p) => (
                                                                         <ProposalItem
                                                                             key={

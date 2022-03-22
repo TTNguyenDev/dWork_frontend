@@ -30,7 +30,8 @@ export const useSubmitBtn = ({
         return (
             profile.data.info?.type === AccountTypes.REQUESTER ||
             task.availableUntil < Date.now() ||
-            task.proposals.length >= task.maxParticipants
+            task.proposals.filter((p) => p.isApproved).length ===
+                task.maxParticipants
         );
     }, [profile.data.info]);
 
