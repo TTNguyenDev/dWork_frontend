@@ -22,6 +22,8 @@ export enum TaskSortTypes {
     LOW_PRICE = 'low_price',
 }
 
+export type FetchType = 'available' | 'account' | 'account_completed';
+
 export class TaskService {
     static async createTask(payload: CreateTaskInput): Promise<void> {
         const maxParticipants = Number.parseInt(payload.maxParticipants);
@@ -111,24 +113,43 @@ export class TaskService {
             categories?: string[];
             title?: string;
             owner?: string;
+            type?: FetchType;
+            minAvailableUntil?: number;
+            maxAvailableUntil?: number;
         };
         fromBlockId?: number;
     }): Promise<Task[]> {
         let query;
+        let table;
+
+        switch (filter?.type) {
+            case 'account':
+                if (filter?.status === TaskStatus.COMPLETED) {
+                    await this.fetchAndCacheTasks('account_completed', true);
+                    table = db.accountCompletedTasks;
+                } else {
+                    await this.fetchAndCacheTasks('account', true);
+                    table = db.accountTasks;
+                }
+                break;
+            default:
+                table = db.tasks;
+                break;
+        }
 
         switch (filter?.sort) {
             case TaskSortTypes.HIGH_PRICE:
-                query = db.tasks.orderBy('price').reverse();
+                query = table.orderBy('price').reverse();
                 break;
             case TaskSortTypes.LOW_PRICE:
-                query = db.tasks.orderBy('price');
+                query = table.orderBy('price');
                 break;
             case TaskSortTypes.OLDEST:
-                query = db.tasks.orderBy('id');
+                query = table.orderBy('id');
                 break;
             case TaskSortTypes.NEWEST:
             default:
-                query = db.tasks.orderBy('id').reverse();
+                query = table.orderBy('id').reverse();
         }
 
         if (filter) {
@@ -149,11 +170,34 @@ export class TaskService {
             if (filter.owner) {
                 query.filter((item) => item.owner === filter.owner);
             }
+
+            if (filter.minAvailableUntil && filter.maxAvailableUntil) {
+                query.filter(
+                    (item) =>
+                        item.availableUntil > filter.minAvailableUntil! &&
+                        item.availableUntil < filter.maxAvailableUntil!
+                );
+            } else {
+                if (filter.minAvailableUntil) {
+                    query.filter(
+                        (item) =>
+                            item.availableUntil > filter.minAvailableUntil!
+                    );
+                } else if (filter.maxAvailableUntil) {
+                    query.filter(
+                        (item) =>
+                            item.availableUntil < filter.maxAvailableUntil!
+                    );
+                }
+            }
         }
 
         const queryRes = await query.toArray();
 
-        if (filter?.status === TaskStatus.AVAILABLE) {
+        if (
+            filter?.type !== 'account' &&
+            filter?.status === TaskStatus.AVAILABLE
+        ) {
             const ids = queryRes.map((q) => q.taskId);
 
             let isCompleted = false;
@@ -275,7 +319,8 @@ export class TaskService {
     }
 
     static async fetchAndCacheTasks(
-        type?: 'available' | 'account' | 'account_completed'
+        type?: FetchType,
+        clear?: boolean
     ): Promise<void> {
         let fetchTasks;
         let table;
@@ -298,6 +343,8 @@ export class TaskService {
                 table = db.tasks;
                 break;
         }
+
+        if (clear) table.clear();
 
         const firstRecord = (
             await table.toCollection().reverse().sortBy('id')

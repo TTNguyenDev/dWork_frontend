@@ -17,8 +17,6 @@ import { CategoryService } from '../../services/categoryService';
 import { Wrapper } from '../wrapper';
 import { TaskStatus } from '../../models/types/jobType';
 import { SORT_SELECT_OPTIONS } from '../tasksFilter';
-import { Category } from '../../models/types/categoryType';
-import { useRouter } from 'next/router';
 
 const TASK_STATUS_SELECT_OPTIONS = [
     {
@@ -59,7 +57,34 @@ export const AccountTasksFilter: React.FunctionComponent<
         }, 200);
     }, []);
 
-    const router = useRouter();
+    const handleStatusSelectChange = useCallback((item) => {
+        switch (item.value) {
+            case TaskStatus.AVAILABLE:
+                setTaskFilter({
+                    status: TaskStatus.AVAILABLE,
+                    maxAvailableUntil: '',
+                    minAvailableUntil: Date.now(),
+                });
+                applyTaskFilter();
+                break;
+            case TaskStatus.COMPLETED:
+                setTaskFilter({
+                    status: TaskStatus.COMPLETED,
+                    maxAvailableUntil: '',
+                    minAvailableUntil: '',
+                });
+                applyTaskFilter();
+                break;
+            case TaskStatus.EXPIRED:
+                setTaskFilter({
+                    status: TaskStatus.EXPIRED,
+                    maxAvailableUntil: Date.now(),
+                    minAvailableUntil: '',
+                });
+                applyTaskFilter();
+                break;
+        }
+    }, []);
 
     if (!filterReady) return null;
 
@@ -81,7 +106,13 @@ export const AccountTasksFilter: React.FunctionComponent<
                         <Select
                             options={TASK_STATUS_SELECT_OPTIONS}
                             isSearchable={false}
-                            defaultValue={TASK_STATUS_SELECT_OPTIONS[0]}
+                            defaultValue={
+                                filter.status
+                                    ? TASK_STATUS_SELECT_OPTIONS.find(
+                                          (o) => o.value === filter.status
+                                      )
+                                    : TASK_STATUS_SELECT_OPTIONS[0]
+                            }
                             components={{
                                 IndicatorSeparator: () => null,
                             }}
@@ -97,6 +128,7 @@ export const AccountTasksFilter: React.FunctionComponent<
                                     cursor: 'pointer',
                                 }),
                             }}
+                            onChange={handleStatusSelectChange}
                         />
                         <Button
                             style={{ fontWeight: 600, fontSize: 14 }}

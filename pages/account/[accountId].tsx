@@ -3,21 +3,16 @@ import Header from 'next/head';
 import { Layout } from '../../components/layout';
 import classes from './account.module.less';
 import { Button, Col, Container, Divider, Row, Stack } from 'rsuite';
-import { useHomePage } from '../../hooks/useHomePage';
-import { Loader } from '../../components/loader';
-import { TaskType } from '../../models/types/jobType';
 import { AccountTypes } from '../../models/types/accountType';
-import { TasksTable } from '../../components/tasksTable';
 import { ListTasks } from '../../components/listTasks';
-import { TaskFilter } from '../../components/tasksFilter';
 import { AccountInfoCard } from '../../components/accountInfoCard';
 import { Wrapper } from '../../components/wrapper';
-import { BlockChainConnector } from '../../utils/blockchain';
 import { AccountTasksFilter } from '../../components/accountTasksFilter';
 import { useListJobs } from '../../hooks/useListJobs';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { useRouter } from 'next/router';
+import { TaskStatus } from '../../models/types/jobType';
 
 export default function AccountPage() {
     const router = useRouter();
@@ -37,7 +32,16 @@ export default function AccountPage() {
         setTaskFilter,
         applyTaskFilter,
     } = useListJobs({
-        defaultFilter: { owner: accountId },
+        defaultFilter: {
+            owner:
+                profile.data.info?.type === AccountTypes.REQUESTER
+                    ? accountId
+                    : undefined,
+            type: 'account',
+            status: TaskStatus.AVAILABLE,
+            maxAvailableUntil: '',
+            minAvailableUntil: Date.now(),
+        },
     });
 
     return (
