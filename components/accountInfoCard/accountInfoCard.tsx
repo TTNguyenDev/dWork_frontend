@@ -4,6 +4,7 @@ import Avatar from 'react-avatar';
 import { FlexboxGrid } from 'rsuite';
 import { useQuery } from 'react-query';
 import { AccountService } from '../../services/accountService';
+import { AccountBio } from '../accountBio';
 
 type AccountInfoCardProps = {
     accountId: string;
@@ -20,6 +21,8 @@ export const AccountInfoCard: React.FunctionComponent<AccountInfoCardProps> = ({
         }
     );
 
+    console.log(account);
+
     return (
         <div className={classes.root}>
             <div className={classes.avatar}>
@@ -32,6 +35,9 @@ export const AccountInfoCard: React.FunctionComponent<AccountInfoCardProps> = ({
                 />
             </div>
             <div className={classes.username}>{accountId}</div>
+            <div>
+                <AccountBio accountId={accountId} bio={account?.bio} />
+            </div>
             <FlexboxGrid align="middle">
                 <FlexboxGrid.Item colspan={8}>
                     <div className={classes.item_info}>

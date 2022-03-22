@@ -16,7 +16,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ task }) => {
     const router = useRouter();
 
     const handleViewDetails = () => {
-        router.push(`task/${task.taskId}`);
+        router.push(`/task/${task.taskId}`);
     };
 
     const bgBadgeCategory = React.useMemo(

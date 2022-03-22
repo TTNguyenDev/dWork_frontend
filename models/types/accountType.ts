@@ -8,6 +8,7 @@ export enum AccountTypes {
 
 export type Account = {
     accountId: string;
+    bio: string;
     type: AccountTypes;
     totalStake: BN;
     currentRequests: number;

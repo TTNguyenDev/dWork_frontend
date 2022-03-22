@@ -36,6 +36,7 @@ const ChangeMethods: string[] = [
     'reject_work',
     'mark_task_as_completed',
     'new_category',
+    'update_bio',
 ];
 
 type ContractMethodType<K = any> = (...args: any) => K;
@@ -58,6 +59,7 @@ type ContractMethodsType = {
     new_category: ContractMethodType;
     categories: ContractMethodType;
     tasks_by_ids: ContractMethodType;
+    update_bio: ContractMethodType;
 };
 
 export class NearConnector {
