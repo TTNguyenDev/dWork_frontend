@@ -54,12 +54,16 @@ export default function TaskDetailsPage() {
         }
     );
 
-    const isNotAvailable = task
-        ? task.availableUntil < Date.now() ||
-          (task.availableUntil >= Date.now() &&
-              task.maxParticipants ===
-                  task.proposals.filter((p) => p.isApproved).length)
-        : undefined;
+    const isNotAvailable = React.useMemo(
+        () =>
+            task
+                ? task.availableUntil < Date.now() ||
+                  (task.availableUntil >= Date.now() &&
+                      task.maxParticipants ===
+                          task.proposals.filter((p) => p.isApproved).length)
+                : undefined,
+        [task]
+    );
 
     const markCompleteButton = React.useMemo(() => {
         if (profile.data.info && taskId)

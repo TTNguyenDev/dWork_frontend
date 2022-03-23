@@ -4,7 +4,7 @@ import { utils } from 'near-api-js';
 import BN from 'bn.js';
 import { db } from '../db';
 
-export const FETCH_TASKS_LIMIT = 1;
+export const FETCH_TASKS_LIMIT = 12;
 
 export type CreateTaskInput = {
     title: string;
