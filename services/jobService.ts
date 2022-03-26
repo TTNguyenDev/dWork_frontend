@@ -38,7 +38,7 @@ export class TaskService {
             },
             '30000000000000',
             utils.format.parseNearAmount(
-                new BN(payload.price).mul(new BN(maxParticipants)).toString()
+                (Number.parseFloat(payload.price) * maxParticipants).toString()
             )
         );
     }
@@ -196,6 +196,7 @@ export class TaskService {
             query.offset(offset).limit(FETCH_TASKS_LIMIT);
 
         const queryRes = await query.toArray();
+        console.log(queryRes);
 
         if (
             filter?.type !== 'account' &&

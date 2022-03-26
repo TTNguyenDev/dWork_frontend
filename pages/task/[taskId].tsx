@@ -85,7 +85,7 @@ export default function TaskDetailsPage() {
             );
 
         return null;
-    }, [taskId, profile.data.info]);
+    }, [taskId, profile.data.info, markATaskAsCompletedLoading]);
 
     const [filterStatus, setFilterStatus] = useState('all');
 

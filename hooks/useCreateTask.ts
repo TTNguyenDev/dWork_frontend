@@ -1,8 +1,9 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Schema } from 'rsuite';
 import { TaskService } from '../services/jobService';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
+import { useForm, UseFormReturn } from 'react-hook-form';
 
 const { StringType, NumberType } = Schema.Types;
 
@@ -17,17 +18,28 @@ const model = Schema.Model({
     description: StringType().isRequired('Description is a required field'),
 });
 
+type CreateTaskFormInput = {
+    title: string;
+    price: number;
+    maxParticipants: number;
+    duration: number;
+    categoryId: string;
+    description: string;
+};
+
 export type UseCreateTaskOutput = {
     model: typeof model;
     createTaskLoading: boolean;
     handleFormChange: (payload: any) => void;
-    handleFormSubmit: (isValid: boolean, afterSubmit: () => void) => void;
+    handleFormSubmit: () => void;
     formValue: any;
     setFormValue: (payload: any) => void;
+    createTaskForm: UseFormReturn<CreateTaskFormInput>;
 };
 
 export const useCreateTask = (): UseCreateTaskOutput => {
     const queryClient = useQueryClient();
+    const createTaskForm = useForm<CreateTaskFormInput>();
 
     const [createTaskLoading, setCreateTaskLoading] = useState(false);
 
@@ -39,18 +51,18 @@ export const useCreateTask = (): UseCreateTaskOutput => {
         setFormValue(formData);
     }, []);
 
-    const handleFormSubmit = useCallback(
-        async (isValid, afterSubmit) => {
-            if (isValid) {
+    const handleFormSubmit = useMemo(
+        () =>
+            createTaskForm.handleSubmit(async (data: any) => {
+                console.log(data);
                 setCreateTaskLoading(true);
                 try {
-                    await TaskService.createTask(formValue);
+                    await TaskService.createTask(data);
                     queryClient.invalidateQueries('jobs');
                     queryClient.invalidateQueries('jobsAvailable');
                     toast('Create task successfully', {
                         type: 'success',
                     });
-                    afterSubmit();
                 } catch (error) {
                     console.error(error);
                     toast('Create task failed', {
@@ -59,8 +71,7 @@ export const useCreateTask = (): UseCreateTaskOutput => {
                 } finally {
                     setCreateTaskLoading(false);
                 }
-            }
-        },
+            }),
         [formValue]
     );
 
@@ -71,5 +82,6 @@ export const useCreateTask = (): UseCreateTaskOutput => {
         handleFormSubmit,
         formValue,
         setFormValue,
+        createTaskForm,
     };
 };

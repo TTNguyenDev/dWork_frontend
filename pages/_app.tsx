@@ -1,3 +1,4 @@
+import { ChakraProvider } from '@chakra-ui/react';
 import { AppProps } from 'next/dist/shared/lib/router/router';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -20,11 +21,13 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
         <QueryClientProvider client={queryClient}>
             <Provider store={store}>
-                <Init />
-                <ToastContainer />
-                <ConnectWalletModal />
-                <CreateTaskModal />
-                <Component {...pageProps} />
+                <ChakraProvider>
+                    <Init />
+                    <ToastContainer />
+                    <ConnectWalletModal />
+                    <CreateTaskModal />
+                    <Component {...pageProps} />
+                </ChakraProvider>
             </Provider>
         </QueryClientProvider>
     );

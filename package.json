@@ -8,6 +8,9 @@
         "start": "next start"
     },
     "dependencies": {
+        "@chakra-ui/react": "^1.8.6",
+        "@emotion/react": "^11",
+        "@emotion/styled": "^11",
         "@reduxjs/toolkit": "^1.7.2",
         "@types/bn.js": "^5.1.0",
         "@types/quill": "^2.0.9",
@@ -20,6 +23,7 @@
         "debug": "^4.3.3",
         "dexie": "^3.2.1",
         "dexie-react-hooks": "^1.1.1",
+        "framer-motion": "^6",
         "ipfs-http-client": "^55.0.0",
         "moment": "^2.29.1",
         "near-api-js": "^0.44.2",
@@ -32,7 +36,7 @@
         "react-avatar": "^4.0.0",
         "react-countdown": "^2.3.2",
         "react-dom": "17.0.2",
-        "react-hook-form": "^7.27.1",
+        "react-hook-form": "7.6.4",
         "react-icons": "^4.3.1",
         "react-query": "^3.34.14",
         "react-quilljs": "^1.2.17",
