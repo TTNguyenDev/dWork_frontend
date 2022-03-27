@@ -18,9 +18,8 @@ export const useMarkATaskAsCompleted = (): UseMarkATaskAsCompletedOutput => {
         setMarkATaskAsCompletedLoading(true);
         try {
             await TaskService.markATaskAsCompleted(payload);
-            queryClient.invalidateQueries('jobsAvailable');
-            queryClient.invalidateQueries('jobsProcessing');
-            queryClient.invalidateQueries('jobsCompleted');
+            await TaskService.fetchAndCacheTasks('account_completed', true);
+            queryClient.invalidateQueries([payload.taskId, 'check_completed']);
             toast('Mark a task as completed successfully', {
                 type: 'success',
             });

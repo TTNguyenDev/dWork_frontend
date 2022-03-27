@@ -18,6 +18,7 @@ import { BlockChainConnector } from '../../utils/blockchain';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { Proposal } from '../../models/types/jobType';
+import { Badge } from '@chakra-ui/react';
 
 const PROPOSAL_STATUS_SELECT_OPTIONS = [
     {
@@ -111,6 +112,16 @@ export default function TaskDetailsPage() {
         return [];
     }, [task, profile.data.info, filterStatus]);
 
+    const checkCompletedQuery = useQuery(
+        [taskId, 'check_completed'],
+        () => TaskService.checkTaskCompleted(taskId),
+        {
+            enabled: !!taskId,
+        }
+    );
+
+    console.log(checkCompletedQuery.isLoading);
+
     return (
         <>
             <Header>
@@ -122,7 +133,21 @@ export default function TaskDetailsPage() {
                         <h3 className={classes.title}>
                             {task ? task.title : taskId}
                         </h3>
-                        {markCompleteButton}
+                        {!checkCompletedQuery.isLoading ? (
+                            checkCompletedQuery.data ? (
+                                <Badge
+                                    colorScheme="green"
+                                    p="5px 10px"
+                                    fontSize="1em"
+                                    fontWeight="800"
+                                    borderRadius="2xl"
+                                >
+                                    Completed
+                                </Badge>
+                            ) : (
+                                markCompleteButton
+                            )
+                        ) : null}
                     </Stack>
                     <div>
                         <Grid fluid>

@@ -57,7 +57,10 @@ export const AccountInfoCard: React.FunctionComponent<AccountInfoCardProps> = ({
                             {account
                                 ? `${account.completedJobs.length}${
                                       account.type === AccountTypes.REQUESTER
-                                          ? `/${account.currentRequests}`
+                                          ? `/${
+                                                account.completedJobs.length +
+                                                account.currentRequests
+                                            }`
                                           : ''
                                   }`
                                 : '...'}

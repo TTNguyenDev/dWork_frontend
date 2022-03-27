@@ -1,7 +1,6 @@
 import { Task, TaskStatus } from '../models/types/jobType';
 import { BlockChainConnector } from '../utils/blockchain';
 import { utils } from 'near-api-js';
-import BN from 'bn.js';
 import { db } from '../db';
 
 export const FETCH_TASKS_LIMIT = 12;
@@ -400,5 +399,14 @@ export class TaskService {
                 isCompleted = true;
             }
         }
+    }
+
+    static async checkTaskCompleted(taskId: string): Promise<boolean> {
+        const arr = taskId.split('_');
+        const res = await db.accountCompletedTasks.get({
+            id: Number.parseInt(arr[arr.length - 1]),
+        });
+
+        return !!res;
     }
 }

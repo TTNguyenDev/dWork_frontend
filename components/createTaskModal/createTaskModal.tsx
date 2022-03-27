@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Modal, Button, DatePicker } from 'rsuite';
 import { useCreateTask } from '../../hooks/useCreateTask';
 import { ModalsController } from '../../utils/modalsController';
@@ -37,15 +37,8 @@ export const CreateTaskModal: React.FunctionComponent<
         });
     }, []);
 
-    const {
-        model,
-        createTaskLoading,
-        formValue,
-        setFormValue,
-        handleFormChange,
-        handleFormSubmit,
-        createTaskForm,
-    } = useCreateTask();
+    const { createTaskLoading, handleFormSubmit, createTaskForm } =
+        useCreateTask();
 
     const handleEditorChange = useCallback((value: string) => {
         if (!value?.replace(/<(.|\n)*?>/g, '').trim()) {
