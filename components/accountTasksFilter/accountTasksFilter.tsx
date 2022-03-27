@@ -294,12 +294,27 @@ const Panel = React.forwardRef(
         );
 
         const categoriesSelectRef = React.useRef<any>();
+
         const [createdAtDatePickerValue, setCreatedAtDatePickerValue] =
-            React.useState<any>([]);
+            React.useState<any>(
+                filter.minCreatedAt && filter.maxCreatedAt
+                    ? [
+                          new Date(Number(filter.minCreatedAt)),
+                          new Date(Number(filter.maxCreatedAt)),
+                      ]
+                    : []
+            );
         const [
             availableUntilDatePickerValue,
             setAvailableUntilDatePickerValue,
-        ] = React.useState<any>([]);
+        ] = React.useState<any>(
+            filter.minAvailableUntil && filter.maxAvailableUntil
+                ? [
+                      new Date(Number(filter.minAvailableUntil)),
+                      new Date(Number(filter.maxAvailableUntil)),
+                  ]
+                : []
+        );
 
         return (
             <div
