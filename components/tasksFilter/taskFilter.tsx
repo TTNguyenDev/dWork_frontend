@@ -146,23 +146,21 @@ const Panel = React.forwardRef(
             [filterRef.current]
         );
 
-        const handleCategorySelectChange = useCallback(
-            (items) => {
-                filterRef.current = {
-                    ...filterRef.current,
-                    categories: items.map((i: any) => i.value),
-                };
-            },
-            [filterRef.current]
-        );
-
         const handleApplyButtonClick = useCallback(() => {
             setTaskFilter(filterRef.current);
             applyTaskFilter();
         }, [filterRef.current]);
 
+        const handleClearButtonClick = useCallback(() => {
+            setTaskFilter({
+                ...filterRef.current,
+                title: '',
+            });
+            applyTaskFilter();
+        }, [filterRef.current]);
+
         return (
-            <div
+            <form
                 {...props}
                 ref={ref as any}
                 style={{
@@ -187,38 +185,11 @@ const Panel = React.forwardRef(
                             </InputGroup>
                         </div>
                     </FlexboxGrid.Item>
-                    <FlexboxGrid.Item as={Col} colspan={24} md={6}>
-                        {/* <div className={classes.item_filter}>
-                            <div className={classes.item_filter_label}>
-                                Category
-                            </div>
-                            <Select
-                                isClearable
-                                isMulti
-                                options={categoriesQuery.data?.map((item) => ({
-                                    value: item.id,
-                                    label: item.name,
-                                }))}
-                                isLoading={categoriesQuery.isLoading}
-                                placeholder="Choose category"
-                                components={{
-                                    IndicatorSeparator: () => null,
-                                }}
-                                styles={{
-                                    control: (base) => ({
-                                        ...base,
-                                        fontWeight: 600,
-                                        border: 'none',
-                                        background: '#f7f7fa',
-                                        color: '#575757',
-                                        borderRadius: 6,
-                                        cursor: 'pointer',
-                                    }),
-                                }}
-                                onChange={handleCategorySelectChange}
-                            />
-                        </div> */}
-                    </FlexboxGrid.Item>
+                    <FlexboxGrid.Item
+                        as={Col}
+                        colspan={24}
+                        md={6}
+                    ></FlexboxGrid.Item>
                     <FlexboxGrid.Item
                         as={Col}
                         colspan={24}
@@ -231,7 +202,11 @@ const Panel = React.forwardRef(
                                 display: 'flex',
                             }}
                         >
-                            <Button style={{ width: '100%', marginRight: 5 }}>
+                            <Button
+                                type="reset"
+                                style={{ width: '100%', marginRight: 5 }}
+                                onClick={handleClearButtonClick}
+                            >
                                 Clear
                             </Button>
                             <Button
@@ -244,7 +219,7 @@ const Panel = React.forwardRef(
                         </div>
                     </FlexboxGrid.Item>
                 </FlexboxGrid>
-            </div>
+            </form>
         );
     }
 );

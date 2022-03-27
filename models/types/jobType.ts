@@ -22,6 +22,7 @@ export type Task = {
     proposals: Proposal[];
     availableUntil: number;
     categoryId: string;
+    createdAt: number;
 };
 
 export type TaskType = 'available' | 'processing' | 'completed' | 'pending';

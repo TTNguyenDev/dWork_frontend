@@ -115,6 +115,8 @@ export class TaskService {
             type?: FetchType;
             minAvailableUntil?: number;
             maxAvailableUntil?: number;
+            minCreatedAt?: number;
+            maxCreatedAt?: number;
         };
         fromBlockId?: number;
     }): Promise<Task[]> {
@@ -173,19 +175,40 @@ export class TaskService {
             if (filter.minAvailableUntil && filter.maxAvailableUntil) {
                 query.filter(
                     (item) =>
-                        item.availableUntil > filter.minAvailableUntil! &&
-                        item.availableUntil < filter.maxAvailableUntil!
+                        item.availableUntil >= filter.minAvailableUntil! &&
+                        item.availableUntil <= filter.maxAvailableUntil!
                 );
             } else {
                 if (filter.minAvailableUntil) {
                     query.filter(
                         (item) =>
-                            item.availableUntil > filter.minAvailableUntil!
+                            item.availableUntil >= filter.minAvailableUntil!
                     );
                 } else if (filter.maxAvailableUntil) {
                     query.filter(
                         (item) =>
-                            item.availableUntil < filter.maxAvailableUntil!
+                            item.availableUntil <= filter.maxAvailableUntil!
+                    );
+                }
+            }
+
+            if (filter.minCreatedAt && filter.maxCreatedAt) {
+                query.filter((item) => {
+                    console.log(item);
+
+                    return (
+                        item.createdAt >= filter.minCreatedAt! &&
+                        item.createdAt <= filter.maxCreatedAt!
+                    );
+                });
+            } else {
+                if (filter.minCreatedAt) {
+                    query.filter(
+                        (item) => item.createdAt >= filter.minCreatedAt!
+                    );
+                } else if (filter.maxCreatedAt) {
+                    query.filter(
+                        (item) => item.createdAt <= filter.maxCreatedAt!
                     );
                 }
             }
@@ -195,7 +218,6 @@ export class TaskService {
             query.offset(offset).limit(FETCH_TASKS_LIMIT);
 
         const queryRes = await query.toArray();
-        console.log(queryRes);
 
         if (
             filter?.type !== 'account' &&
@@ -319,6 +341,7 @@ export class TaskService {
             })),
             availableUntil: Number.parseInt(raw.available_until.substr(0, 13)),
             categoryId: raw.category_id,
+            createdAt: Number.parseInt(raw.created_at.substr(0, 13)),
         };
     }
 

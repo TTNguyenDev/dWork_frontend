@@ -12,6 +12,7 @@ type Task = {
     availableUntil: number;
     categoryId: string;
     proposals: Proposal[];
+    createdAt: number;
 };
 
 export class MySubClassedDexie extends Dexie {

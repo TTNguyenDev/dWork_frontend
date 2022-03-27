@@ -17,6 +17,7 @@ import { CategoryService } from '../../services/categoryService';
 import { Wrapper } from '../wrapper';
 import { TaskStatus } from '../../models/types/jobType';
 import { SORT_SELECT_OPTIONS } from '../tasksFilter';
+import moment from 'moment';
 
 const TASK_STATUS_SELECT_OPTIONS = [
     {
@@ -90,83 +91,88 @@ export const AccountTasksFilter: React.FunctionComponent<
 
     return (
         <Wrapper className={classes.root}>
-            <div className={classes.top}>
-                <InputGroup inside style={{ maxWidth: 300, marginRight: 15 }}>
-                    <InputGroup.Addon>
-                        <BsSearch />
-                    </InputGroup.Addon>
-                    <Input
-                        placeholder="Search"
-                        onChange={handleSearchInputChange}
-                        defaultValue={filter.title}
-                    />
-                </InputGroup>
-                <div>
-                    <Stack spacing={15}>
-                        <Select
-                            options={TASK_STATUS_SELECT_OPTIONS}
-                            isSearchable={false}
-                            defaultValue={
-                                filter.status
-                                    ? TASK_STATUS_SELECT_OPTIONS.find(
-                                          (o) => o.value === filter.status
-                                      )
-                                    : TASK_STATUS_SELECT_OPTIONS[0]
-                            }
-                            components={{
-                                IndicatorSeparator: () => null,
-                            }}
-                            styles={{
-                                control: (base) => ({
-                                    ...base,
-                                    minWidth: 120,
-                                    fontWeight: 600,
-                                    border: 'none',
-                                    background: '#f7f7fa',
-                                    color: '#575757',
-                                    borderRadius: 6,
-                                    cursor: 'pointer',
-                                }),
-                            }}
-                            onChange={handleStatusSelectChange}
+            <form>
+                <div className={classes.top}>
+                    <InputGroup
+                        inside
+                        style={{ maxWidth: 300, marginRight: 15 }}
+                    >
+                        <InputGroup.Addon>
+                            <BsSearch />
+                        </InputGroup.Addon>
+                        <Input
+                            placeholder="Search"
+                            onChange={handleSearchInputChange}
+                            defaultValue={filter.title}
                         />
-                        <Button
-                            style={{ fontWeight: 600, fontSize: 14 }}
-                            onClick={handleToggle}
-                        >
-                            <Stack>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <BsFilter size={20} />
-                                </div>
-                                <div>Filter</div>
-                            </Stack>
-                        </Button>
-                    </Stack>
+                    </InputGroup>
+                    <div>
+                        <Stack spacing={15}>
+                            <Select
+                                options={TASK_STATUS_SELECT_OPTIONS}
+                                isSearchable={false}
+                                defaultValue={
+                                    filter.status
+                                        ? TASK_STATUS_SELECT_OPTIONS.find(
+                                              (o) => o.value === filter.status
+                                          )
+                                        : TASK_STATUS_SELECT_OPTIONS[0]
+                                }
+                                components={{
+                                    IndicatorSeparator: () => null,
+                                }}
+                                styles={{
+                                    control: (base) => ({
+                                        ...base,
+                                        minWidth: 120,
+                                        fontWeight: 600,
+                                        border: 'none',
+                                        background: '#f7f7fa',
+                                        color: '#575757',
+                                        borderRadius: 6,
+                                        cursor: 'pointer',
+                                    }),
+                                }}
+                                onChange={handleStatusSelectChange}
+                            />
+                            <Button
+                                style={{ fontWeight: 600, fontSize: 14 }}
+                                onClick={handleToggle}
+                            >
+                                <Stack>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <BsFilter size={20} />
+                                    </div>
+                                    <div>Filter</div>
+                                </Stack>
+                            </Button>
+                        </Stack>
+                    </div>
                 </div>
-            </div>
-            <Animation.Collapse className={classes.bottom} in={show}>
-                {(props, ref) => (
-                    <Panel
-                        {...props}
-                        ref={ref}
-                        filter={filter}
-                        setTaskFilter={setTaskFilter}
-                        applyTaskFilter={applyTaskFilter}
-                    />
-                )}
-            </Animation.Collapse>
+                <Animation.Collapse className={classes.bottom} in={show}>
+                    {(props, ref) => (
+                        <Panel
+                            {...props}
+                            ref={ref}
+                            filter={filter}
+                            setTaskFilter={setTaskFilter}
+                            applyTaskFilter={applyTaskFilter}
+                        />
+                    )}
+                </Animation.Collapse>
+            </form>
         </Wrapper>
     );
 };
 
 const Panel = React.forwardRef(
     ({ style, filter, setTaskFilter, applyTaskFilter, ...props }: any, ref) => {
-        const filterRef = useRef({ ...filter });
+        const filterRef = useRef<any>({});
         const categoriesQuery = useQuery('categories', () =>
             CategoryService.fetchCategories()
         );
@@ -188,10 +194,95 @@ const Panel = React.forwardRef(
             };
         }, []);
 
+        const handleCreatedDatePickerChange = useCallback(
+            (values) => {
+                setCreatedAtDatePickerValue(values);
+                if (values) {
+                    const startTime = moment(values[0])
+                        .set('hours', 0)
+                        .set('minutes', 0)
+                        .set('second', 0)
+                        .valueOf();
+
+                    const endTime = moment(values[1])
+                        .set('hours', 23)
+                        .set('minutes', 59)
+                        .set('second', 59)
+                        .valueOf();
+
+                    setTaskFilter({
+                        ...filterRef.current,
+                        minCreatedAt: startTime,
+                        maxCreatedAt: endTime,
+                    });
+                } else {
+                    setTaskFilter({
+                        ...filterRef.current,
+                        minCreatedAt: '',
+                        maxCreatedAt: '',
+                    });
+                }
+            },
+            [filterRef.current]
+        );
+
+        const handleAvailableUntilPickerChange = useCallback(
+            (values) => {
+                setAvailableUntilDatePickerValue(values);
+                if (values) {
+                    const startTime = moment(values[0])
+                        .set('hours', 0)
+                        .set('minutes', 0)
+                        .set('second', 0)
+                        .valueOf();
+
+                    const endTime = moment(values[1])
+                        .set('hours', 23)
+                        .set('minutes', 59)
+                        .set('second', 59)
+                        .valueOf();
+
+                    setTaskFilter({
+                        ...filterRef.current,
+                        minAvailableUntil: startTime,
+                        maxAvailableUntil: endTime,
+                    });
+                } else {
+                    setTaskFilter({
+                        ...filterRef.current,
+                        minAvailableUntil: '',
+                        maxAvailableUntil:
+                            filter.status === TaskStatus.EXPIRED
+                                ? Date.now()
+                                : '',
+                    });
+                }
+            },
+            [filterRef.current, filter]
+        );
+
         const handleApplyButtonClick = useCallback(() => {
             setTaskFilter(filterRef.current);
             applyTaskFilter();
         }, [filterRef.current]);
+
+        const handleClearButtonClick = useCallback(() => {
+            categoriesSelectRef.current.clearValue();
+            setCreatedAtDatePickerValue([]);
+            setAvailableUntilDatePickerValue([]);
+            console.log(filterRef);
+            setTaskFilter({
+                ...filterRef.current,
+                title: '',
+                categories: '',
+                minCreatedAt: '',
+                maxCreatedAt: '',
+                minAvailableUntil: '',
+                maxAvailableUntil:
+                    filter.status === TaskStatus.EXPIRED ? Date.now() : '',
+            });
+            applyTaskFilter();
+        }, [filterRef.current, filter]);
 
         const categorySelectOptions = React.useMemo(
             () =>
@@ -201,6 +292,14 @@ const Panel = React.forwardRef(
                 })),
             [categoriesQuery.data]
         );
+
+        const categoriesSelectRef = React.useRef<any>();
+        const [createdAtDatePickerValue, setCreatedAtDatePickerValue] =
+            React.useState<any>([]);
+        const [
+            availableUntilDatePickerValue,
+            setAvailableUntilDatePickerValue,
+        ] = React.useState<any>([]);
 
         return (
             <div
@@ -217,7 +316,11 @@ const Panel = React.forwardRef(
                             <div className={classes.item_filter_label}>
                                 Created
                             </div>
-                            <DateRangePicker style={{ width: '100%' }} />
+                            <DateRangePicker
+                                style={{ width: '100%' }}
+                                value={createdAtDatePickerValue}
+                                onChange={handleCreatedDatePickerChange}
+                            />
                         </div>
                     </FlexboxGrid.Item>
                     <FlexboxGrid.Item as={Col} colspan={24} md={6}>
@@ -256,10 +359,10 @@ const Panel = React.forwardRef(
                                     }),
                                 }}
                                 onChange={handleCategorySelectChange}
+                                ref={categoriesSelectRef}
                             />
                         </div>
                     </FlexboxGrid.Item>
-
                     <FlexboxGrid.Item as={Col} colspan={24} md={6}>
                         <div className={classes.item_filter}>
                             <div className={classes.item_filter_label}>
@@ -298,7 +401,11 @@ const Panel = React.forwardRef(
                             <div className={classes.item_filter_label}>
                                 Deadline
                             </div>
-                            <DateRangePicker style={{ width: '100%' }} />
+                            <DateRangePicker
+                                style={{ width: '100%' }}
+                                value={availableUntilDatePickerValue}
+                                onChange={handleAvailableUntilPickerChange}
+                            />
                         </div>
                     </FlexboxGrid.Item>
                     <FlexboxGrid.Item as={Col} colspan={24} md={6}>
@@ -308,7 +415,11 @@ const Panel = React.forwardRef(
                                 display: 'flex',
                             }}
                         >
-                            <Button style={{ width: '100%', marginRight: 5 }}>
+                            <Button
+                                type="reset"
+                                style={{ width: '100%', marginRight: 5 }}
+                                onClick={handleClearButtonClick}
+                            >
                                 Clear
                             </Button>
                             <Button
