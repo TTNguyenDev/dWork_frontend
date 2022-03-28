@@ -1,30 +1,28 @@
-import BN from 'bn.js';
-
-export enum JobStatus {
-    READY_FOR_APPLY = 'ReadyForApply',
-    FOUND_WORKER = 'FoundWorker',
-    WORKER_SUBMITTED = 'WorkSubmitted',
-    PAYOUT = 'Payout',
-    DELETED = 'Deleted',
-    PENDING = 'Pending',
+export enum TaskStatus {
+    AVAILABLE = 'available',
+    COMPLETED = 'completed',
+    EXPIRED = 'expired',
 }
 
 export type Proposal = {
     accountId: string;
     proofOfWork: string;
     isApproved: boolean;
+    isRejected: boolean;
 };
 
-export type Job = {
+export type Task = {
+    id: number;
     taskId: string;
     owner: string;
     title: string;
     description: string;
     maxParticipants: number;
-    price: string;
+    price: number;
     proposals: Proposal[];
     availableUntil: number;
-    type?: JobType;
+    categoryId: string;
+    createdAt: number;
 };
 
-export type JobType = 'available' | 'processing' | 'completed' | 'pending';
+export type TaskType = 'available' | 'processing' | 'completed' | 'pending';

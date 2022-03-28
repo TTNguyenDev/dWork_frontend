@@ -1,0 +1,38 @@
+.root {
+    padding: 10px;
+    margin: 0 10px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bottom {
+    margin: 0 -7.5px;
+}
+
+.list_category {
+    margin: 0 10px;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.item_filter {
+    padding: 0 7.5px;
+    margin-bottom: 15px;
+    &_label {
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .list_category {
+        display: none;
+    }
+}

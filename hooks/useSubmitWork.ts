@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { Schema } from 'rsuite';
-import { JobService } from '../services/jobService';
+import { TaskService } from '../services/jobService';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 
@@ -44,7 +44,7 @@ export const useSubmitWork = (): UseSubmitWorkOutput => {
 
                 setSubmitWorkLoading(true);
                 try {
-                    await JobService.submitWork({
+                    await TaskService.submitWork({
                         taskId,
                         proof,
                     });

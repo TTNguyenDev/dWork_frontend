@@ -1,31 +1,33 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Table, Button, Stack } from 'rsuite';
-import { Job, JobType } from '../../models/types/jobType';
+import { Task, TaskType } from '../../models/types/jobType';
 import { MdDone } from 'react-icons/md';
 import { BlockChainConnector } from '../../utils/blockchain';
 import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
+import { useRouter } from 'next/router';
+
 interface TasksTableProps {
-    type: JobType;
-    tasks: Job[];
+    type: TaskType;
+    tasks: Task[];
     loading: boolean;
-    handleViewBtnClick: (task: Job) => void;
 }
 
 export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
     type,
     tasks,
     loading,
-    handleViewBtnClick,
 }) => {
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const router = useRouter();
+
+    const handleViewBtnClick = useCallback((taskId: string) => {
+        router.push(`/task/${taskId}`);
+    }, []);
 
     return (
         <Table data={tasks as any} loading={loading} hover autoHeight>
             <Table.Column width={50}>
                 <Table.HeaderCell>No</Table.HeaderCell>
-                <Table.Cell>{(task: Job) => tasks.indexOf(task)}</Table.Cell>
+                <Table.Cell>{(task: Task) => tasks.indexOf(task)}</Table.Cell>
             </Table.Column>
 
             <Table.Column resizable width={250}>
@@ -34,12 +36,12 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
             </Table.Column>
             <Table.Column width={120} resizable>
                 <Table.HeaderCell>Bounty prize</Table.HeaderCell>
-                <Table.Cell>{(task: Job) => `${task.price} Ⓝ`}</Table.Cell>
+                <Table.Cell>{(task: Task) => `${task.price} Ⓝ`}</Table.Cell>
             </Table.Column>
             <Table.Column width={220}>
                 <Table.HeaderCell>Deadline</Table.HeaderCell>
                 <Table.Cell>
-                    {({ availableUntil }: Job) => {
+                    {({ availableUntil }: Task) => {
                         const datetime = new Date(availableUntil);
                         return (
                             <span
@@ -62,12 +64,12 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
             </Table.Column>
             <Table.Column width={80}>
                 <Table.HeaderCell>Proposals</Table.HeaderCell>
-                <Table.Cell>{(job: Job) => job.proposals.length}</Table.Cell>
+                <Table.Cell>{(job: Task) => job.proposals.length}</Table.Cell>
             </Table.Column>
             <Table.Column resizable width={150} minWidth={150}>
                 <Table.HeaderCell>Actions</Table.HeaderCell>
                 <Table.Cell>
-                    {(task: Job) => {
+                    {(task: Task) => {
                         const {
                             markATaskAsCompletedLoading,
                             handleMarkATaskAsCompleted,
@@ -78,7 +80,7 @@ export const TasksTable: React.FunctionComponent<TasksTableProps> = ({
                                 <Button
                                     size="xs"
                                     onClick={() =>
-                                        handleViewBtnClick({ ...task, type })
+                                        handleViewBtnClick(task.taskId)
                                     }
                                 >
                                     View

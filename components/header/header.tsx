@@ -1,6 +1,6 @@
 import React from 'react';
 import { BsPlusLg } from 'react-icons/bs';
-import { Navbar, Loader, Stack, Button, IconButton } from 'rsuite';
+import { Navbar, Loader, Stack, Button, IconButton, FlexboxGrid } from 'rsuite';
 import { useHeader } from '../../hooks/useHeader';
 import { AccountTypes } from '../../models/types/accountType';
 import { ModalsController } from '../../utils/modalsController';
@@ -36,16 +36,26 @@ export const Header: React.FunctionComponent<HeaderProps> = ({ activeKey }) => {
                 ) : logged ? (
                     <Stack>
                         {accountType === AccountTypes.REQUESTER && (
-                            <IconButton
+                            <Button
                                 appearance="primary"
-                                size="sm"
-                                icon={<BsPlusLg />}
-                                style={{ width: 30, height: 30 }}
+                                style={{ marginRight: 20 }}
                                 onClick={
                                     ModalsController.controller
                                         .openCreateTaskModal
                                 }
-                            />
+                            >
+                                <Stack spacing="8px" alignItems="center">
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <BsPlusLg />
+                                    </div>
+                                    <div>NEW TASK</div>
+                                </Stack>
+                            </Button>
                         )}
                         <HeaderAccount
                             accountType={accountType}

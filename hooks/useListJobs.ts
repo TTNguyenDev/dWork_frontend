@@ -1,21 +1,27 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useInfiniteQuery, useQuery } from 'react-query';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useInfiniteQuery, useQueryClient } from 'react-query';
 import { Optional } from '../common';
-import { Job } from '../models/types/jobType';
-import { JobService } from '../services/jobService';
-import { RootState } from '../store';
+import { Task } from '../models/types/jobType';
+import { FETCH_TASKS_LIMIT, TaskService } from '../services/jobService';
+import { TaskFilterInput, useTaskFilter } from './useTaskFilter';
+
+export type UseListJobsInput = TaskFilterInput;
 
 export type UseListJobsOutput = {
     loading: boolean;
-    jobs: Optional<Job[]>;
+    jobs: Optional<Task[]>;
     isFetchingNextPage: boolean;
     hasNextPage: Optional<boolean>;
     fetchNextPage: () => Promise<any>;
+    filterReady: boolean;
+    filter: any;
+    setTaskFilter: (payload: Record<string, any>) => void;
+    applyTaskFilter: () => void;
 };
 
-export const useListJobs = (): UseListJobsOutput => {
-    const app = useSelector((state: RootState) => state.app);
+export const useListJobs = (payload?: UseListJobsInput): UseListJobsOutput => {
+    const { filterReady, filter, setTaskFilter, applyTaskFilter } =
+        useTaskFilter(payload);
 
     const {
         data,
@@ -25,12 +31,29 @@ export const useListJobs = (): UseListJobsOutput => {
         isLoading,
         isFetchingNextPage,
         status,
-    } = useInfiniteQuery('jobs', JobService.fetchAvailableJobsInfinity, {
-        getNextPageParam: (lastPage, pages) => {
-            if (lastPage.length < 10) return undefined;
-            return 10 * pages.length;
-        },
-    });
+    } = useInfiniteQuery(
+        ['jobs', filter],
+        ({ pageParam: { offset, fromBlockId } = {} }) =>
+            TaskService.fetchJobsInfinity({
+                offset,
+                fromBlockId,
+                filter,
+            }),
+        {
+            getNextPageParam: (lastPage, pages) => {
+                if (lastPage.length < FETCH_TASKS_LIMIT) return undefined;
+                return {
+                    offset: FETCH_TASKS_LIMIT * pages.length,
+                    fromBlockId: lastPage[lastPage.length - 1].id,
+                };
+            },
+        }
+    );
+
+    const queryClient = useQueryClient();
+    useEffect(() => {
+        queryClient.invalidateQueries('jobs');
+    }, [filter]);
 
     useEffect(() => {
         fetchNextPage();
@@ -46,5 +69,9 @@ export const useListJobs = (): UseListJobsOutput => {
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,
+        filterReady,
+        filter,
+        setTaskFilter,
+        applyTaskFilter,
     };
 };

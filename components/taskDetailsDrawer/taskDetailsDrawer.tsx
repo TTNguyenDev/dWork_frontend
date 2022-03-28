@@ -1,253 +1,188 @@
 import React from 'react';
-import {
-    Badge,
-    Button,
-    Col,
-    Divider,
-    Drawer,
-    Grid,
-    Panel,
-    Row,
-    Stack,
-} from 'rsuite';
-import { useRejectWork } from '../../hooks/useRejectWork';
-import { useApproveWork } from '../../hooks/useApproveWork';
-import { Job, Proposal } from '../../models/types/jobType';
+import { Button, Col, Divider, Drawer, Grid, Panel, Row, Stack } from 'rsuite';
+import { TaskType } from '../../models/types/jobType';
 import { BlockChainConnector } from '../../utils/blockchain';
 import { useMarkATaskAsCompleted } from '../../hooks/useMarkATaskAsCompleted';
 import Avatar from 'react-avatar';
 import * as dateFns from 'date-fns';
+import { useQuery } from 'react-query';
+import { TaskService } from '../../services/jobService';
+import { Loader } from '../loader';
+import { ProposalItem } from '../proposalItem';
+import { SubmitWorkButton } from '../submitWorkButton';
 interface TaskDetailsDrawerProps {
-    task?: Job;
+    taskId?: string;
+    type?: TaskType;
     open: boolean;
     setOpen: (open: boolean) => void;
 }
 
-const ProposalItem = ({
-    p,
-    task,
-    setOpen,
-}: {
-    p: Proposal;
-    task: Job;
-    setOpen: (open: boolean) => void;
-}) => {
-    const { approveWorkLoading, handleApproveWork } = useApproveWork();
-    const { rejectWorkLoading, handleRejectWork } = useRejectWork();
-
-    return (
-        <Row key={p.accountId} style={{ marginBottom: 15 }}>
-            <Col xs={24} sm={24} md={24}>
-                <Panel bordered>
-                    <div style={{ marginBottom: 15 }}>
-                        <Stack
-                            style={{
-                                color: '#555',
-                            }}
-                            spacing={5}
-                        >
-                            <Avatar
-                                size="1.5em"
-                                textSizeRatio={1.75}
-                                round
-                                name={p.accountId}
-                            />
-                            <div>{p.accountId}</div>
-                        </Stack>
-                    </div>
-                    {p.proofOfWork ? (
-                        <div
-                            className="ql-editor"
-                            dangerouslySetInnerHTML={{
-                                __html: p.proofOfWork,
-                            }}
-                            style={{
-                                marginBottom: 15,
-                                maxWidth: 800,
-                            }}
-                        />
-                    ) : (
-                        <p
-                            style={{
-                                marginBottom: 15,
-                            }}
-                        >
-                            <i>Empty</i>
-                        </p>
-                    )}
-                    <div style={{ marginBottom: 15 }} />
-                    {p.isApproved && <Badge color="green" content="Approved" />}
-                    {!p.isApproved &&
-                        task.owner ===
-                            BlockChainConnector.instance.account.accountId && (
-                            <Stack justifyContent="flex-end" spacing={10}>
-                                <Button
-                                    appearance="primary"
-                                    loading={approveWorkLoading}
-                                    onClick={() => {
-                                        handleApproveWork({
-                                            taskId: task.taskId,
-                                            workerId: p.accountId,
-                                        }).then(() => setOpen(false));
-                                    }}
-                                >
-                                    Approve
-                                </Button>
-                                <Button
-                                    appearance="ghost"
-                                    loading={rejectWorkLoading}
-                                    onClick={() => {
-                                        handleRejectWork({
-                                            taskId: task.taskId,
-                                            workerId: p.accountId,
-                                        }).then(() => setOpen(false));
-                                    }}
-                                >
-                                    Reject
-                                </Button>
-                            </Stack>
-                        )}
-                </Panel>
-            </Col>
-        </Row>
-    );
-};
-
 export const TaskDetailsDrawer: React.FunctionComponent<
     TaskDetailsDrawerProps
-> = ({ task, open, setOpen }) => {
+> = ({ taskId, type, open, setOpen }) => {
     const { markATaskAsCompletedLoading, handleMarkATaskAsCompleted } =
         useMarkATaskAsCompleted();
 
-    if (!task) return null;
+    const { data: task, isLoading } = useQuery(
+        taskId!,
+        () => TaskService.fetchTaskById(taskId!),
+        {
+            enabled: !!taskId,
+        }
+    );
+
+    const isNotAvailable = task
+        ? task.availableUntil < Date.now() ||
+          (task.availableUntil >= Date.now() &&
+              task.maxParticipants ===
+                  task.proposals.filter((p) => p.isApproved).length)
+        : undefined;
 
     return (
         <Drawer full open={open} onClose={() => setOpen(false)}>
-            <Drawer.Header>
-                <Drawer.Title>
-                    <Stack justifyContent="space-between">
-                        <div>Task details</div>
-                        {task.type !== 'completed' &&
-                            task.owner ===
-                                BlockChainConnector.instance.account
-                                    .accountId &&
-                            (task.availableUntil < Date.now() ||
-                                (task.availableUntil >= Date.now() &&
-                                    task.maxParticipants ===
-                                        task.proposals.filter(
-                                            (p) => p.isApproved
-                                        ).length)) && (
-                                <Button
-                                    size="sm"
-                                    appearance="primary"
-                                    loading={markATaskAsCompletedLoading}
-                                    onClick={() =>
-                                        handleMarkATaskAsCompleted({
-                                            taskId: task.taskId,
-                                        }).then(() => setOpen(false))
-                                    }
-                                >
-                                    Mark task as completed
-                                </Button>
-                            )}
-                    </Stack>
-                </Drawer.Title>
-            </Drawer.Header>
-            <Drawer.Body>
-                <Grid fluid>
-                    <Row>
-                        <Col xs={24} sm={24} md={8}>
-                            <h6 style={{ marginBottom: 5 }}>ID</h6>
-                            <p style={{ marginBottom: 15 }}>{task.taskId}</p>
-                        </Col>
-                        <Col xs={24} sm={24} md={8}>
-                            <h6 style={{ marginBottom: 5 }}>Title</h6>
-                            <p style={{ marginBottom: 15 }}>{task.title}</p>
-                        </Col>
-                        <Col xs={24} sm={24} md={8}>
-                            <h6 style={{ marginBottom: 5 }}>Owner</h6>
-                            <Stack style={{ color: '#555' }} spacing={5}>
-                                <Avatar
-                                    size="1.5em"
-                                    textSizeRatio={1.75}
-                                    round
-                                    name={task.owner}
-                                />
-                                <div>{task.owner}</div>
-                            </Stack>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={24} sm={24} md={8}>
-                            <h6 style={{ marginBottom: 5 }}>Bounty prize</h6>
-                            <p
-                                style={{ marginBottom: 15 }}
-                            >{`${task.price} Ⓝ`}</p>
-                        </Col>
-                        <Col xs={24} sm={24} md={8}>
-                            <h6 style={{ marginBottom: 5 }}>Deadline</h6>
-                            <div style={{ marginBottom: 15 }}>
-                                <span
-                                    style={{
-                                        color:
-                                            task.availableUntil >= Date.now()
-                                                ? 'green'
-                                                : 'red',
-                                    }}
-                                >
-                                    {dateFns.format(
-                                        task.availableUntil,
-                                        'yyyy-MM-dd HH:mm'
+            {isLoading || !task ? (
+                <Loader />
+            ) : (
+                <>
+                    <Drawer.Header>
+                        <Drawer.Title>
+                            <Stack justifyContent="space-between">
+                                <div>Task details</div>
+                                {type !== 'completed' &&
+                                    task.owner ===
+                                        BlockChainConnector.instance.account
+                                            .accountId &&
+                                    isNotAvailable && (
+                                        <Button
+                                            size="sm"
+                                            appearance="primary"
+                                            loading={
+                                                markATaskAsCompletedLoading
+                                            }
+                                            onClick={() =>
+                                                handleMarkATaskAsCompleted({
+                                                    taskId: task.taskId,
+                                                }).then(() => setOpen(false))
+                                            }
+                                        >
+                                            Mark task as completed
+                                        </Button>
                                     )}
-                                </span>
-                            </div>
-                        </Col>
-                        <Col xs={24} sm={24} md={8}>
-                            <h6 style={{ marginBottom: 5 }}>
-                                Max participants
-                            </h6>
-                            <p style={{ marginBottom: 15 }}>
-                                {task.maxParticipants}
-                            </p>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={24}>
-                            <h6 style={{ marginBottom: 5 }}>Description</h6>
-                            <Panel bordered>
-                                <div
-                                    className="ql-editor"
-                                    dangerouslySetInnerHTML={{
-                                        __html: task.description,
-                                    }}
-                                    style={{ maxWidth: 800 }}
-                                />
-                            </Panel>
-                        </Col>
-                    </Row>
-                </Grid>
-                <Divider />
-                <h6
-                    style={{ marginBottom: 5 }}
-                >{`Proposals (${task.proposals.length})`}</h6>
-                <div style={{ marginBottom: 15 }} />
-                {task.proposals[0] ? (
-                    <>
+                                <SubmitWorkButton task={task} />
+                            </Stack>
+                        </Drawer.Title>
+                    </Drawer.Header>
+                    <Drawer.Body>
                         <Grid fluid>
-                            {task.proposals.map((p) => (
-                                <ProposalItem
-                                    p={p}
-                                    task={task}
-                                    setOpen={setOpen}
-                                />
-                            ))}
+                            <Row>
+                                <Col xs={24} sm={24} md={8}>
+                                    <h6 style={{ marginBottom: 5 }}>ID</h6>
+                                    <p style={{ marginBottom: 15 }}>
+                                        {task.taskId}
+                                    </p>
+                                </Col>
+                                <Col xs={24} sm={24} md={8}>
+                                    <h6 style={{ marginBottom: 5 }}>Title</h6>
+                                    <p style={{ marginBottom: 15 }}>
+                                        {task.title}
+                                    </p>
+                                </Col>
+                                <Col xs={24} sm={24} md={8}>
+                                    <h6 style={{ marginBottom: 5 }}>Owner</h6>
+                                    <Stack
+                                        style={{ color: '#555' }}
+                                        spacing={5}
+                                    >
+                                        <Avatar
+                                            size="1.5em"
+                                            textSizeRatio={1.75}
+                                            round
+                                            name={task.owner}
+                                        />
+                                        <div>{task.owner}</div>
+                                    </Stack>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={24} sm={24} md={8}>
+                                    <h6 style={{ marginBottom: 5 }}>
+                                        Bounty prize
+                                    </h6>
+                                    <p
+                                        style={{ marginBottom: 15 }}
+                                    >{`${task.price} Ⓝ`}</p>
+                                </Col>
+                                <Col xs={24} sm={24} md={8}>
+                                    <h6 style={{ marginBottom: 5 }}>
+                                        Deadline
+                                    </h6>
+                                    <div style={{ marginBottom: 15 }}>
+                                        <span
+                                            style={{
+                                                color:
+                                                    task.availableUntil >=
+                                                    Date.now()
+                                                        ? 'green'
+                                                        : 'red',
+                                            }}
+                                        >
+                                            {dateFns.format(
+                                                task.availableUntil,
+                                                'yyyy-MM-dd HH:mm'
+                                            )}
+                                        </span>
+                                    </div>
+                                </Col>
+                                <Col xs={24} sm={24} md={8}>
+                                    <h6 style={{ marginBottom: 5 }}>
+                                        Max participants
+                                    </h6>
+                                    <p style={{ marginBottom: 15 }}>
+                                        {task.maxParticipants}
+                                    </p>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={24}>
+                                    <h6 style={{ marginBottom: 5 }}>
+                                        Description
+                                    </h6>
+                                    <Panel bordered>
+                                        <div
+                                            className="ql-editor"
+                                            dangerouslySetInnerHTML={{
+                                                __html: task.description,
+                                            }}
+                                            style={{ maxWidth: 800 }}
+                                        />
+                                    </Panel>
+                                </Col>
+                            </Row>
                         </Grid>
+                        <Divider />
+                        <h6
+                            style={{ marginBottom: 5 }}
+                        >{`Proposals (${task.proposals.length})`}</h6>
                         <div style={{ marginBottom: 15 }} />
-                    </>
-                ) : (
-                    'Empty'
-                )}
-            </Drawer.Body>
+                        {task.proposals.length ? (
+                            <>
+                                <Grid fluid>
+                                    {task.proposals.map((p) => (
+                                        <ProposalItem
+                                            key={p.accountId}
+                                            data={p}
+                                            task={task}
+                                        />
+                                    ))}
+                                </Grid>
+                                <div style={{ marginBottom: 15 }} />
+                            </>
+                        ) : (
+                            'Empty'
+                        )}
+                    </Drawer.Body>
+                </>
+            )}{' '}
         </Drawer>
     );
 };

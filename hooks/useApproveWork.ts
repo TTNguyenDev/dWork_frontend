@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { JobService } from '../services/jobService';
+import { TaskService } from '../services/jobService';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 
@@ -19,9 +19,10 @@ export const useApproveWork = (): UseApproveWorkOutput => {
     const handleApproveWork = useCallback(async (payload) => {
         setApproveWorkLoading(true);
         try {
-            await JobService.approveWork(payload);
+            await TaskService.approveWork(payload);
             queryClient.invalidateQueries('jobsProcessing');
-            queryClient.invalidateQueries('jobsCompleted');
+            queryClient.invalidateQueries('jobsProcessing');
+            queryClient.invalidateQueries(payload.taskId);
             toast('Approve work successfully', {
                 type: 'success',
             });

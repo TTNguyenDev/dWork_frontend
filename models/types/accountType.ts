@@ -1,5 +1,5 @@
 import BN from 'bn.js';
-import { Job } from './jobType';
+import { Task } from './jobType';
 
 export enum AccountTypes {
     REQUESTER = 'Requester',
@@ -8,9 +8,9 @@ export enum AccountTypes {
 
 export type Account = {
     accountId: string;
+    bio: string;
     type: AccountTypes;
     totalStake: BN;
     currentRequests: number;
-    completedJobs: Job[]
-}
-
+    completedJobs: Task[];
+};

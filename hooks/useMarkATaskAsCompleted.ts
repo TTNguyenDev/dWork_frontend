@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { JobService } from '../services/jobService';
+import { TaskService } from '../services/jobService';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 
@@ -17,10 +17,9 @@ export const useMarkATaskAsCompleted = (): UseMarkATaskAsCompletedOutput => {
     const handleMarkATaskAsCompleted = useCallback(async (payload) => {
         setMarkATaskAsCompletedLoading(true);
         try {
-            await JobService.markATaskAsCompleted(payload);
-            queryClient.invalidateQueries('jobsAvailable');
-            queryClient.invalidateQueries('jobsProcessing');
-            queryClient.invalidateQueries('jobsCompleted');
+            await TaskService.markATaskAsCompleted(payload);
+            await TaskService.fetchAndCacheTasks('account_completed', true);
+            queryClient.invalidateQueries([payload.taskId, 'check_completed']);
             toast('Mark a task as completed successfully', {
                 type: 'success',
             });

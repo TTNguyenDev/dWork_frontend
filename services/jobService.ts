@@ -1,7 +1,9 @@
-import { Job } from '../models/types/jobType';
+import { Task, TaskStatus } from '../models/types/jobType';
 import { BlockChainConnector } from '../utils/blockchain';
 import { utils } from 'near-api-js';
-import BN from 'bn.js';
+import { db } from '../db';
+
+export const FETCH_TASKS_LIMIT = 12;
 
 export type CreateTaskInput = {
     title: string;
@@ -9,8 +11,19 @@ export type CreateTaskInput = {
     price: string;
     maxParticipants: string;
     duration: number;
+    categoryId: string;
 };
-export class JobService {
+
+export enum TaskSortTypes {
+    NEWEST = 'newest',
+    OLDEST = 'oldest',
+    HIGH_PRICE = 'high_price',
+    LOW_PRICE = 'low_price',
+}
+
+export type FetchType = 'available' | 'account' | 'account_completed';
+
+export class TaskService {
     static async createTask(payload: CreateTaskInput): Promise<void> {
         const maxParticipants = Number.parseInt(payload.maxParticipants);
         await BlockChainConnector.instance.contract.new_task(
@@ -20,10 +33,11 @@ export class JobService {
                 price: utils.format.parseNearAmount(payload.price),
                 max_participants: maxParticipants,
                 duration: (payload.duration * 1000000).toString(),
+                category_id: payload.categoryId,
             },
             '30000000000000',
             utils.format.parseNearAmount(
-                new BN(payload.price).mul(new BN(maxParticipants)).toString()
+                (Number.parseFloat(payload.price) * maxParticipants).toString()
             )
         );
     }
@@ -70,39 +84,200 @@ export class JobService {
         });
     }
 
-    static async fetchAvailableJobs(): Promise<Job[]> {
+    static async fetchAvailableJobs(): Promise<Task[]> {
         const res = await BlockChainConnector.instance.contract.available_tasks(
             {
                 from_index: 0,
-                limit: 50,
+                limit: 12,
             }
         );
 
         return res.map((raw: any) =>
-            JobService.mapToModel({
+            TaskService.mapToModel({
                 task_id: raw[0],
                 ...raw[1],
             })
         );
     }
 
-    static async fetchAvailableJobsInfinity({ pageParam = 0 }): Promise<Job[]> {
-        const res = await BlockChainConnector.instance.contract.available_tasks(
-            {
-                from_index: pageParam,
-                limit: 10,
-            }
-        );
+    static async fetchJobsInfinity({
+        offset = 0,
+        fromBlockId,
+        filter,
+    }: {
+        offset?: number;
+        filter?: {
+            status?: TaskStatus;
+            sort?: string;
+            categories?: string[];
+            title?: string;
+            owner?: string;
+            type?: FetchType;
+            minAvailableUntil?: number;
+            maxAvailableUntil?: number;
+            minCreatedAt?: number;
+            maxCreatedAt?: number;
+        };
+        fromBlockId?: number;
+    }): Promise<Task[]> {
+        let query;
+        let table;
 
-        return res.map((raw: any) =>
-            JobService.mapToModel({
-                task_id: raw[0],
-                ...raw[1],
-            })
-        );
+        switch (filter?.type) {
+            case 'account':
+                if (filter?.status === TaskStatus.COMPLETED) {
+                    await this.fetchAndCacheTasks('account_completed', true);
+                    table = db.accountCompletedTasks;
+                } else {
+                    await this.fetchAndCacheTasks('account', true);
+                    table = db.accountTasks;
+                }
+                break;
+            default:
+                table = db.tasks;
+                break;
+        }
+
+        switch (filter?.sort) {
+            case TaskSortTypes.HIGH_PRICE:
+                query = table.orderBy('price').reverse();
+                break;
+            case TaskSortTypes.LOW_PRICE:
+                query = table.orderBy('price');
+                break;
+            case TaskSortTypes.OLDEST:
+                query = table.orderBy('id');
+                break;
+            case TaskSortTypes.NEWEST:
+            default:
+                query = table.orderBy('id').reverse();
+        }
+
+        if (filter) {
+            if (filter.categories) {
+                query.filter((item) =>
+                    filter.categories!.includes(item.categoryId)
+                );
+            }
+
+            if (filter.title) {
+                query.filter((item) =>
+                    item.title
+                        .toLocaleLowerCase()
+                        .includes(filter.title!.toLowerCase())
+                );
+            }
+
+            if (filter.owner) {
+                query.filter((item) => item.owner === filter.owner);
+            }
+
+            if (filter.minAvailableUntil && filter.maxAvailableUntil) {
+                query.filter(
+                    (item) =>
+                        item.availableUntil >= filter.minAvailableUntil! &&
+                        item.availableUntil <= filter.maxAvailableUntil!
+                );
+            } else {
+                if (filter.minAvailableUntil) {
+                    query.filter(
+                        (item) =>
+                            item.availableUntil >= filter.minAvailableUntil!
+                    );
+                } else if (filter.maxAvailableUntil) {
+                    query.filter(
+                        (item) =>
+                            item.availableUntil <= filter.maxAvailableUntil!
+                    );
+                }
+            }
+
+            if (filter.minCreatedAt && filter.maxCreatedAt) {
+                query.filter((item) => {
+                    console.log(item);
+
+                    return (
+                        item.createdAt >= filter.minCreatedAt! &&
+                        item.createdAt <= filter.maxCreatedAt!
+                    );
+                });
+            } else {
+                if (filter.minCreatedAt) {
+                    query.filter(
+                        (item) => item.createdAt >= filter.minCreatedAt!
+                    );
+                } else if (filter.maxCreatedAt) {
+                    query.filter(
+                        (item) => item.createdAt <= filter.maxCreatedAt!
+                    );
+                }
+            }
+        }
+
+        if (filter?.type === 'account')
+            query.offset(offset).limit(FETCH_TASKS_LIMIT);
+
+        const queryRes = await query.toArray();
+
+        if (
+            filter?.type !== 'account' &&
+            filter?.status === TaskStatus.AVAILABLE
+        ) {
+            const ids = queryRes.map((q) => q.taskId);
+
+            let isCompleted = false;
+
+            let offset = 0;
+            if (fromBlockId) {
+                offset = queryRes.findIndex((q) => q.id === fromBlockId) + 1;
+            }
+
+            const LIMIT = 20;
+
+            let availableTasks: Task[] = [];
+
+            while (!isCompleted) {
+                const batchIds = ids.slice(offset, (offset += LIMIT));
+                const res =
+                    await BlockChainConnector.instance.contract.tasks_by_ids({
+                        ids: batchIds,
+                    });
+
+                const tasks: Task[] = res
+                    .map((raw: any, index: number) =>
+                        TaskService.mapToModel({
+                            task_id: raw[0],
+                            ...raw[1],
+                        })
+                    )
+                    .filter(
+                        (item: Task) =>
+                            item.proposals.filter((p) => p.isApproved).length <
+                                item.maxParticipants &&
+                            item.availableUntil > Date.now()
+                    );
+
+                const validTasks = tasks.slice(
+                    0,
+                    FETCH_TASKS_LIMIT - availableTasks.length
+                );
+
+                availableTasks = [...availableTasks, ...validTasks];
+
+                if (
+                    availableTasks.length === FETCH_TASKS_LIMIT ||
+                    offset > ids.length - 1
+                )
+                    isCompleted = true;
+            }
+
+            return availableTasks;
+        }
+
+        return queryRes;
     }
 
-    static async fetchJobByAccountId(accountId?: string): Promise<Job[]> {
+    static async fetchJobByAccountId(accountId?: string): Promise<Task[]> {
         const res = await BlockChainConnector.instance.contract.current_tasks({
             account_id:
                 accountId ?? BlockChainConnector.instance.account.accountId,
@@ -111,7 +286,7 @@ export class JobService {
         });
 
         return res.map((raw: any) =>
-            JobService.mapToModel({
+            TaskService.mapToModel({
                 task_id: raw[0],
                 ...raw[1],
             })
@@ -120,7 +295,7 @@ export class JobService {
 
     static async fetchJobCompletedByAccountId(
         accountId?: string
-    ): Promise<Job[]> {
+    ): Promise<Task[]> {
         const res = await BlockChainConnector.instance.contract.completed_tasks(
             {
                 account_id:
@@ -131,27 +306,130 @@ export class JobService {
         );
 
         return res.map((raw: any) =>
-            JobService.mapToModel({
+            TaskService.mapToModel({
                 task_id: raw[0],
                 ...raw[1],
             })
         );
     }
 
-    private static mapToModel(raw: any): Job {
+    static async fetchTaskById(taskId?: string): Promise<Task> {
+        const res = await BlockChainConnector.instance.contract.task_by_id({
+            task_id: taskId,
+        });
+
+        return this.mapToModel({ ...res, task_id: taskId });
+    }
+
+    private static mapToModel(raw: any): Task {
+        const arr = raw.task_id.split('_');
+        const id = Number.parseInt(arr[arr.length - 1]);
+
         return {
+            id,
             taskId: raw.task_id,
             owner: raw.owner,
             title: raw.title,
             description: raw.description,
             maxParticipants: raw.max_participants,
-            price: utils.format.formatNearAmount(raw.price),
-            proposals: raw.proposals.map((p: any) => ({
+            price: Number(utils.format.formatNearAmount(raw.price)),
+            proposals: raw.proposals?.map((p: any) => ({
                 accountId: p.account_id,
                 proofOfWork: p.proof_of_work,
                 isApproved: p.is_approved,
+                isRejected: p.is_reject,
             })),
             availableUntil: Number.parseInt(raw.available_until.substr(0, 13)),
+            categoryId: raw.category_id,
+            createdAt: Number.parseInt(raw.created_at.substr(0, 13)),
         };
+    }
+
+    static async fetchAndCacheTasks(
+        type?: FetchType,
+        clear?: boolean
+    ): Promise<void> {
+        let fetchTasks;
+        let table;
+
+        switch (type) {
+            case 'account':
+                fetchTasks =
+                    BlockChainConnector.instance.contract.current_tasks;
+                table = db.accountTasks;
+                break;
+            case 'account_completed':
+                fetchTasks =
+                    BlockChainConnector.instance.contract.completed_tasks;
+                table = db.accountCompletedTasks;
+                break;
+            case 'available':
+            default:
+                fetchTasks =
+                    BlockChainConnector.instance.contract.available_tasks;
+                table = db.tasks;
+                break;
+        }
+
+        if (clear) table.clear();
+
+        const firstRecord = (
+            await table.toCollection().reverse().sortBy('id')
+        )[0];
+
+        const LIMIT = 20;
+        let currentIndex = 0;
+        let isCompleted = false;
+
+        while (!isCompleted) {
+            try {
+                const res = await fetchTasks({
+                    from_index: currentIndex,
+                    limit: LIMIT,
+                    account_id: BlockChainConnector.instance.account.accountId,
+                });
+
+                if (res.length === 0) {
+                    isCompleted = true;
+                    break;
+                }
+
+                const data: Task[] = res.map((raw: any) =>
+                    TaskService.mapToModel({
+                        task_id: raw[0],
+                        ...raw[1],
+                        proposals: [],
+                    })
+                );
+
+                if (firstRecord) {
+                    const firstRecordIndex = data.findIndex(
+                        (item) => item.id === firstRecord.id
+                    );
+
+                    if (firstRecordIndex !== -1) {
+                        await table.bulkAdd(data.slice(0, firstRecordIndex));
+                        isCompleted = true;
+                        break;
+                    }
+                }
+
+                await table.bulkAdd(data);
+
+                currentIndex += LIMIT;
+            } catch (err) {
+                console.error('fetchAndCacheTasks' + ' ' + type, err);
+                isCompleted = true;
+            }
+        }
+    }
+
+    static async checkTaskCompleted(taskId: string): Promise<boolean> {
+        const arr = taskId.split('_');
+        const res = await db.accountCompletedTasks.get({
+            id: Number.parseInt(arr[arr.length - 1]),
+        });
+
+        return !!res;
     }
 }

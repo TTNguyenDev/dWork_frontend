@@ -1,19 +1,26 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import {
-    Modal,
-    Button,
-    Form,
-    InputNumber,
-    Input,
-    DateRangePicker,
-    DatePicker,
-} from 'rsuite';
+import React, { useCallback, useEffect } from 'react';
+import { Modal, Button, DatePicker } from 'rsuite';
 import { useCreateTask } from '../../hooks/useCreateTask';
 import { ModalsController } from '../../utils/modalsController';
 import { Editor } from '../editor';
-import { TextField } from '../textField';
-import classes from './createTaskModal.module.less';
 import * as dateFns from 'date-fns';
+import CreatableSelect from 'react-select/creatable';
+import { useQuery } from 'react-query';
+import { CategoryService } from '../../services/categoryService';
+import { useCreateCategory } from '../../hooks/useCreateCategory';
+import {
+    Box,
+    FormControl,
+    FormErrorMessage,
+    FormLabel,
+    Input,
+    NumberDecrementStepper,
+    NumberIncrementStepper,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    VStack,
+} from '@chakra-ui/react';
 
 type createTaskModalProps = {};
 
@@ -30,20 +37,28 @@ export const CreateTaskModal: React.FunctionComponent<
         });
     }, []);
 
-    const { model, createTaskLoading, handleFormChange, handleFormSubmit } =
+    const { createTaskLoading, handleFormSubmit, createTaskForm } =
         useCreateTask();
 
-    const [descValue, setDescValue] = useState<string>('');
-    const [durationValue, setDurationValue] = useState<number>(0);
-
     const handleEditorChange = useCallback((value: string) => {
-        setDescValue(value);
+        if (!value?.replace(/<(.|\n)*?>/g, '').trim()) {
+            createTaskForm.setValue('description', '');
+        } else {
+            createTaskForm.setValue('description', value);
+        }
+        createTaskForm.trigger('description');
     }, []);
+
+    const categoriesQuery = useQuery('categories', () =>
+        CategoryService.fetchCategories()
+    );
+
+    const { createCategoryLoading, handleCreateCategory } = useCreateCategory();
 
     return (
         <Modal
             size="sm"
-            backdrop
+            backdrop="static"
             keyboard={false}
             open={open}
             onClose={handleClose}
@@ -52,98 +67,240 @@ export const CreateTaskModal: React.FunctionComponent<
             <Modal.Header>
                 <Modal.Title>Create new task</Modal.Title>
             </Modal.Header>
-            <Form
-                model={model}
-                fluid
-                onChange={handleFormChange}
-                onSubmit={async (payload) => {
-                    await handleFormSubmit(
-                        payload,
-                        descValue,
-                        durationValue,
-                        handleClose
-                    );
-                }}
-            >
+            <form onSubmit={handleFormSubmit}>
                 <Modal.Body>
-                    <TextField name="title" label="Title" />
-                    <TextField
-                        name="price"
-                        label="Bounty prize Ⓝ"
-                        type="number"
-                        style={{ width: 'unset' }}
-                    />
-                    <TextField
-                        name="maxParticipants"
-                        label="Max participants"
-                        type="number"
-                        style={{ width: 'unset' }}
-                    />
-                    {/* <TextField
-                        name="duration"
-                        label="Duration"
-                        type="number"
-                        style={{ width: 'unset' }}
-                    /> */}
-                    <label className="rs-form-control-label">Deadline</label>
-                    <DatePicker
-                        onChange={(value) => {
-                            setDurationValue(
-                                (value as Date).getTime() - Date.now()
-                            );
-                        }}
-                        format="yyyy-MM-dd HH:mm"
-                        style={{ width: '100%' }}
-                        disabledDate={(date) =>
-                            dateFns.isBefore(
-                                date!,
-                                dateFns.subDays(new Date(), 1)
-                            )
-                        }
-                        disabledHours={(hour, date) => {
-                            if (
-                                dateFns.getDate(date) ===
-                                dateFns.getDate(new Date())
-                            ) {
-                                return hour < dateFns.getHours(new Date());
+                    <VStack spacing="1em">
+                        <FormControl
+                            isInvalid={!!createTaskForm.formState.errors.title}
+                        >
+                            <FormLabel htmlFor="title">Title</FormLabel>
+                            <Input
+                                {...createTaskForm.register('title', {
+                                    required: 'This is required',
+                                })}
+                            />
+                            {createTaskForm.formState.errors.title && (
+                                <FormErrorMessage>
+                                    {
+                                        createTaskForm.formState.errors.title
+                                            .message
+                                    }
+                                </FormErrorMessage>
+                            )}
+                        </FormControl>
+                        <FormControl
+                            isInvalid={!!createTaskForm.formState.errors.price}
+                        >
+                            <FormLabel>Bounty prize Ⓝ</FormLabel>
+                            <NumberInput defaultValue={1} min={1} precision={2}>
+                                <NumberInputField
+                                    {...createTaskForm.register('price', {
+                                        required:
+                                            'Bounty prize is a required field',
+                                    })}
+                                />
+                                <NumberInputStepper>
+                                    <NumberIncrementStepper />
+                                    <NumberDecrementStepper />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            {createTaskForm.formState.errors.price && (
+                                <FormErrorMessage>
+                                    {
+                                        createTaskForm.formState.errors.price
+                                            .message
+                                    }
+                                </FormErrorMessage>
+                            )}
+                        </FormControl>
+                        <FormControl
+                            isInvalid={
+                                !!createTaskForm.formState.errors
+                                    .maxParticipants
                             }
-
-                            return false;
-                        }}
-                        disabledMinutes={(minute, date) => {
-                            if (
-                                dateFns.getDate(date) ===
-                                    dateFns.getDate(new Date()) &&
-                                dateFns.getHours(date) ===
-                                    dateFns.getHours(new Date())
-                            ) {
-                                return minute < dateFns.getMinutes(new Date());
+                        >
+                            <FormLabel>Max participants</FormLabel>
+                            <NumberInput defaultValue={1} min={1} precision={0}>
+                                <NumberInputField
+                                    {...createTaskForm.register(
+                                        'maxParticipants',
+                                        {
+                                            required:
+                                                'Max participants is a required field',
+                                        }
+                                    )}
+                                />
+                                <NumberInputStepper>
+                                    <NumberIncrementStepper />
+                                    <NumberDecrementStepper />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            {createTaskForm.formState.errors
+                                .maxParticipants && (
+                                <FormErrorMessage>
+                                    {
+                                        createTaskForm.formState.errors
+                                            .maxParticipants.message
+                                    }
+                                </FormErrorMessage>
+                            )}
+                        </FormControl>
+                        <FormControl
+                            isInvalid={
+                                !!createTaskForm.formState.errors.duration
                             }
+                        >
+                            <FormLabel>Deadline</FormLabel>
+                            <Input
+                                hidden
+                                {...createTaskForm.register('duration', {
+                                    required: 'Deadline is a required field',
+                                })}
+                            />
+                            <Box h="40px">
+                                <DatePicker
+                                    onChange={(value) => {
+                                        createTaskForm.setValue(
+                                            'duration',
+                                            (value as Date).getTime() -
+                                                Date.now()
+                                        );
+                                        createTaskForm.trigger('duration');
+                                    }}
+                                    format="yyyy-MM-dd HH:mm"
+                                    style={{ width: '100%', marginBottom: -15 }}
+                                    disabledDate={(date) =>
+                                        dateFns.isBefore(
+                                            date!,
+                                            dateFns.subDays(new Date(), 1)
+                                        )
+                                    }
+                                    disabledHours={(hour, date) => {
+                                        if (
+                                            dateFns.getDate(date) ===
+                                            dateFns.getDate(new Date())
+                                        ) {
+                                            return (
+                                                hour <
+                                                dateFns.getHours(new Date())
+                                            );
+                                        }
 
-                            return false;
-                        }}
-                    />
-                    <div style={{ marginBottom: 15 }} />
-                    <Editor
-                        onChange={handleEditorChange}
-                        style={{
-                            padding: 0,
-                        }}
-                        placeholder="Description"
-                    />
-                    {/* <TextField
-                        name="description"
-                        label="Description"
-                        type="textarea"
-                        rows={5}
-                        value="asdasdasdsa"
-                    /> */}
+                                        return false;
+                                    }}
+                                    disabledMinutes={(minute, date) => {
+                                        if (
+                                            dateFns.getDate(date) ===
+                                                dateFns.getDate(new Date()) &&
+                                            dateFns.getHours(date) ===
+                                                dateFns.getHours(new Date())
+                                        ) {
+                                            return (
+                                                minute <
+                                                dateFns.getMinutes(new Date())
+                                            );
+                                        }
+
+                                        return false;
+                                    }}
+                                />
+                            </Box>
+                            {createTaskForm.formState.errors.duration && (
+                                <FormErrorMessage>
+                                    {
+                                        createTaskForm.formState.errors.duration
+                                            .message
+                                    }
+                                </FormErrorMessage>
+                            )}
+                        </FormControl>
+                        <FormControl
+                            isInvalid={
+                                !!createTaskForm.formState.errors.categoryId
+                            }
+                        >
+                            <FormLabel>Category</FormLabel>
+                            <Input
+                                hidden
+                                {...createTaskForm.register('categoryId', {
+                                    required: 'Category is a required field',
+                                })}
+                            />
+                            <Box h="40px">
+                                <CreatableSelect
+                                    isClearable
+                                    onChange={async (payload: any) => {
+                                        if (
+                                            payload &&
+                                            payload.value !== null &&
+                                            payload.__isNew__
+                                        )
+                                            await handleCreateCategory({
+                                                topicName: payload!.value,
+                                            });
+
+                                        createTaskForm.setValue(
+                                            'categoryId',
+                                            payload?.value.replaceAll(' ', '_')
+                                        );
+                                        createTaskForm.trigger('categoryId');
+                                    }}
+                                    options={categoriesQuery.data?.map(
+                                        (item) => ({
+                                            value: item.id,
+                                            label: item.name,
+                                        })
+                                    )}
+                                    isLoading={categoriesQuery.isLoading}
+                                    isDisabled={createCategoryLoading}
+                                    placeholder="Choose category"
+                                />
+                            </Box>
+                            {createTaskForm.formState.errors.categoryId && (
+                                <FormErrorMessage>
+                                    {
+                                        createTaskForm.formState.errors
+                                            .categoryId.message
+                                    }
+                                </FormErrorMessage>
+                            )}
+                        </FormControl>
+                        <FormControl
+                            isInvalid={
+                                !!createTaskForm.formState.errors.description
+                            }
+                        >
+                            <FormLabel mb={0}>Description</FormLabel>
+                            <Input
+                                hidden
+                                {...createTaskForm.register('description', {
+                                    required: 'Description is a required field',
+                                })}
+                            />
+                            <Editor
+                                onChange={handleEditorChange}
+                                style={{
+                                    padding: 0,
+                                }}
+                                placeholder="Description"
+                            />
+                            {createTaskForm.formState.errors.description && (
+                                <FormErrorMessage>
+                                    {
+                                        createTaskForm.formState.errors
+                                            .description.message
+                                    }
+                                </FormErrorMessage>
+                            )}
+                        </FormControl>
+                    </VStack>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
                         appearance="primary"
                         type="submit"
                         loading={createTaskLoading}
+                        disabled={createCategoryLoading}
                     >
                         Create
                     </Button>
@@ -151,7 +308,7 @@ export const CreateTaskModal: React.FunctionComponent<
                         Cancel
                     </Button>
                 </Modal.Footer>
-            </Form>
+            </form>
         </Modal>
     );
 };

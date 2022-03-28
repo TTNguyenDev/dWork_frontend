@@ -13,6 +13,7 @@ export class AccountService {
     private static mapToModel(raw: any): Account {
         return {
             accountId: raw.account_id,
+            bio: raw.bio,
             type: raw.user_type.type,
             totalStake: raw.user_type.total_stake,
             currentRequests: raw.user_type.current_requests,
@@ -28,5 +29,11 @@ export class AccountService {
             '30000000000000',
             '500000000000000000000000'
         );
+    }
+
+    static async updateBio(bio: string): Promise<void> {
+        await BlockChainConnector.instance.contract.update_bio({
+            bio,
+        });
     }
 }

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Badge } from 'rsuite';
-import { JobStatus } from '../../models/types/jobType';
+import { TaskStatus } from '../../models/types/jobType';
 
 interface StatusBadgeProps {
-    status: JobStatus;
+    status: TaskStatus;
 }
 
 export const StatusBadge: React.FunctionComponent<StatusBadgeProps> = ({
@@ -11,17 +11,17 @@ export const StatusBadge: React.FunctionComponent<StatusBadgeProps> = ({
 }) => {
     return (
         <Badge
-            color={
-                status === JobStatus.READY_FOR_APPLY
-                    ? 'green'
-                    : status === JobStatus.FOUND_WORKER
-                    ? 'cyan'
-                    : status === JobStatus.WORKER_SUBMITTED
-                    ? 'blue'
-                    : status === JobStatus.PAYOUT
-                    ? 'violet'
-                    : 'blue'
-            }
+            // color={
+            //     status === TaskStatus.READY_FOR_APPLY
+            //         ? 'green'
+            //         : status === TaskStatus.FOUND_WORKER
+            //         ? 'cyan'
+            //         : status === TaskStatus.WORKER_SUBMITTED
+            //         ? 'blue'
+            //         : status === TaskStatus.PAYOUT
+            //         ? 'violet'
+            //         : 'blue'
+            // }
             content={status}
         />
     );
