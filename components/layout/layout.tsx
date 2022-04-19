@@ -3,6 +3,7 @@ import { Header } from '../header';
 import { Container, Content } from 'rsuite';
 import { Footer } from '../footer';
 import { Box } from '@chakra-ui/react';
+import { HeaderLandingPage } from '../headerLandingPage';
 
 type LayoutProps = {
     activeKey?: string;
@@ -15,7 +16,7 @@ export const Layout: React.FunctionComponent<LayoutProps> = ({
 }) => {
     return (
         <Container>
-            <Header activeKey={activeKey} />
+            {activeKey === 'landing_page' ? <HeaderLandingPage /> : <Header />}
             <Content>
                 <Box minH="calc(100vh - 200px)">{children}</Box>
             </Content>
