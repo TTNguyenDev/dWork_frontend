@@ -92,7 +92,14 @@ export const CreateTaskModal: React.FunctionComponent<
                             isInvalid={!!createTaskForm.formState.errors.price}
                         >
                             <FormLabel>Bounty prize Ⓝ</FormLabel>
-                            <NumberInput defaultValue={1} min={1} precision={2}>
+                            <NumberInput
+                                defaultValue={1}
+                                min={0.01}
+                                precision={2}
+                                onChange={(value) =>
+                                    createTaskForm.setValue('price', value)
+                                }
+                            >
                                 <NumberInputField
                                     {...createTaskForm.register('price', {
                                         required:
@@ -120,7 +127,17 @@ export const CreateTaskModal: React.FunctionComponent<
                             }
                         >
                             <FormLabel>Max participants</FormLabel>
-                            <NumberInput defaultValue={1} min={1} precision={0}>
+                            <NumberInput
+                                defaultValue={1}
+                                min={1}
+                                precision={0}
+                                onChange={(value) =>
+                                    createTaskForm.setValue(
+                                        'maxParticipants',
+                                        value
+                                    )
+                                }
+                            >
                                 <NumberInputField
                                     {...createTaskForm.register(
                                         'maxParticipants',
