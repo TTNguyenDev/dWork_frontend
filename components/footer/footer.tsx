@@ -45,15 +45,15 @@ export const Footer: React.FunctionComponent<FooterProps> = () => {
                                     dWork
                                 </Text>
                                 <HStack
-                                    spacing="15px"
-                                    textColor="blackAlpha.800"
+                                    spacing="25px"
+                                    textColor="blackAlpha.700"
                                     justifyContent="center"
                                     mb="50px"
                                 >
-                                    <BsDiscord size={30} />
-                                    <BsTelegram size={30} />
-                                    <BsTwitter size={30} />
-                                    <BsYoutube size={30} />
+                                    <BsDiscord size={25} />
+                                    <BsTelegram size={25} />
+                                    <BsTwitter size={25} />
+                                    <BsYoutube size={25} />
                                 </HStack>
                             </VStack>
                         </Center>

@@ -1,52 +1,39 @@
 import React from 'react';
 import Header from 'next/head';
 import { Layout } from '../components/layout';
-import classes from './index.module.less';
-import { Button, Col, Container, FlexboxGrid, Steps } from 'rsuite';
-import createTaskLogo from '../assets/logos/create-task.png';
-import makeMoneyLogo from '../assets/logos/make-money.png';
-import { useHomePage } from '../hooks/useHomePage';
-import { Loader } from '../components/loader';
-import { ListTasks } from '../components/listTasks';
-import { TaskFilter } from '../components/tasksFilter';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { Button, Steps } from 'rsuite';
 import {
+    AspectRatio,
     Box,
     Center,
     Grid,
     GridItem,
     Heading,
     HStack,
+    ListItem,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
     Text,
-    VStack,
+    UnorderedList,
+    useDisclosure,
 } from '@chakra-ui/react';
 import LogoLNC from '../assets/logos/lnc-b.svg';
 import LogoNearFoundation from '../assets/logos/near-foundation.svg';
 import Link from 'next/link';
 import Image from 'next/image';
+import FeatureLogo1 from '../assets/feature_logo_1.svg';
+import FeatureLogo2 from '../assets/feature_logo_2.svg';
+import FeatureLogo3 from '../assets/feature_logo_3.svg';
+import FeatureLogo4 from '../assets/feature_logo_4.svg';
+import ReactPlayer from 'react-player';
 
 export default function Home() {
-    const {
-        authLoading,
-        logged,
-        createTaskBtnLoading,
-        makeMoneyBtnLoading,
-        handleCreateTaskBtnClick,
-        handleMakeMoneyBtnClick,
-        jobs,
-        listJobsLoading,
-        profileLoading,
-        profileInfo,
-        fetchNextPage,
-        isFetchingNextPage,
-        hasNextPage,
-        filter,
-        setTaskFilter,
-        applyTaskFilter,
-    } = useHomePage();
-
-    const app = useSelector((state: RootState) => state.app);
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <>
@@ -93,7 +80,60 @@ export default function Home() {
                                 </Box>
                             </Center>
                         </GridItem>
-                        <GridItem colSpan={{ base: 2, md: 1 }}></GridItem>
+                        <GridItem colSpan={{ base: 2, md: 1 }}>
+                            <Center h="100%">
+                                <AspectRatio
+                                    ratio={16 / 9}
+                                    w="100%"
+                                    onClick={onOpen}
+                                    cursor="pointer"
+                                >
+                                    <Box bg="blackAlpha.300">
+                                        <Text
+                                            textColor="blackAlpha.500"
+                                            fontWeight={600}
+                                        >
+                                            Preview
+                                        </Text>
+                                    </Box>
+                                </AspectRatio>
+                            </Center>
+                            <Modal
+                                isCentered
+                                onClose={onClose}
+                                isOpen={isOpen}
+                                motionPreset="slideInBottom"
+                                size="full"
+                            >
+                                <ModalOverlay />
+                                <ModalContent bg="transparent">
+                                    <ModalCloseButton color="white" />
+                                    <ModalBody position="relative" zIndex={-1}>
+                                        <Box
+                                            w="100%"
+                                            maxW="1600px"
+                                            p="15px"
+                                            position="absolute"
+                                            top="50%"
+                                            left="50%"
+                                            transform="translate(-50%, -50%)"
+                                        >
+                                            <AspectRatio
+                                                w="100%"
+                                                ratio={16 / 9}
+                                            >
+                                                <ReactPlayer
+                                                    url="https://www.youtube.com/watch?v=yqWX86uT5jM"
+                                                    playing
+                                                    width="100%"
+                                                    height="100%"
+                                                />
+                                            </AspectRatio>
+                                        </Box>
+                                    </ModalBody>
+                                </ModalContent>
+                            </Modal>
+                        </GridItem>
                     </Grid>
                 </Box>
                 <Box pt="200px" pb="300px">
@@ -177,26 +217,26 @@ export default function Home() {
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
                                 <Box>
+                                    <Heading
+                                        as="h3"
+                                        fontSize="34px"
+                                        fontWeight="500"
+                                        mb="20px"
+                                    >
+                                        Easy to post jobs
+                                    </Heading>
                                     <Text fontSize="24px" fontWeight={300}>
-                                        We’ve seen recently that centralized
-                                        platforms designed to “democratise
-                                        finance” just can’t be trusted - as
-                                        Robinhood’s response to the trading of
-                                        GME on their platform demonstrated.
+                                        Post a job and hire a pro. We are
+                                        solving your problem with pro-workers
+                                        worldwide—no services fee for now. GME
+                                        on their platform demonstrated.
                                     </Text>
                                 </Box>
                             </Center>
                         </GridItem>
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
-                                <Text
-                                    background="linear-gradient(to right, #1371a9 0%, #7713db 100%)"
-                                    backgroundClip="text"
-                                    fontSize="48px"
-                                    fontWeight="500"
-                                >
-                                    ICON
-                                </Text>
+                                <Image src={FeatureLogo1} width="250px" />
                             </Center>
                         </GridItem>
                     </Grid>
@@ -211,25 +251,24 @@ export default function Home() {
                     >
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
-                                <Text
-                                    background="linear-gradient(to right, #1371a9 0%, #7713db 100%)"
-                                    backgroundClip="text"
-                                    fontSize="48px"
-                                    fontWeight="500"
-                                >
-                                    ICON
-                                </Text>
+                                <Image src={FeatureLogo2} width="250px" />
                             </Center>
                         </GridItem>
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
                                 <Box>
+                                    <Heading
+                                        as="h3"
+                                        fontSize="34px"
+                                        fontWeight="500"
+                                        mb="20px"
+                                    >
+                                        Earn crypto
+                                    </Heading>
                                     <Text fontSize="24px" fontWeight={300}>
-                                        We’ve seen recently that centralized
-                                        platforms designed to “democratise
-                                        finance” just can’t be trusted - as
-                                        Robinhood’s response to the trading of
-                                        GME on their platform demonstrated.
+                                        Make money by solving problems. As a
+                                        worker, we can ensure your pay with
+                                        smart-contract.
                                     </Text>
                                 </Box>
                             </Center>
@@ -247,26 +286,29 @@ export default function Home() {
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
                                 <Box>
+                                    <Heading
+                                        as="h3"
+                                        fontSize="34px"
+                                        fontWeight="500"
+                                        mb="20px"
+                                    >
+                                        Completely decentralized
+                                    </Heading>
                                     <Text fontSize="24px" fontWeight={300}>
-                                        We’ve seen recently that centralized
-                                        platforms designed to “democratise
-                                        finance” just can’t be trusted - as
-                                        Robinhood’s response to the trading of
-                                        GME on their platform demonstrated.
+                                        dWork is decentralized on the NEAR
+                                        Blockchain - A 3rd generation blockchain
+                                        with a meager network fee. Tasks and
+                                        worker’s proof are stored on NEAR
+                                        Blockchain and IPFS. Your money will be
+                                        controlled with this protocol. We
+                                        protect everyone's benefit.
                                     </Text>
                                 </Box>
                             </Center>
                         </GridItem>
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
-                                <Text
-                                    background="linear-gradient(to right, #1371a9 0%, #7713db 100%)"
-                                    backgroundClip="text"
-                                    fontSize="48px"
-                                    fontWeight="500"
-                                >
-                                    ICON
-                                </Text>
+                                <Image src={FeatureLogo3} width="250px" />
                             </Center>
                         </GridItem>
                     </Grid>
@@ -281,25 +323,23 @@ export default function Home() {
                     >
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
-                                <Text
-                                    background="linear-gradient(to right, #1371a9 0%, #7713db 100%)"
-                                    backgroundClip="text"
-                                    fontSize="48px"
-                                    fontWeight="500"
-                                >
-                                    ICON
-                                </Text>
+                                <Image src={FeatureLogo4} width="250px" />
                             </Center>
                         </GridItem>
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
                                 <Box>
+                                    <Heading
+                                        as="h3"
+                                        fontSize="34px"
+                                        fontWeight="500"
+                                        mb="20px"
+                                    >
+                                        User Ranking
+                                    </Heading>
                                     <Text fontSize="24px" fontWeight={300}>
-                                        We’ve seen recently that centralized
-                                        platforms designed to “democratise
-                                        finance” just can’t be trusted - as
-                                        Robinhood’s response to the trading of
-                                        GME on their platform demonstrated.
+                                        User ranking and penalty to someone
+                                        trying to cheat or spam dWork protocol.
                                     </Text>
                                 </Box>
                             </Center>
@@ -317,48 +357,139 @@ export default function Home() {
                             ROAD MAP
                         </Text>
                     </Box>
-                    <Box p="0 15px" display={{ base: 'none', md: 'block' }}>
-                        <Steps current={0}>
+                    <Box
+                        p="0 15px"
+                        maxW="1200px"
+                        margin="auto"
+                        mb="50px"
+                        padding="50px 15px"
+                        display={{ base: 'none', md: 'block' }}
+                    >
+                        <Steps current={1}>
+                            <Steps.Item
+                                title="Q1/2022"
+                                description={
+                                    <UnorderedList>
+                                        <ListItem>
+                                            Proposing the idea and building a
+                                            prototype
+                                        </ListItem>
+                                        <ListItem>Partner with LNC</ListItem>
+                                        <ListItem>Basic features</ListItem>
+                                        <ListItem>Beta test</ListItem>
+                                    </UnorderedList>
+                                }
+                            />
                             <Steps.Item
                                 title="Q2/2022"
-                                description="This is a description."
+                                description={
+                                    <UnorderedList>
+                                        <ListItem>
+                                            Tasks management, Users Ranking,
+                                            Indexed data, and filters
+                                        </ListItem>
+                                        <ListItem>Internal test</ListItem>
+                                        <ListItem>Beta test</ListItem>
+                                    </UnorderedList>
+                                }
                             />
                             <Steps.Item
                                 title="Q3/2022"
-                                description="This is a description."
+                                description={
+                                    <UnorderedList>
+                                        <ListItem>
+                                            Retroactive, reward to contributors
+                                        </ListItem>
+                                        <ListItem>
+                                            Audit smart contract
+                                        </ListItem>
+                                        <ListItem>Release on mainnet</ListItem>
+                                    </UnorderedList>
+                                }
                             />
                             <Steps.Item
                                 title="Q4/2022"
-                                description="This is a description."
-                            />
-                            <Steps.Item
-                                title="Q1/2023"
-                                description="This is a description."
+                                description={
+                                    <UnorderedList>
+                                        <ListItem>Hire more employees</ListItem>
+                                        <ListItem>Marketing</ListItem>
+                                        <ListItem>
+                                            Release the dWork token for
+                                            governance, use as a currency for
+                                            internal payment
+                                        </ListItem>
+                                        <ListItem>
+                                            Allow swapping on Defi protocol
+                                        </ListItem>
+                                    </UnorderedList>
+                                }
                             />
                         </Steps>
                     </Box>
                     <Box p="0 15px" display={{ base: 'block', md: 'none' }}>
                         <Steps current={0} vertical>
                             <Steps.Item
+                                title="Q1/2022"
+                                description={
+                                    <UnorderedList>
+                                        <ListItem>
+                                            Proposing the idea and building a
+                                            prototype
+                                        </ListItem>
+                                        <ListItem>Partner with LNC</ListItem>
+                                        <ListItem>Basic features</ListItem>
+                                        <ListItem>Beta test</ListItem>
+                                    </UnorderedList>
+                                }
+                            />
+                            <Steps.Item
                                 title="Q2/2022"
-                                description="This is a description."
+                                description={
+                                    <UnorderedList>
+                                        <ListItem>
+                                            Tasks management, Users Ranking,
+                                            Indexed data, and filters
+                                        </ListItem>
+                                        <ListItem>Internal test</ListItem>
+                                        <ListItem>Beta test</ListItem>
+                                    </UnorderedList>
+                                }
                             />
                             <Steps.Item
                                 title="Q3/2022"
-                                description="This is a description."
+                                description={
+                                    <UnorderedList>
+                                        <ListItem>
+                                            Retroactive, reward to contributors
+                                        </ListItem>
+                                        <ListItem>
+                                            Audit smart contract
+                                        </ListItem>
+                                        <ListItem>Release on mainnet</ListItem>
+                                    </UnorderedList>
+                                }
                             />
                             <Steps.Item
                                 title="Q4/2022"
-                                description="This is a description."
-                            />
-                            <Steps.Item
-                                title="Q1/2023"
-                                description="This is a description."
+                                description={
+                                    <UnorderedList>
+                                        <ListItem>Hire more employees</ListItem>
+                                        <ListItem>Marketing</ListItem>
+                                        <ListItem>
+                                            Release the dWork token for
+                                            governance, use as a currency for
+                                            internal payment
+                                        </ListItem>
+                                        <ListItem>
+                                            Allow swapping on Defi protocol
+                                        </ListItem>
+                                    </UnorderedList>
+                                }
                             />
                         </Steps>
                     </Box>
                 </Box>
-                <Box pt="200px" pb="300px">
+                {/* <Box pt="200px" pb="300px">
                     <Box>
                         <Text
                             fontSize="38px"
@@ -460,7 +591,7 @@ export default function Home() {
                             </VStack>
                         </GridItem>
                     </Grid>
-                </Box>
+                </Box> */}
             </Layout>
         </>
     );
