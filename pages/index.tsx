@@ -41,7 +41,7 @@ export default function Home() {
                 <title>Home</title>
             </Header>
             <Layout activeKey="landing_page">
-                <Box pt="200px" pb="300px">
+                <Box pt="150px" pb="200px">
                     <Grid
                         templateColumns="repeat(2, 1fr)"
                         gap={10}
@@ -136,7 +136,7 @@ export default function Home() {
                         </GridItem>
                     </Grid>
                 </Box>
-                <Box pt="200px" pb="300px">
+                <Box pt="150px" pb="200px">
                     <Grid
                         templateColumns="repeat(2, 1fr)"
                         gap={10}
@@ -194,7 +194,7 @@ export default function Home() {
                         </HStack>
                     </Box>
                 </Box>
-                <Box pt="200px" pb="300px">
+                <Box pt="150px" pb="200px">
                     <Box>
                         <Text
                             fontSize="38px"
@@ -236,7 +236,11 @@ export default function Home() {
                         </GridItem>
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
-                                <Image src={FeatureLogo1} width="250px" />
+                                <Image
+                                    src={FeatureLogo1}
+                                    width="250px"
+                                    height="250px"
+                                />
                             </Center>
                         </GridItem>
                     </Grid>
@@ -251,7 +255,11 @@ export default function Home() {
                     >
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
-                                <Image src={FeatureLogo2} width="250px" />
+                                <Image
+                                    src={FeatureLogo2}
+                                    width="250px"
+                                    height="250px"
+                                />
                             </Center>
                         </GridItem>
                         <GridItem colSpan={{ base: 2, md: 1 }}>
@@ -308,7 +316,11 @@ export default function Home() {
                         </GridItem>
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
-                                <Image src={FeatureLogo3} width="250px" />
+                                <Image
+                                    src={FeatureLogo3}
+                                    width="250px"
+                                    height="250px"
+                                />
                             </Center>
                         </GridItem>
                     </Grid>
@@ -323,7 +335,11 @@ export default function Home() {
                     >
                         <GridItem colSpan={{ base: 2, md: 1 }}>
                             <Center h="100%">
-                                <Image src={FeatureLogo4} width="250px" />
+                                <Image
+                                    src={FeatureLogo4}
+                                    width="250px"
+                                    height="250px"
+                                />
                             </Center>
                         </GridItem>
                         <GridItem colSpan={{ base: 2, md: 1 }}>
@@ -346,7 +362,7 @@ export default function Home() {
                         </GridItem>
                     </Grid>
                 </Box>
-                <Box pt="200px" pb="300px">
+                <Box pt="150px" pb="200px">
                     <Box>
                         <Text
                             fontSize="38px"
@@ -489,7 +505,7 @@ export default function Home() {
                         </Steps>
                     </Box>
                 </Box>
-                {/* <Box pt="200px" pb="300px">
+                {/* <Box pt="150px" pb="200px">
                     <Box>
                         <Text
                             fontSize="38px"
