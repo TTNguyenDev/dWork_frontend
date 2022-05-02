@@ -81,18 +81,12 @@ export const useHomePage = (): UseHomePageOutput => {
             return;
         }
 
-        setCreateTaskBtnLoading(true);
-        try {
-            await AccountService.register(true);
-            toast('Register as a requester successfully', {
-                type: 'success',
-            });
-        } catch (error) {
-            toast('Register as a requester failed', {
-                type: 'error',
-            });
-        }
-        setCreateTaskBtnLoading(false);
+        ModalsController.controller.setDataDepositInfomationModal({
+            amount: 0.5,
+            reason: 'create a requester account',
+            action: () => AccountService.register(true),
+        });
+        ModalsController.controller.openDepositInfomationModal();
     }, [auth.data.logged]);
 
     const handleMakeMoneyBtnClick = useCallback(async () => {
@@ -101,18 +95,12 @@ export const useHomePage = (): UseHomePageOutput => {
             return;
         }
 
-        setMakeMoneyBtnLoading(true);
-        try {
-            await AccountService.register(false);
-            toast('Register as a worker successfully', {
-                type: 'success',
-            });
-        } catch (error) {
-            toast('Register as a worker failed', {
-                type: 'error',
-            });
-        }
-        setMakeMoneyBtnLoading(false);
+        ModalsController.controller.setDataDepositInfomationModal({
+            amount: 0.5,
+            reason: 'create a worker account',
+            action: () => AccountService.register(false),
+        });
+        ModalsController.controller.openDepositInfomationModal();
     }, [auth.data.logged]);
 
     return {

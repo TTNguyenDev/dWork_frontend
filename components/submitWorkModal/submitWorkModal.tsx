@@ -42,13 +42,8 @@ export const SubmitWorkModal: React.FunctionComponent<SubmitWorkModalProps> = ({
                 model={model}
                 fluid
                 onChange={handleFormChange}
-                onSubmit={async (payload) => {
-                    await handleFormSubmit(
-                        payload,
-                        taskId,
-                        proofValue,
-                        handleClose
-                    );
+                onSubmit={(payload) => {
+                    handleFormSubmit(payload, taskId, proofValue, handleClose);
                 }}
                 formDefaultValue={{
                     taskId,
