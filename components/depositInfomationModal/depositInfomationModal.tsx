@@ -24,7 +24,6 @@ export const DespositInfomationModal: React.FunctionComponent = () => {
     return (
         <Modal
             size="sm"
-            backdrop="static"
             keyboard={false}
             open={open}
             onClose={handleClose}
