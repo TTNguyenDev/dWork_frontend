@@ -55,6 +55,13 @@ export const CreateTaskModal: React.FunctionComponent<
 
     const { createCategoryLoading, handleCreateCategory } = useCreateCategory();
 
+    const amount = React.useMemo(
+        () =>
+            Number(createTaskForm.getValues('price')) *
+            Number(createTaskForm.getValues('maxParticipants')),
+        [createTaskForm.watch('price'), createTaskForm.watch('maxParticipants')]
+    );
+
     return (
         <Modal
             size="sm"
@@ -69,7 +76,7 @@ export const CreateTaskModal: React.FunctionComponent<
             </Modal.Header>
             <form onSubmit={handleFormSubmit}>
                 <Modal.Body>
-                    <VStack spacing="1em">
+                    <VStack spacing="1em" align="stretch">
                         <FormControl
                             isInvalid={!!createTaskForm.formState.errors.title}
                         >
@@ -310,6 +317,16 @@ export const CreateTaskModal: React.FunctionComponent<
                                 </FormErrorMessage>
                             )}
                         </FormControl>
+                        {!isNaN(amount) && (
+                            <Message
+                                showIcon
+                                type="info"
+                                header="Informational"
+                            >
+                                You need to deposit <b>{amount} NEAR</b> to
+                                submit your work.
+                            </Message>
+                        )}
                     </VStack>
                 </Modal.Body>
                 <Modal.Footer>
