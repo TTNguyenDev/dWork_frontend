@@ -3,6 +3,7 @@ import { CreateTaskInput, TaskService } from '../services/jobService';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 import { useForm, UseFormReturn } from 'react-hook-form';
+import { IPFSUtils } from '../utils/ipfsUtils';
 
 export type UseCreateTaskOutput = {
     createTaskLoading: boolean;
@@ -20,6 +21,9 @@ export const useCreateTask = (): UseCreateTaskOutput => {
         () =>
             createTaskForm.handleSubmit(async (data: any) => {
                 setCreateTaskLoading(true);
+                const ipfsData = await IPFSUtils.client.add(data.description);
+                data.description = ipfsData.path;
+
                 try {
                     await TaskService.createTask(data);
                     queryClient.invalidateQueries('jobs');

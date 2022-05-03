@@ -14,11 +14,11 @@ import { AccountInfoCard } from '../../components/accountInfoCard';
 import { SubmitWorkButton } from '../../components/submitWorkButton';
 import Select from 'react-select';
 import { ProposalItem } from '../../components/proposalItem';
-import { BlockChainConnector } from '../../utils/blockchain';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { Proposal } from '../../models/types/jobType';
 import { Badge } from '@chakra-ui/react';
+import { HtmlIPFS } from '../../components/htmlIPFS';
 
 const PROPOSAL_STATUS_SELECT_OPTIONS = [
     {
@@ -119,8 +119,6 @@ export default function TaskDetailsPage() {
             enabled: !!taskId,
         }
     );
-
-    console.log(checkCompletedQuery.isLoading);
 
     return (
         <>
@@ -272,12 +270,9 @@ export default function TaskDetailsPage() {
                                                     </h6>
                                                 </div>
                                                 <div>
-                                                    <div
-                                                        className="ql-editor"
-                                                        style={{ padding: 0 }}
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: task.description,
-                                                        }}
+                                                    <HtmlIPFS
+                                                        cid={task.description}
+                                                        key="task_description"
                                                     />
                                                 </div>
                                             </Wrapper>
