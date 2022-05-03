@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { useInfiniteQuery, useQueryClient } from 'react-query';
+import { useSelector } from 'react-redux';
 import { Optional } from '../common';
 import { Task } from '../models/types/jobType';
 import { FETCH_TASKS_LIMIT, TaskService } from '../services/jobService';
+import { RootState } from '../store';
 import { TaskFilterInput, useTaskFilter } from './useTaskFilter';
 
 export type UseListJobsInput = TaskFilterInput;
@@ -22,6 +24,8 @@ export type UseListJobsOutput = {
 export const useListJobs = (payload?: UseListJobsInput): UseListJobsOutput => {
     const { filterReady, filter, setTaskFilter, applyTaskFilter } =
         useTaskFilter(payload);
+
+    const app = useSelector((state: RootState) => state.app);
 
     const {
         data,
@@ -47,6 +51,7 @@ export const useListJobs = (payload?: UseListJobsInput): UseListJobsOutput => {
                     fromBlockId: lastPage[lastPage.length - 1].id,
                 };
             },
+            enabled: app.data.cacheReady,
         }
     );
 
