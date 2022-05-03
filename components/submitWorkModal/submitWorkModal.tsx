@@ -65,7 +65,7 @@ export const SubmitWorkModal: React.FunctionComponent<SubmitWorkModalProps> = ({
                         rows={5}
                     /> */}
                     <div style={{ marginBottom: 50 }} />
-                    <Message showIcon type="info" header="Informational">
+                    <Message showIcon type="info" header="Note">
                         You need to deposit <b>0.01 NEAR</b> to submit your
                         work. We do this to avoid spam submissions. You will get
                         a refund after the requester checks your post.

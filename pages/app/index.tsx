@@ -85,18 +85,22 @@ export default function Home() {
                                                 API. Access a global, on-demand,
                                                 24/7 workforce.
                                             </div>
-                                            <Button
-                                                appearance="primary"
-                                                className={
-                                                    classes.card_intro_btn
-                                                }
-                                                loading={createTaskBtnLoading}
-                                                onClick={
-                                                    handleCreateTaskBtnClick
-                                                }
-                                            >
-                                                Create a Requester account
-                                            </Button>
+                                            {logged && (
+                                                <Button
+                                                    appearance="primary"
+                                                    className={
+                                                        classes.card_intro_btn
+                                                    }
+                                                    loading={
+                                                        createTaskBtnLoading
+                                                    }
+                                                    onClick={
+                                                        handleCreateTaskBtnClick
+                                                    }
+                                                >
+                                                    Create a Requester account
+                                                </Button>
+                                            )}
                                         </section>
                                     </FlexboxGrid.Item>
                                     <FlexboxGrid.Item
@@ -136,18 +140,22 @@ export default function Home() {
                                                     completing simple tasks.
                                                 </div>
                                             </div>
-                                            <Button
-                                                appearance="primary"
-                                                className={
-                                                    classes.card_intro_btn
-                                                }
-                                                loading={makeMoneyBtnLoading}
-                                                onClick={
-                                                    handleMakeMoneyBtnClick
-                                                }
-                                            >
-                                                Create a Worker account
-                                            </Button>
+                                            {logged && (
+                                                <Button
+                                                    appearance="primary"
+                                                    className={
+                                                        classes.card_intro_btn
+                                                    }
+                                                    loading={
+                                                        makeMoneyBtnLoading
+                                                    }
+                                                    onClick={
+                                                        handleMakeMoneyBtnClick
+                                                    }
+                                                >
+                                                    Create a Worker account
+                                                </Button>
+                                            )}
                                         </section>
                                     </FlexboxGrid.Item>
                                 </FlexboxGrid>

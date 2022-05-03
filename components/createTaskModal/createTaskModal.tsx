@@ -264,18 +264,21 @@ export const CreateTaskModal: React.FunctionComponent<
                                 <CreatableSelect
                                     isClearable
                                     onChange={async (payload: any) => {
-                                        if (
-                                            payload &&
-                                            payload.value !== null &&
-                                            payload.__isNew__
-                                        )
-                                            await handleCreateCategory({
-                                                topicName: payload!.value,
-                                            });
+                                        const value = payload?.value.trim();
+                                        if (value !== null && payload.__isNew__)
+                                            createTaskForm.setValue(
+                                                'newCategory',
+                                                value
+                                            );
+                                        else
+                                            createTaskForm.setValue(
+                                                'newCategory',
+                                                undefined
+                                            );
 
                                         createTaskForm.setValue(
                                             'categoryId',
-                                            payload?.value.replaceAll(' ', '_')
+                                            value.replaceAll(' ', '_')
                                         );
                                         createTaskForm.trigger('categoryId');
                                     }}
@@ -328,11 +331,7 @@ export const CreateTaskModal: React.FunctionComponent<
                             )}
                         </FormControl>
                         {!isNaN(amount) && (
-                            <Message
-                                showIcon
-                                type="info"
-                                header="Informational"
-                            >
+                            <Message showIcon type="info" header="Note">
                                 You need to stake <b>{amount} Ⓝ </b> to prepay
                                 user rewards.
                             </Message>

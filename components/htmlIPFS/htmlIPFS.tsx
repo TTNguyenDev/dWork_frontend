@@ -51,11 +51,7 @@ export const HtmlIPFS: React.FunctionComponent<HtmlIPFSProps> = ({
                 ) : (
                     htmlQuery.data && (
                         <Box
-                            className={
-                                className
-                                    ? ['ql-editor', className].join(' ')
-                                    : 'ql-editor'
-                            }
+                            className={className ? className : 'ql-editor'}
                             dangerouslySetInnerHTML={{
                                 __html: textOnly
                                     ? htmlQuery.data.replace(/<(.|\n)*?>/g, ' ')
