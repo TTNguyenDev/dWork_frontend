@@ -381,7 +381,7 @@ export class TaskService {
             await table.toCollection().reverse().sortBy('id')
         )[0];
 
-        const LIMIT = 20;
+        const LIMIT = 100;
         let currentIndex = 0;
         let isCompleted = false;
 
