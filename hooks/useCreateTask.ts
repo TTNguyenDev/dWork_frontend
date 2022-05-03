@@ -25,7 +25,14 @@ export const useCreateTask = (): UseCreateTaskOutput => {
                 data.description = ipfsData.path;
 
                 try {
-                    await TaskService.createTask(data);
+                    await TaskService.createTask(
+                        data,
+                        data.newCategory
+                            ? {
+                                  name: data.newCategory,
+                              }
+                            : undefined
+                    );
                     queryClient.invalidateQueries('jobs');
                     queryClient.invalidateQueries('jobsAvailable');
                     toast('Create task successfully', {

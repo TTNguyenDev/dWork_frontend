@@ -30,11 +30,11 @@ export const DespositInfomationModal: React.FunctionComponent = () => {
             overflow={false}
         >
             <Modal.Header>
-                <Modal.Title>Deposit Infomation</Modal.Title>
+                <Modal.Title>Deposit Information</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Message showIcon type="info" header="Informational">
-                    You need to stake <b>{data.amount} Ⓝ</b> as a registration.
+                <Message showIcon type="info" header="Note">
+                    You need to stake <b>{data.amount} Ⓝ</b> as a registration
                     fee
                 </Message>
             </Modal.Body>

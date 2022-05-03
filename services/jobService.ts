@@ -3,6 +3,7 @@ import { BlockChainConnector } from '../utils/blockchain';
 import { utils } from 'near-api-js';
 import { db } from '../db';
 import { PRICE_DECIMAL_LENGTH } from '../constants';
+import { batchTransactions } from '../utils/serviceUtils';
 
 export const FETCH_TASKS_LIMIT = 12;
 
@@ -13,6 +14,7 @@ export type CreateTaskInput = {
     maxParticipants: string;
     duration: number;
     categoryId: string;
+    newCategory?: string;
 };
 
 export enum TaskSortTypes {
@@ -25,25 +27,43 @@ export enum TaskSortTypes {
 export type FetchType = 'available' | 'account' | 'account_completed';
 
 export class TaskService {
-    static async createTask(payload: CreateTaskInput): Promise<void> {
+    static async createTask(
+        payload: CreateTaskInput,
+        newCategory?: {
+            name: string;
+        }
+    ): Promise<void> {
+        const transactions: any[] = [];
+
+        if (newCategory)
+            transactions.push({
+                methodName: 'new_category',
+                body: {
+                    topic_name: newCategory.name,
+                },
+            });
+
         const maxParticipants = Number.parseInt(payload.maxParticipants);
-        console.log(payload);
-        await BlockChainConnector.instance.contract.new_task(
-            {
+        const createTaskTrans = {
+            methodName: 'new_task',
+            body: {
                 title: payload.title,
                 description: payload.description,
                 price: utils.format.parseNearAmount(payload.price),
                 max_participants: maxParticipants,
                 duration: (payload.duration * 1000000).toString(),
-                category_id: payload.categoryId,
+                category_id: payload.categoryId.toLowerCase(),
             },
-            '30000000000000',
-            utils.format.parseNearAmount(
+            gas: '30000000000000',
+            deposit: utils.format.parseNearAmount(
                 (Number.parseFloat(payload.price) * maxParticipants)
                     .toFixed(PRICE_DECIMAL_LENGTH)
                     .toString()
-            )
-        );
+            ),
+        };
+        transactions.push(createTaskTrans);
+        await batchTransactions(transactions);
+        return;
     }
 
     static async submitWork(payload: {
