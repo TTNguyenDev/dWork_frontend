@@ -88,13 +88,13 @@ export default function Home() {
                                     onClick={onOpen}
                                     cursor="pointer"
                                 >
-                                    <Box bg="blackAlpha.300">
-                                        <Text
-                                            textColor="blackAlpha.500"
-                                            fontWeight={600}
-                                        >
-                                            Preview
-                                        </Text>
+                                    <Box pointerEvents="none">
+                                        <ReactPlayer
+                                            url="https://www.youtube.com/watch?v=yqWX86uT5jM"
+                                            width="100%"
+                                            height="100%"
+                                            light
+                                        />
                                     </Box>
                                 </AspectRatio>
                             </Center>

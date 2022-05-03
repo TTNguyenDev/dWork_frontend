@@ -66,6 +66,11 @@ export default function TaskDetailsPage() {
         [task]
     );
 
+    const isOwner = React.useMemo(
+        () => task?.owner === profile.data.info?.accountId,
+        [task?.owner, profile.data.info?.accountId]
+    );
+
     const markCompleteButton = React.useMemo(() => {
         if (profile.data.info && taskId)
             return (
@@ -91,7 +96,6 @@ export default function TaskDetailsPage() {
     const [filterStatus, setFilterStatus] = useState('all');
 
     const proposal: Proposal[] = useMemo(() => {
-        console.log(filterStatus);
         if (task?.proposals && profile.data.info) {
             return task.proposals.filter((p) => {
                 if (task?.owner === profile.data.info?.accountId) {
@@ -293,39 +297,43 @@ export default function TaskDetailsPage() {
                                                     >
                                                         Proposals
                                                     </h6>
-                                                    <Select
-                                                        options={
-                                                            PROPOSAL_STATUS_SELECT_OPTIONS
-                                                        }
-                                                        isSearchable={false}
-                                                        defaultValue={
-                                                            PROPOSAL_STATUS_SELECT_OPTIONS[0]
-                                                        }
-                                                        components={{
-                                                            IndicatorSeparator:
-                                                                () => null,
-                                                        }}
-                                                        styles={{
-                                                            control: (
-                                                                base
-                                                            ) => ({
-                                                                ...base,
-                                                                minWidth: 120,
-                                                                fontWeight: 600,
-                                                                border: 'none',
-                                                                background:
-                                                                    '#f7f7fa',
-                                                                color: '#575757',
-                                                                borderRadius: 6,
-                                                                cursor: 'pointer',
-                                                            }),
-                                                        }}
-                                                        onChange={(item: any) =>
-                                                            setFilterStatus(
-                                                                item.value
-                                                            )
-                                                        }
-                                                    />
+                                                    {isOwner && (
+                                                        <Select
+                                                            options={
+                                                                PROPOSAL_STATUS_SELECT_OPTIONS
+                                                            }
+                                                            isSearchable={false}
+                                                            defaultValue={
+                                                                PROPOSAL_STATUS_SELECT_OPTIONS[0]
+                                                            }
+                                                            components={{
+                                                                IndicatorSeparator:
+                                                                    () => null,
+                                                            }}
+                                                            styles={{
+                                                                control: (
+                                                                    base
+                                                                ) => ({
+                                                                    ...base,
+                                                                    minWidth: 120,
+                                                                    fontWeight: 600,
+                                                                    border: 'none',
+                                                                    background:
+                                                                        '#f7f7fa',
+                                                                    color: '#575757',
+                                                                    borderRadius: 6,
+                                                                    cursor: 'pointer',
+                                                                }),
+                                                            }}
+                                                            onChange={(
+                                                                item: any
+                                                            ) =>
+                                                                setFilterStatus(
+                                                                    item.value
+                                                                )
+                                                            }
+                                                        />
+                                                    )}
                                                 </div>
                                                 <div>
                                                     {proposal.length ? (
