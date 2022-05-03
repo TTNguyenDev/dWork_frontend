@@ -2,6 +2,7 @@ import { Task, TaskStatus } from '../models/types/jobType';
 import { BlockChainConnector } from '../utils/blockchain';
 import { utils } from 'near-api-js';
 import { db } from '../db';
+import { PRICE_DECIMAL_LENGTH } from '../constants';
 
 export const FETCH_TASKS_LIMIT = 12;
 
@@ -26,6 +27,7 @@ export type FetchType = 'available' | 'account' | 'account_completed';
 export class TaskService {
     static async createTask(payload: CreateTaskInput): Promise<void> {
         const maxParticipants = Number.parseInt(payload.maxParticipants);
+        console.log(payload);
         await BlockChainConnector.instance.contract.new_task(
             {
                 title: payload.title,
@@ -37,7 +39,9 @@ export class TaskService {
             },
             '30000000000000',
             utils.format.parseNearAmount(
-                (Number.parseFloat(payload.price) * maxParticipants).toString()
+                (Number.parseFloat(payload.price) * maxParticipants)
+                    .toFixed(PRICE_DECIMAL_LENGTH)
+                    .toString()
             )
         );
     }

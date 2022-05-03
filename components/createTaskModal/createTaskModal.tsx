@@ -21,6 +21,7 @@ import {
     NumberInputStepper,
     VStack,
 } from '@chakra-ui/react';
+import { PRICE_DECIMAL_LENGTH } from '../../constants';
 
 type createTaskModalProps = {};
 
@@ -41,7 +42,11 @@ export const CreateTaskModal: React.FunctionComponent<
         useCreateTask();
 
     const handleEditorChange = useCallback((value: string) => {
-        if (!value?.replace(/<(.|\n)*?>/g, '').trim()) {
+        if (
+            !value?.replace(/<(.|\n)*?>/g, '').trim() &&
+            !value.includes('iframe') &&
+            !value.includes('img')
+        ) {
             createTaskForm.setValue('description', '');
         } else {
             createTaskForm.setValue('description', value);
@@ -57,8 +62,12 @@ export const CreateTaskModal: React.FunctionComponent<
 
     const amount = React.useMemo(
         () =>
-            Number(createTaskForm.getValues('price')) *
-            Number(createTaskForm.getValues('maxParticipants')),
+            Number(
+                (
+                    Number(createTaskForm.getValues('price')) *
+                    Number(createTaskForm.getValues('maxParticipants'))
+                ).toFixed(PRICE_DECIMAL_LENGTH)
+            ),
         [createTaskForm.watch('price'), createTaskForm.watch('maxParticipants')]
     );
 
@@ -137,6 +146,7 @@ export const CreateTaskModal: React.FunctionComponent<
                             <NumberInput
                                 defaultValue={1}
                                 min={1}
+                                max={50}
                                 precision={0}
                                 onChange={(value) =>
                                     createTaskForm.setValue(

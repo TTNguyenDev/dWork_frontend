@@ -9,6 +9,7 @@ import { BsClock, BsPeople } from 'react-icons/bs';
 import { Wrapper } from '../wrapper';
 import { TaskService } from '../../services/jobService';
 import { useQuery } from 'react-query';
+import { HtmlIPFS } from '../htmlIPFS';
 
 interface JobCardProps {
     task: Task;
@@ -72,12 +73,12 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ task }) => {
                                 <h5 className={classes.title}>{task.title}</h5>
                             </Col>
                             <Col xs={24} sm={24} md={24}>
-                                <div className={classes.desc}>
-                                    {task.description.replace(
-                                        /<(.|\n)*?>/g,
-                                        ' '
-                                    )}
-                                </div>
+                                <HtmlIPFS
+                                    cid={task.description}
+                                    key="task_description"
+                                    textOnly
+                                    className={classes.desc}
+                                />
                             </Col>
                         </Row>
                         <Row gutter={16} style={{ marginBottom: 5 }}>
