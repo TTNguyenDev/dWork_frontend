@@ -34,8 +34,8 @@ export const DespositInfomationModal: React.FunctionComponent = () => {
             </Modal.Header>
             <Modal.Body>
                 <Message showIcon type="info" header="Informational">
-                    You need to deposit <b>{data.amount} NEAR</b> to &nbsp;
-                    {data.reason}
+                    You need to stake <b>{data.amount} Ⓝ</b> as a registration.
+                    fee
                 </Message>
             </Modal.Body>
             <Modal.Footer>

@@ -333,8 +333,8 @@ export const CreateTaskModal: React.FunctionComponent<
                                 type="info"
                                 header="Informational"
                             >
-                                You need to deposit <b>{amount} NEAR</b> to
-                                submit your work.
+                                You need to stake <b>{amount} Ⓝ </b> to prepay
+                                user rewards.
                             </Message>
                         )}
                     </VStack>
