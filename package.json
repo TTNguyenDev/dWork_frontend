@@ -31,6 +31,7 @@
         "next-with-less": "^2.0.5",
         "quill": "2.0.0-dev.4",
         "quill-image-uploader": "^1.2.2",
+        "quill-magic-url": "^4.1.4",
         "randomcolor": "^0.6.2",
         "react": "17.0.2",
         "react-avatar": "^4.0.0",
