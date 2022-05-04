@@ -218,8 +218,6 @@ export class TaskService {
 
             if (filter.minCreatedAt && filter.maxCreatedAt) {
                 query.filter((item) => {
-                    console.log(item);
-
                     return (
                         item.createdAt >= filter.minCreatedAt! &&
                         item.createdAt <= filter.maxCreatedAt!
