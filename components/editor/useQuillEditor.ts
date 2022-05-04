@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useQuill } from 'react-quilljs';
 import { QuillEditorPropsType } from './quillEditor';
+// @ts-ignore
 import MagicUrl from 'quill-magic-url';
 
 export const useQuillEditor = (props: QuillEditorPropsType) => {
