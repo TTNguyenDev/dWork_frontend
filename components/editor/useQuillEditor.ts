@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useQuill } from 'react-quilljs';
 import { QuillEditorPropsType } from './quillEditor';
-import ImageUploader from '../../utils/quill/imageUploader/quill.imageUploader';
+import MagicUrl from 'quill-magic-url';
 
 export const useQuillEditor = (props: QuillEditorPropsType) => {
     const { placeholder, onChange, customRef, refQuill } = props;
@@ -11,6 +11,7 @@ export const useQuillEditor = (props: QuillEditorPropsType) => {
         clipboard: {
             matchVisual: false,
         },
+        magicUrl: true,
     };
 
     const formats = [
@@ -31,8 +32,7 @@ export const useQuillEditor = (props: QuillEditorPropsType) => {
     ];
     useEffect(() => {
         const Quill = require('quill');
-
-        Quill.register('modules/imageUploader', ImageUploader);
+        Quill.register('modules/magicUrl', MagicUrl);
     }, []);
 
     const { quill, quillRef } = useQuill({
