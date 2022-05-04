@@ -410,7 +410,6 @@ export class TaskService {
                     limit: LIMIT,
                     account_id: BlockChainConnector.instance.account.accountId,
                 });
-                console.log(res);
 
                 if (res.length === 0) {
                     isCompleted = true;
