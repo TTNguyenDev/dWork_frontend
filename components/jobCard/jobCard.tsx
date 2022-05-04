@@ -62,7 +62,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ task }) => {
                         </Row>
                         <Row
                             gutter={16}
-                            style={{ marginBottom: 15, height: 100 }}
+                            style={{ marginBottom: 15, height: 113 }}
                         >
                             <Col
                                 xs={24}
@@ -75,7 +75,7 @@ export const JobCard: React.FunctionComponent<JobCardProps> = ({ task }) => {
                             <Col xs={24} sm={24} md={24}>
                                 <HtmlIPFS
                                     cid={task.description}
-                                    key="task_description"
+                                    queryKey="task_description"
                                     textOnly
                                     className={classes.desc}
                                 />

@@ -22,6 +22,7 @@ const ViewMethods: string[] = [
     'task_by_id',
     'categories',
     'tasks_by_ids',
+    'maximum_participants_per_task',
 ];
 
 const ChangeMethods: string[] = [
@@ -60,6 +61,7 @@ type ContractMethodsType = {
     categories: ContractMethodType;
     tasks_by_ids: ContractMethodType;
     update_bio: ContractMethodType;
+    maximum_participants_per_task: ContractMethodType;
 };
 
 export class NearConnector {

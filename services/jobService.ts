@@ -5,7 +5,7 @@ import { db } from '../db';
 import { PRICE_DECIMAL_LENGTH } from '../constants';
 import { batchTransactions } from '../utils/serviceUtils';
 
-export const FETCH_TASKS_LIMIT = 12;
+export const FETCH_TASKS_LIMIT = 20;
 
 export type CreateTaskInput = {
     title: string;
@@ -397,9 +397,7 @@ export class TaskService {
 
         if (clear) table.clear();
 
-        const firstRecord = (
-            await table.toCollection().reverse().sortBy('id')
-        )[0];
+        const firstRecord = await table.orderBy('id').reverse().first();
 
         const LIMIT = 100;
         let currentIndex = 0;
@@ -412,6 +410,7 @@ export class TaskService {
                     limit: LIMIT,
                     account_id: BlockChainConnector.instance.account.accountId,
                 });
+                console.log(res);
 
                 if (res.length === 0) {
                     isCompleted = true;
@@ -455,5 +454,9 @@ export class TaskService {
         });
 
         return !!res;
+    }
+
+    static async maxParticipantsPerTask(): Promise<number> {
+        return BlockChainConnector.instance.contract.maximum_participants_per_task();
     }
 }

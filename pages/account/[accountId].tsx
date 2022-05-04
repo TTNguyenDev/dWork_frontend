@@ -78,12 +78,12 @@ export default function AccountPage() {
                                         >
                                             Tasks
                                         </Button>
-                                        <Button
+                                        {/*<Button
                                             style={{ width: '100%' }}
                                             appearance="subtle"
                                         >
                                             Settings
-                                        </Button>
+                                        </Button>*/}
                                     </Stack>
                                 </Wrapper>
                             </div>
