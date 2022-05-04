@@ -12,20 +12,24 @@ import { IPFSUtils } from '../../utils/ipfsUtils';
 
 interface HtmlIPFSProps {
     cid: string;
-    key?: string;
+    queryKey?: string;
     textOnly?: boolean;
     className?: string;
 }
 
 export const HtmlIPFS: React.FunctionComponent<HtmlIPFSProps> = ({
     cid,
-    key = 'html_ipfs',
+    queryKey = 'html_ipfs',
     className,
     textOnly,
 }) => {
-    const htmlQuery = useQuery([key, cid], () => IPFSUtils.getDataByCID(cid), {
-        enabled: !!cid,
-    });
+    const htmlQuery = useQuery(
+        [queryKey, cid],
+        () => IPFSUtils.getDataByCID(cid),
+        {
+            enabled: !!cid,
+        }
+    );
 
     return (
         <>

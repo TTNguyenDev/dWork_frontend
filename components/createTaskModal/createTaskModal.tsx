@@ -22,6 +22,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { PRICE_DECIMAL_LENGTH } from '../../constants';
+import { TaskService } from '../../services/jobService';
 
 type createTaskModalProps = {};
 
@@ -40,6 +41,12 @@ export const CreateTaskModal: React.FunctionComponent<
 
     const { createTaskLoading, handleFormSubmit, createTaskForm } =
         useCreateTask();
+
+    const maxParticipantsPerTaskQuery = useQuery(
+        'maximum_participants_per_task',
+        TaskService.maxParticipantsPerTask
+    );
+    console.log(maxParticipantsPerTaskQuery.data);
 
     const handleEditorChange = useCallback((value: string) => {
         if (
@@ -143,32 +150,34 @@ export const CreateTaskModal: React.FunctionComponent<
                             }
                         >
                             <FormLabel>Max participants</FormLabel>
-                            <NumberInput
-                                defaultValue={1}
-                                min={1}
-                                max={50}
-                                precision={0}
-                                onChange={(value) =>
-                                    createTaskForm.setValue(
-                                        'maxParticipants',
-                                        value
-                                    )
-                                }
-                            >
-                                <NumberInputField
-                                    {...createTaskForm.register(
-                                        'maxParticipants',
-                                        {
-                                            required:
-                                                'Max participants is a required field',
-                                        }
-                                    )}
-                                />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
+                            {maxParticipantsPerTaskQuery.data && (
+                                <NumberInput
+                                    defaultValue={1}
+                                    min={1}
+                                    max={maxParticipantsPerTaskQuery.data}
+                                    precision={0}
+                                    onChange={(value) =>
+                                        createTaskForm.setValue(
+                                            'maxParticipants',
+                                            value
+                                        )
+                                    }
+                                >
+                                    <NumberInputField
+                                        {...createTaskForm.register(
+                                            'maxParticipants',
+                                            {
+                                                required:
+                                                    'Max participants is a required field',
+                                            }
+                                        )}
+                                    />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                            )}
                             {createTaskForm.formState.errors
                                 .maxParticipants && (
                                 <FormErrorMessage>

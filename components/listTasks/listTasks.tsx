@@ -30,11 +30,11 @@ export const ListTasks: React.FunctionComponent<ListTasksProps> = ({
     return (
         <div className={classes.root}>
             <div className={classes.list_tasks_wrapper}>
-                {isLoading ? (
+                {isLoading || !tasks ? (
                     <Loader />
                 ) : (
                     <FlexboxGrid className={classes.list_jobs}>
-                        {!isCreatable && (!tasks || !tasks.length) && (
+                        {!isCreatable && !tasks.length && (
                             <div className={classes.empty_list}>No tasks</div>
                         )}
                         {isCreatable && (
@@ -75,7 +75,7 @@ export const ListTasks: React.FunctionComponent<ListTasksProps> = ({
                     </FlexboxGrid>
                 )}
                 {tasks && !!tasks.length && (
-                    <div style={{ textAlign: 'center' }}>
+                    <div style={{ textAlign: 'center', marginBottom: 30 }}>
                         <Button
                             size="md"
                             appearance="primary"

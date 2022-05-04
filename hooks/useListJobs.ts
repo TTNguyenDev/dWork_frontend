@@ -51,7 +51,7 @@ export const useListJobs = (payload?: UseListJobsInput): UseListJobsOutput => {
                     fromBlockId: lastPage[lastPage.length - 1].id,
                 };
             },
-            enabled: app.data.cacheReady,
+            enabled: app.data.cacheReady && app.data.accountTasksCacheReady,
         }
     );
 
@@ -66,7 +66,7 @@ export const useListJobs = (payload?: UseListJobsInput): UseListJobsOutput => {
 
     const jobs = data
         ? data.pages.reduce((prev, current) => [...prev, ...current], [])
-        : [];
+        : undefined;
 
     return {
         loading: isLoading,

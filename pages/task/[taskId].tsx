@@ -276,7 +276,7 @@ export default function TaskDetailsPage() {
                                                 <div>
                                                     <HtmlIPFS
                                                         cid={task.description}
-                                                        key="task_description"
+                                                        queryKey="task_description"
                                                     />
                                                 </div>
                                             </Wrapper>

@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { IPFSUtils } from '../utils/ipfsUtils';
+import { BlockChainConnector } from '../utils/blockchain';
 
 export type UseCreateTaskOutput = {
     createTaskLoading: boolean;
@@ -25,6 +26,11 @@ export const useCreateTask = (): UseCreateTaskOutput => {
                 data.description = ipfsData.path;
 
                 try {
+                    window.history.replaceState(
+                        'create_task_redirect',
+                        'task',
+                        `/account/${BlockChainConnector.instance.account.accountId}`
+                    );
                     await TaskService.createTask(
                         data,
                         data.newCategory

@@ -35,7 +35,7 @@ export const DespositInfomationModal: React.FunctionComponent = () => {
             <Modal.Body>
                 <Message showIcon type="info" header="Note">
                     You need to stake <b>{data.amount} Ⓝ</b> as a registration
-                    fee
+                    fee.
                 </Message>
             </Modal.Body>
             <Modal.Footer>
