@@ -738,6 +738,11 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.3.0.tgz#ea89004119dc42db2e1dba0f97d553f7372f6fcb"
   integrity sha512-AHPmaAx+RYfZz0eYu6Gviiagpmiyw98ySSlQvCUhVGDRtDFe4DBS0x1bSjdF3gqUDYOczB+yYvBTtEylYSdRhg==
 
+"@hookstate/core@^4.0.0-rc21":
+  version "4.0.0-rc21"
+  resolved "https://registry.yarnpkg.com/@hookstate/core/-/core-4.0.0-rc21.tgz#5c7c8e1ec02d7a2eea148edf88b9c8aa3baf0fa8"
+  integrity sha512-aAiF537i9a54OlWzA/EtOa1l4bJMmpmJ4Fb/ZV8R30xD6jGMCGbCxHcb6SWIqO92T/w8dFXyl5XQbQ8reFpQrA==
+
 "@ipld/dag-cbor@^7.0.0":
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/@ipld/dag-cbor/-/dag-cbor-7.0.3.tgz#aa31b28afb11a807c3d627828a344e5521ac4a1e"
@@ -3555,11 +3560,6 @@ jest-worker@^27.4.5:
     "@types/node" "*"
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
-
-jotai@^1.8.4:
-  version "1.8.4"
-  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.8.4.tgz#e188bff3cc790c758d25646f6f5daf9854c98eef"
-  integrity sha512-bkHDHNxm7bU4+bJL4z96fTlJYN34UDRTu3ghEajJrDepayON9YEaxPrXr7xhLnIRntoFC6eDYYhMNA/ilbj2RQ==
 
 js-sha256@^0.9.0:
   version "0.9.0"
