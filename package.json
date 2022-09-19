@@ -25,6 +25,7 @@
         "dexie-react-hooks": "^1.1.1",
         "framer-motion": "^6",
         "ipfs-http-client": "^55.0.0",
+        "jotai": "^1.8.4",
         "moment": "^2.29.1",
         "near-api-js": "^0.44.2",
         "next": "^12.1.0",
