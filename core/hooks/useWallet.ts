@@ -1,3 +1,1 @@
-export const useWallet = () => {
-    
-};
+export const useWallet = () => {};

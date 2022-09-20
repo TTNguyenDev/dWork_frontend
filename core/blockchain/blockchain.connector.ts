@@ -1,4 +1,4 @@
 export interface IBlockchainConnector<T = any> {
-    conn: T;
-    connect(): Promise<T>;
+  conn: T;
+  connect(): Promise<T>;
 }

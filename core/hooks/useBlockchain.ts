@@ -4,30 +4,41 @@ import { useHookstate } from '@hookstate/core';
 import { BlockchainState } from '../store';
 
 export const useBlockchain = () => {
-    const blockchainState = useHookstate(BlockchainState);
+  const blockchainState = useHookstate(BlockchainState);
 
-    const connect = React.useCallback(async () => {
-        await Container.blockchainConnector.connect();
-        blockchainState.loading.set(false);
-        blockchainState.ready.set(true);
-    }, []);
+  const connect = React.useCallback(async () => {
+    await Container.blockchainConnector.connect();
+    blockchainState.merge({
+      loading: false,
+      ready: true,
+    });
 
-    const signIn = React.useCallback(async () => {
-        if (blockchainState.ready.get())
-            await Container.blockchainConnector.signIn();
-    }, []);
+    const isSignedIn = await Container.blockchainConnector.isSignedIn();
+    blockchainState.wallet.merge({
+      loading: false,
+      logged: isSignedIn,
+    });
+    blockchainState.wallet.logged.set(isSignedIn);
+  }, []);
 
-    const signOut = React.useCallback(async () => {
-        if (blockchainState.ready.get())
-            await Container.blockchainConnector.signOut();
-    }, []);
+  const signIn = React.useCallback(async () => {
+    if (blockchainState.ready.get()) {
+      BlockchainState.wallet.loading.set(true);
+      await Container.blockchainConnector.signIn();
+    }
+  }, []);
 
-    return {
-        blockchainState,
-        blockchainMethods: {
-            connect,
-            signIn,
-            signOut,
-        },
-    };
+  const signOut = React.useCallback(async () => {
+    if (blockchainState.ready.get())
+      await Container.blockchainConnector.signOut();
+  }, []);
+
+  return {
+    blockchainState,
+    blockchainMethods: {
+      connect,
+      signIn,
+      signOut,
+    },
+  };
 };
