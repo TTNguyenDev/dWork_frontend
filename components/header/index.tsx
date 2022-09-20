@@ -1,27 +1,29 @@
 import { Box, Button, Flex, HStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useBlockchain } from '../../core/hooks';
+import { useHeader } from '../../hooks';
 
 export const Header = () => {
-  const { blockchainState, blockchainMethods } = useBlockchain();
-
-  useEffect(() => {
-    blockchainMethods.connect();
-  }, []);
+  const { headerState, headerMethods } = useHeader();
 
   return (
     <Flex justifyContent="space-between">
       <Box>dWork</Box>
       <Box>
-        {blockchainState.wallet.logged.get() ? (
-          <Box>Logged</Box>
+        {headerState.logged ? (
+          <Box>
+            <Box>Logged</Box>
+            <Button
+              isLoading={headerState.loading}
+              onClick={() => headerMethods.signOut()}
+            >
+              Logout
+            </Button>
+          </Box>
         ) : (
           <Button
-            isLoading={
-              blockchainState.loading.get() ||
-              blockchainState.wallet.loading.get()
-            }
-            onClick={() => blockchainMethods.signIn()}
+            isLoading={headerState.loading}
+            onClick={() => headerMethods.signIn()}
           >
             Connect to Wallet
           </Button>

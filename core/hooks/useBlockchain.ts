@@ -6,19 +6,24 @@ import { BlockchainState } from '../store';
 export const useBlockchain = () => {
   const blockchainState = useHookstate(BlockchainState);
 
-  const connect = React.useCallback(async () => {
-    await Container.blockchainConnector.connect();
-    blockchainState.merge({
-      loading: false,
-      ready: true,
-    });
-
+  const _checkLogged = async () => {
     const isSignedIn = await Container.blockchainConnector.isSignedIn();
     blockchainState.wallet.merge({
       loading: false,
       logged: isSignedIn,
     });
     blockchainState.wallet.logged.set(isSignedIn);
+  };
+
+  /////
+
+  const connect = React.useCallback(async () => {
+    await Container.blockchainConnector.connect();
+    blockchainState.merge({
+      loading: false,
+      ready: true,
+    });
+    await _checkLogged();
   }, []);
 
   const signIn = React.useCallback(async () => {
@@ -29,8 +34,11 @@ export const useBlockchain = () => {
   }, []);
 
   const signOut = React.useCallback(async () => {
-    if (blockchainState.ready.get())
+    if (blockchainState.ready.get()) {
+      BlockchainState.wallet.loading.set(true);
       await Container.blockchainConnector.signOut();
+      await _checkLogged();
+    }
   }, []);
 
   return {

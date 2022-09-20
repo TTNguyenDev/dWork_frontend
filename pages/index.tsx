@@ -6,15 +6,17 @@ import { NextPageWithLayout } from './_app';
 const Home: NextPageWithLayout = () => {
   return (
     <>
-      <Head>
+    <Head>
         <title>dWork</title>
         <meta name="description" content="dWork" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>
-        <div>Hello world!</div>
-      </div>
-    </>
+       <div>
+      
+      <div>Hello world!</div>
+    </div>
+      </>
+   
   );
 };
 
