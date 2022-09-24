@@ -294,10 +294,10 @@ const Home: NextPageWithLayout = () => {
                 Completely Decentralized
               </Text>
               <Text fontSize="16px" fontWeight="500">
-                dWork is decentralized on the NEAR Blockchain - A 3rd generation
+                {` dWork is decentralized on the NEAR Blockchain - A 3rd generation
                 blockchain with a meager network fee. Tasks and worker’s proof
                 are stored on NEAR Blockchain and IPFS. Your money will be
-                controlled with this protocol. We protect everyone's benefit.
+                controlled with this protocol. We protect everyone's benefit.`}
               </Text>
             </Box>
           </GridItem>
