@@ -20,7 +20,10 @@ import { ReactElement } from 'react';
 import ReactPlayer from 'react-player';
 import { Layout } from './layout';
 import { NextPageWithLayout } from './_app';
-import { IoIosRocket } from 'react-icons/io';
+import { IoIosRocket, IoIosCreate } from 'react-icons/io';
+import { BsCurrencyDollar } from 'react-icons/bs';
+import { GiStarShuriken } from 'react-icons/gi';
+import { RiUserStarLine } from 'react-icons/ri';
 
 const Home: NextPageWithLayout = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -173,6 +176,163 @@ const Home: NextPageWithLayout = () => {
               </Text>
               <Text fontSize="16px" fontWeight="500">
                 Paid money
+              </Text>
+            </Box>
+          </GridItem>
+        </Grid>
+      </Box>
+      <Box h="150px" />
+      <Box maxW="1600px" margin="auto" p="0 15px">
+        <Grid templateColumns="repeat(4, 1fr)" gap="20px" padding="50px 0">
+          <GridItem colSpan={4} mb="80px">
+            <Text fontSize="36px" fontWeight="600" textAlign="center">
+              WHY PEOPLE
+              <Text as="span" color="#3081ED">
+                &nbsp;CHOOSE&nbsp;
+              </Text>
+              US
+            </Text>
+          </GridItem>
+          <GridItem>
+            <Box
+              h="100%"
+              padding="60px"
+              borderWidth="1px"
+              borderColor="#9B51E0"
+              borderRadius="xl"
+              position="relative"
+            >
+              <Center
+                w="95px"
+                h="95px"
+                borderRadius="full"
+                bg="linear-gradient(93.51deg, #9B51E0 2.84%, #3081ED 99.18%)"
+                position="absolute"
+                top="-50px"
+                left="50%"
+                transform="translateX(-50%)"
+              >
+                <IoIosCreate size="40px" />
+              </Center>
+              <Text
+                fontSize="24px"
+                fontWeight="500"
+                textAlign="center"
+                mb="20px"
+              >
+                Easy to post jobs
+              </Text>
+              <Text fontSize="16px" fontWeight="500">
+                Post a job and hire a pro. We are solving your problem with
+                pro-workers worldwide—no services fee for now. GME on their
+                platform demonstrated.
+              </Text>
+            </Box>
+          </GridItem>
+          <GridItem>
+            <Box
+              h="100%"
+              padding="60px"
+              borderWidth="1px"
+              borderColor="#9B51E0"
+              borderRadius="xl"
+              position="relative"
+            >
+              <Center
+                w="95px"
+                h="95px"
+                borderRadius="full"
+                bg="linear-gradient(93.51deg, #9B51E0 2.84%, #3081ED 99.18%)"
+                position="absolute"
+                top="-50px"
+                left="50%"
+                transform="translateX(-50%)"
+              >
+                <BsCurrencyDollar size="40px" />
+              </Center>
+              <Text
+                fontSize="24px"
+                fontWeight="500"
+                textAlign="center"
+                mb="20px"
+              >
+                Earn Crypto
+              </Text>
+              <Text fontSize="16px" fontWeight="500">
+                Make money by solving problems. As a worker, we can ensure your
+                pay with smart-contract.
+              </Text>
+            </Box>
+          </GridItem>
+          <GridItem>
+            <Box
+              h="100%"
+              padding="60px"
+              borderWidth="1px"
+              borderColor="#9B51E0"
+              borderRadius="xl"
+              position="relative"
+            >
+              <Center
+                w="95px"
+                h="95px"
+                borderRadius="full"
+                bg="linear-gradient(93.51deg, #9B51E0 2.84%, #3081ED 99.18%)"
+                position="absolute"
+                top="-50px"
+                left="50%"
+                transform="translateX(-50%)"
+              >
+                <GiStarShuriken size="40px" />
+              </Center>
+              <Text
+                fontSize="24px"
+                fontWeight="500"
+                textAlign="center"
+                mb="20px"
+              >
+                Completely Decentralized
+              </Text>
+              <Text fontSize="16px" fontWeight="500">
+                dWork is decentralized on the NEAR Blockchain - A 3rd generation
+                blockchain with a meager network fee. Tasks and worker’s proof
+                are stored on NEAR Blockchain and IPFS. Your money will be
+                controlled with this protocol. We protect everyone's benefit.
+              </Text>
+            </Box>
+          </GridItem>
+          <GridItem>
+            <Box
+              h="100%"
+              padding="60px"
+              borderWidth="1px"
+              borderColor="#9B51E0"
+              borderRadius="xl"
+              position="relative"
+            >
+              <Center
+                w="95px"
+                h="95px"
+                borderRadius="full"
+                bg="linear-gradient(93.51deg, #9B51E0 2.84%, #3081ED 99.18%)"
+                position="absolute"
+                top="-50px"
+                left="50%"
+                transform="translateX(-50%)"
+              >
+                <RiUserStarLine size="40px" />
+              </Center>
+              <Text
+                fontSize="24px"
+                fontWeight="500"
+                textAlign="center"
+                mb="20px"
+              >
+                User Ranking
+              </Text>
+              <Text fontSize="16px" fontWeight="500">
+                User ranking and penalty to someone trying to cheat or spam
+                dWork protocol.
               </Text>
             </Box>
           </GridItem>
