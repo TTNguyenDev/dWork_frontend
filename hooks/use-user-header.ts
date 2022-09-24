@@ -11,7 +11,8 @@ export const useUserHeader = () => {
         blockchainState.loading.get() || blockchainState.wallet.loading.get(),
       account: account
         ? {
-            username: account.id,
+            id: account.id,
+            username: account.username,
             balance: {
               available: Number(
                 format.formatNearAmount(account.balance.available)

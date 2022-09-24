@@ -9,6 +9,7 @@ export type BlockChainState = {
     logged: boolean;
     account?: {
       id: string;
+      username: string;
       balance: AccountBalance;
     };
   };
