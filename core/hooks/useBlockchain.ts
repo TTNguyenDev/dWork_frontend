@@ -9,6 +9,7 @@ export const useBlockchain = () => {
   const _checkLogged = async () => {
     const isSignedIn = await Container.blockchainConnector.isSignedIn();
 
+    const accountId = Container.blockchainConnector.wallet.getAccountId();
     // get account balance
     const accountBalance = await Container.blockchainConnector.wallet
       .account()
@@ -19,7 +20,8 @@ export const useBlockchain = () => {
       loading: false,
       logged: isSignedIn,
       account: {
-        id: Container.blockchainConnector.wallet.getAccountId(),
+        id: accountId,
+        username: accountId.replace('.testnet', '').replace('.near', ''),
         balance: accountBalance,
       },
     });

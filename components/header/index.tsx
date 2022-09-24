@@ -10,7 +10,14 @@ export const Header = () => {
   const { headerState, headerMethods } = useHeader();
 
   return (
-    <Box bg="black" position="sticky" top="0" zIndex="sticky">
+    <Box
+      bg="blackAlpha.700"
+      position="sticky"
+      top="0"
+      zIndex="sticky"
+      backdropFilter="auto"
+      backdropBlur="50px"
+    >
       <Flex justifyContent="space-between" maxW="1200px" margin="auto" p="20px">
         <Box>
           <HStack spacing="20px">
