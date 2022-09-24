@@ -362,18 +362,42 @@ const Home: NextPageWithLayout = () => {
             </Text>
           </GridItem>
           <GridItem>
-            <Image src={ourPartnersImg.src} />
+            <Image src={ourPartnersImg.src} alt="Out partners image" />
           </GridItem>
           <GridItem>
             <VStack h="100%" justifyContent="center">
-              <Image src={nearFoundationImg.src} w="250px" mb="150px" />
-              <Image src={lncBrandImg.src} w="500px" />
+              <Image
+                src={nearFoundationImg.src}
+                alt="Near foundation brand"
+                w="250px"
+                mb="150px"
+              />
+              <Image src={lncBrandImg.src} alt="LNC brand" w="500px" />
             </VStack>
           </GridItem>
           <GridItem></GridItem>
         </Grid>
       </Box>
-      <Box h="50px" />
+      {/* <Box h="150px" />
+      <Box maxW="1600px" margin="auto" p="0 15px">
+        <Grid templateColumns="repeat(2, 1fr)" gap="20px" padding="50px 0">
+          <GridItem colSpan={2} mb="80px">
+            <Text fontSize="36px" fontWeight="600" textAlign="center">
+              WHAT
+              <Text
+                as="span"
+                bg="linear-gradient(93.51deg, #9B51E0 2.84%, #3081ED 99.18%)"
+                bgClip="text"
+              >
+                &nbsp;PEOPLE TALKING&nbsp;
+              </Text>
+              ABOUT US
+            </Text>
+          </GridItem>
+          <GridItem></GridItem>
+        </Grid>
+      </Box> */}
+      <Box h="150px" />
     </>
   );
 };

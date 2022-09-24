@@ -4,6 +4,7 @@ import logoImg from '../../assets/dwork-logo.svg';
 import logoLncImg from '../../assets/lnc-logo.svg';
 import { BsPlusLg } from 'react-icons/bs';
 import { Container } from '../../core';
+import { UserHeader } from '../user-header';
 
 export const Header = () => {
   const { headerState, headerMethods } = useHeader();
@@ -31,16 +32,7 @@ export const Header = () => {
           </Text>
           {headerState.logged ? (
             <Box>
-              <Text>
-                Hello {Container.blockchainConnector.wallet.getAccountId()}
-              </Text>
-              {/* <Button
-              variant="primary"
-              isLoading={headerState.loading}
-              onClick={() => headerMethods.signOut()}
-            >
-              Logout
-            </Button> */}
+              <UserHeader />
             </Box>
           ) : (
             <Button
