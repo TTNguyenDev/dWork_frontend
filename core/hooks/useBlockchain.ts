@@ -9,7 +9,6 @@ export const useBlockchain = () => {
   const _checkLogged = async () => {
     const isSignedIn = await Container.blockchainConnector.isSignedIn();
     blockchainState.wallet.merge({
-      loading: false,
       logged: isSignedIn,
     });
     if (isSignedIn) {
@@ -26,6 +25,9 @@ export const useBlockchain = () => {
         balance: accountBalance,
       });
     }
+    blockchainState.wallet.merge({
+      loading: false,
+    });
   };
 
   /////

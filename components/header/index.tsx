@@ -1,4 +1,13 @@
-import { Box, Button, Flex, HStack, Image, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  HStack,
+  Image,
+  Spinner,
+  Text,
+} from '@chakra-ui/react';
 import { useHeader } from '../../hooks';
 import logoImg from '../../assets/dwork-logo.svg';
 import logoLncImg from '../../assets/lnc-logo.svg';
@@ -37,7 +46,12 @@ export const Header = () => {
           <Text fontSize="16px" fontWeight="700" color="white">
             How it work
           </Text>
-          {headerState.logged ? (
+          {headerState.blockchainLoading ||
+          (headerState.logged && headerState.walletLoading) ? (
+            <Center w="100px">
+              <Spinner />
+            </Center>
+          ) : headerState.logged ? (
             <Box>
               <UserHeader />
             </Box>
@@ -45,7 +59,7 @@ export const Header = () => {
             <Button
               variant="connectWallet"
               leftIcon={<BsPlusLg />}
-              isLoading={headerState.loading}
+              isLoading={headerState.walletLoading}
               onClick={() => headerMethods.signIn()}
             >
               Connect Wallet
