@@ -6,8 +6,8 @@ export const useHeader = () => {
 
   return {
     headerState: {
-      loading:
-        blockchainState.loading.get() || blockchainState.wallet.loading.get(),
+      blockchainLoading: blockchainState.loading.get(),
+      walletLoading: blockchainState.wallet.loading.get(),
       logged: blockchainState.wallet.logged.get(),
     },
     headerMethods: {

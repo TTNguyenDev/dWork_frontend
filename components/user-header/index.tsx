@@ -6,13 +6,11 @@ import {
   HStack,
   Menu,
   MenuButton,
-  MenuItem,
   MenuList,
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useHeader, useUserHeader } from '../../hooks';
-import { Container } from '../../core';
+import { useUserHeader } from '../../hooks';
 
 export const UserHeader = () => {
   const { userHeaderState, userHeaderMethods } = useUserHeader();
