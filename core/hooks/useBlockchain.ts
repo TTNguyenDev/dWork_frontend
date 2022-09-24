@@ -8,11 +8,21 @@ export const useBlockchain = () => {
 
   const _checkLogged = async () => {
     const isSignedIn = await Container.blockchainConnector.isSignedIn();
+
+    // get account balance
+    const accountBalance = await Container.blockchainConnector.wallet
+      .account()
+      .getAccountBalance();
+
+    // update wallet state
     blockchainState.wallet.merge({
       loading: false,
       logged: isSignedIn,
+      account: {
+        id: Container.blockchainConnector.wallet.getAccountId(),
+        balance: accountBalance,
+      },
     });
-    blockchainState.wallet.logged.set(isSignedIn);
   };
 
   /////

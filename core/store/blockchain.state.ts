@@ -1,4 +1,5 @@
 import { hookstate, State } from '@hookstate/core';
+import { AccountBalance } from 'near-api-js/lib/account';
 
 export type BlockChainState = {
   loading: boolean;
@@ -6,6 +7,10 @@ export type BlockChainState = {
   wallet: {
     loading: boolean;
     logged: boolean;
+    account?: {
+      id: string;
+      balance: AccountBalance;
+    };
   };
 };
 export const BlockchainState: State<BlockChainState> = hookstate({
