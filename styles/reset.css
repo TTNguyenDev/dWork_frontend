@@ -1,0 +1,9 @@
+* {
+  font-family: 'Urbanist', sans-serif;
+  color: white;
+}
+
+html,
+body {
+  background: black !important;
+}
