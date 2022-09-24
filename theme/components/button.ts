@@ -1,21 +1,12 @@
 export const Button = {
   variants: {
-    primary: ({
-      borderColor,
-      borderWidth = 1,
-    }: {
-      borderColor: string;
-      borderWidth: number;
-    }) => ({
-      background: 'gradientPrimary',
-      borderWidth: '0px',
-      height: 'fit-content',
-      width: 'fit-content',
+    connectWallet: () => ({
+      padding: '25px',
+      background: '#202632',
       fontSize: '16px',
-      fontWeight: '800',
-      minW: 'auto',
+      fontWeight: '700',
       transition: 'all 0.2s',
-      textColor: '#fff',
+      textColor: 'white',
       _loading: {
         opacity: 1,
       },
@@ -27,36 +18,15 @@ export const Button = {
           background: '',
         },
       },
-      _before: {
-        content: '" "',
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-        color: '#fff',
-      },
-      _active: {
-        boxShadow: 'none',
-      },
-      _focus: {
-        boxShadow: 'none',
-      },
     }),
-    secondary: ({
-      borderColor,
-      borderWidth = 1,
-    }: {
-      borderColor: string;
-      borderWidth: number;
-    }) => ({
-      background: 'textPrimary',
-      borderWidth: '0px',
-      height: 'fit-content',
-      width: 'fit-content',
+    primary: () => ({
+      padding: '25px',
+      background: 'linear-gradient(207.67deg, #FDAE8F 3.43%, #FD1C68 104.7%)',
       fontSize: '16px',
-      fontWeight: '800',
-      minW: 'auto',
+      fontWeight: '700',
       transition: 'all 0.2s',
-      textColor: '#fff',
+      textColor: 'white',
+      borderRadius: 'xl',
       _loading: {
         opacity: 1,
       },
@@ -67,41 +37,6 @@ export const Button = {
           opacity: 1,
           background: '',
         },
-      },
-      _before: {
-        content: '" "',
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-        color: '#fff',
-      },
-      _active: {
-        boxShadow: 'none',
-      },
-      _focus: {
-        boxShadow: 'none',
-      },
-    }),
-    accountMenu: () => ({
-      minW: 'auto',
-      background: 'transparent',
-      transition: 'all 0.2s',
-      borderStyle: 'solid',
-      borderColor: 'transparent',
-      borderWidth: '2px',
-      textColor: '#FFF',
-      fontSize: '16px',
-      borderRadius: 0,
-      justifyContent: 'start',
-      w: '100%',
-      _hover: {
-        borderImage: 'var(--primary-border-button-color) 1',
-      },
-      _active: {
-        boxShadow: 'none',
-      },
-      _focus: {
-        boxShadow: 'none',
       },
     }),
   },

@@ -1,22 +1,185 @@
+import {
+  AspectRatio,
+  Box,
+  Button,
+  Center,
+  Grid,
+  GridItem,
+  HStack,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+  VStack,
+} from '@chakra-ui/react';
 import Head from 'next/head';
 import { ReactElement } from 'react';
+import ReactPlayer from 'react-player';
 import { Layout } from './layout';
 import { NextPageWithLayout } from './_app';
+import { IoIosRocket } from 'react-icons/io';
 
 const Home: NextPageWithLayout = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
-    <Head>
-        <title>dWork</title>
+      <Head>
+        <title>Homepage - dWork</title>
         <meta name="description" content="dWork" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-       <div>
-      
-      <div>Hello world!</div>
-    </div>
-      </>
-   
+      <Box h="50px" />
+      <Box maxW="1200px" margin="auto" p="0 15px">
+        <Grid templateColumns="repeat(2, 1fr)" gap="20px">
+          <GridItem w="100%">
+            <VStack alignItems="start" spacing="40px" maxW="400px">
+              <Text fontSize="48px" fontWeight="700">
+                Earn
+                <Text
+                  as="span"
+                  background="linear-gradient(#FDAE8F, #FD1C68)"
+                  backgroundClip="text"
+                >
+                  &nbsp;Crypto&nbsp;
+                </Text>
+                by completing small tasks.
+              </Text>
+              <Text fontSize="20px" fontWeight="400">
+                Decentralized platform allows users to hire and find jobs here.
+                The system ensures the salary for developers as well as
+                transparent proof of work to the job owners.
+              </Text>
+              <Button
+                variant="primary"
+                leftIcon={<IoIosRocket size="25" />}
+                fontSize="20px"
+                padding="35px 50px"
+              >
+                Launch App
+              </Button>
+            </VStack>
+          </GridItem>
+          <GridItem w="100%">
+            <Center h="100%">
+              <AspectRatio
+                ratio={16 / 9}
+                w="100%"
+                borderRadius="md"
+                borderWidth="0.7px"
+                borderColor="#9B51E0"
+                padding="30px 20px"
+                cursor="pointer"
+                overflow="hidden"
+                onClick={onOpen}
+              >
+                <Box pointerEvents="none" position="relative">
+                  <HStack position="absolute" top="10px">
+                    <Box w="12px" h="12px" borderRadius="full" bg="#FC1F6F" />
+                    <Box w="12px" h="12px" borderRadius="full" bg="#FFCC18" />
+                    <Box w="12px" h="12px" borderRadius="full" bg="#1DF359" />
+                  </HStack>
+                  <ReactPlayer
+                    url="https://www.youtube.com/watch?v=yqWX86uT5jM"
+                    width="100%"
+                    height="100%"
+                    light
+                  />
+                </Box>
+              </AspectRatio>
+            </Center>
+            <Modal
+              isCentered
+              onClose={onClose}
+              isOpen={isOpen}
+              motionPreset="slideInBottom"
+              size="full"
+            >
+              <ModalOverlay />
+              <ModalContent bg="transparent">
+                <ModalCloseButton color="white" />
+                <ModalBody position="relative" zIndex={-1}>
+                  <Box
+                    w="100%"
+                    maxW="1600px"
+                    p="15px"
+                    position="absolute"
+                    top="50%"
+                    left="50%"
+                    transform="translate(-50%, -50%)"
+                  >
+                    <AspectRatio w="100%" ratio={16 / 9}>
+                      <ReactPlayer
+                        url="https://www.youtube.com/watch?v=yqWX86uT5jM"
+                        playing
+                        width="100%"
+                        height="100%"
+                      />
+                    </AspectRatio>
+                  </Box>
+                </ModalBody>
+              </ModalContent>
+            </Modal>
+          </GridItem>
+        </Grid>
+      </Box>
+      <Box h="150px" />
+      <Box maxW="1400px" margin="auto" p="0 15px">
+        <Grid
+          templateColumns="repeat(4, 1fr)"
+          gap="20px"
+          padding="50px 0"
+          borderRadius="xl"
+          bg="linear-gradient(93.51deg, #9B51E0 2.84%, #3081ED 99.18%)"
+          overflow="hidden"
+        >
+          <GridItem>
+            <Box textAlign="center">
+              <Text fontSize="36px" fontWeight="600">
+                10000+
+              </Text>
+              <Text fontSize="16px" fontWeight="500">
+                Registered users
+              </Text>
+            </Box>
+          </GridItem>
+          <GridItem>
+            <Box textAlign="center">
+              <Text fontSize="36px" fontWeight="600">
+                1280+
+              </Text>
+              <Text fontSize="16px" fontWeight="500">
+                Created tasks
+              </Text>
+            </Box>
+          </GridItem>
+          <GridItem>
+            <Box textAlign="center">
+              <Text fontSize="36px" fontWeight="600">
+                500+
+              </Text>
+              <Text fontSize="16px" fontWeight="500">
+                Solved tasks
+              </Text>
+            </Box>
+          </GridItem>
+          <GridItem>
+            <Box textAlign="center">
+              <Text fontSize="36px" fontWeight="600">
+                5000$+
+              </Text>
+              <Text fontSize="16px" fontWeight="500">
+                Paid money
+              </Text>
+            </Box>
+          </GridItem>
+        </Grid>
+      </Box>
+      <Box h="50px" />
+    </>
   );
 };
 
