@@ -30,6 +30,7 @@ export class NearConnector implements IBlockchainConnector<Near> {
     const keyStore = new keyStores.BrowserLocalStorageKeyStore();
     this._conn = await connect({
       ...this._config,
+      keyStore,
     });
     this._wallet = new WalletConnection(this.conn, '');
     return this.conn;

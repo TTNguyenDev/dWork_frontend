@@ -96,6 +96,7 @@ export const UserHeader = () => {
               _hover={{
                 bg: '#333243',
               }}
+              onClick={userHeaderMethods.signOut}
             >
               <Box>Sign Out</Box>
             </HStack>
