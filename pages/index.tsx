@@ -6,6 +6,7 @@ import {
   Grid,
   GridItem,
   HStack,
+  Image,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -18,12 +19,15 @@ import {
 import Head from 'next/head';
 import { ReactElement } from 'react';
 import ReactPlayer from 'react-player';
-import { Layout } from './layout';
+import Layout from './layout';
 import { NextPageWithLayout } from './_app';
 import { IoIosRocket, IoIosCreate } from 'react-icons/io';
 import { BsCurrencyDollar } from 'react-icons/bs';
 import { GiStarShuriken } from 'react-icons/gi';
 import { RiUserStarLine } from 'react-icons/ri';
+import ourPartnersImg from '../assets/our-partners.png';
+import lncBrandImg from '../assets/lnc-brand.svg';
+import nearFoundationImg from '../assets/near-foundation-brand.svg';
 
 const Home: NextPageWithLayout = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,7 +42,7 @@ const Home: NextPageWithLayout = () => {
       <Box h="50px" />
       <Box maxW="1200px" margin="auto" p="0 15px">
         <Grid templateColumns="repeat(2, 1fr)" gap="20px">
-          <GridItem w="100%">
+          <GridItem>
             <VStack alignItems="start" spacing="40px" maxW="400px">
               <Text fontSize="48px" fontWeight="700">
                 Earn
@@ -66,7 +70,7 @@ const Home: NextPageWithLayout = () => {
               </Button>
             </VStack>
           </GridItem>
-          <GridItem w="100%">
+          <GridItem>
             <Center h="100%">
               <AspectRatio
                 ratio={16 / 9}
@@ -187,7 +191,11 @@ const Home: NextPageWithLayout = () => {
           <GridItem colSpan={4} mb="80px">
             <Text fontSize="36px" fontWeight="600" textAlign="center">
               WHY PEOPLE
-              <Text as="span" color="#3081ED">
+              <Text
+                as="span"
+                bg="linear-gradient(93.51deg, #9B51E0 2.84%, #3081ED 99.18%)"
+                bgClip="text"
+              >
                 &nbsp;CHOOSE&nbsp;
               </Text>
               US
@@ -336,6 +344,33 @@ const Home: NextPageWithLayout = () => {
               </Text>
             </Box>
           </GridItem>
+        </Grid>
+      </Box>
+      <Box h="150px" />
+      <Box maxW="1600px" margin="auto" p="0 15px">
+        <Grid templateColumns="repeat(2, 1fr)" gap="20px" padding="50px 0">
+          <GridItem colSpan={2} mb="80px">
+            <Text fontSize="36px" fontWeight="600" textAlign="center">
+              OUR
+              <Text
+                as="span"
+                bg="linear-gradient(93.51deg, #9B51E0 2.84%, #3081ED 99.18%)"
+                bgClip="text"
+              >
+                &nbsp;PARTNERS
+              </Text>
+            </Text>
+          </GridItem>
+          <GridItem>
+            <Image src={ourPartnersImg.src} />
+          </GridItem>
+          <GridItem>
+            <VStack h="100%" justifyContent="center">
+              <Image src={nearFoundationImg.src} w="250px" mb="150px" />
+              <Image src={lncBrandImg.src} w="500px" />
+            </VStack>
+          </GridItem>
+          <GridItem></GridItem>
         </Grid>
       </Box>
       <Box h="50px" />

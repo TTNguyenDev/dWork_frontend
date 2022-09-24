@@ -3,7 +3,7 @@ import { PropsWithChildren } from 'react';
 import { Header } from '../components';
 import { Footer } from '../components/footer';
 
-export const Layout = ({ children }: PropsWithChildren) => {
+export default function Layout({ children }: PropsWithChildren) {
   return (
     <>
       <Header />
@@ -13,4 +13,4 @@ export const Layout = ({ children }: PropsWithChildren) => {
       <Footer />
     </>
   );
-};
+}
