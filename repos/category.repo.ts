@@ -1,10 +1,10 @@
-import { RepoGetListInput } from '../core/types';
+import { GetListInput } from '../core/types';
 import { DB } from '../db';
 import { CategoryDto } from '../dtos';
 
 export class CategoryRepo {
   static async getList(
-    input: RepoGetListInput<CategoryDto>
+    input: GetListInput<CategoryDto>
   ): Promise<CategoryDto[]> {
     const { docs } = await DB.client.category.db.find({
       ...input,

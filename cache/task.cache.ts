@@ -1,24 +1,24 @@
-import { CategoryApi } from '../apis';
+import { TaskApi } from '../apis';
 import { cacheDataList } from '../core/utils';
 import { DB } from '../db';
 
 const LIMIT_PER_CACHE_HIT = 500;
 
-export const CategoryCache = Object.freeze({
+export const TaskCache = Object.freeze({
   async cache() {
-    const dbClient = DB.client.category.db;
+    const dbClient = DB.client.task.db;
     await cacheDataList({
       dbClient,
       limitPerCacheHit: LIMIT_PER_CACHE_HIT,
       firstRecordQuery: {
-        sort: [{ created: 'desc' }],
+        sort: [{ created_at: 'desc' }],
         selector: {
-          created: { $exists: true },
+          created_at: { $exists: true },
         },
       },
-      fetchList: CategoryApi.getList,
+      fetchList: TaskApi.getList,
       compareKey: 'id',
     });
-    console.info('CategoryCache: cached!!');
+    console.info('TaskCache: cached!!');
   },
 });

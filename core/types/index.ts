@@ -3,7 +3,7 @@ export type ApiGetListInput = {
   limit: number;
 };
 
-export type RepoGetListInput<T extends {} = {}> = Omit<
+export type GetListInput<T extends {} = {}> = Omit<
   PouchDB.Find.FindRequest<T>,
   'selector'
 > & {

@@ -10,6 +10,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { BsPlusLg } from 'react-icons/bs';
 import { useUserHeader } from '../../hooks';
 
 export const UserHeader = () => {
@@ -65,8 +66,14 @@ export const UserHeader = () => {
                 @{userHeaderState.account?.id}
               </Text>
             </Box>
-            <Button variant="primary" size="sm" w="100%">
-              Go to Dashboard
+            <Button
+              leftIcon={<BsPlusLg />}
+              variant="solid"
+              size="sm"
+              w="100%"
+              onClick={userHeaderMethods.btnCreateNewTaskOnClick}
+            >
+              Create new task
             </Button>
           </Box>
           <Divider opacity="0.1" />
@@ -80,6 +87,7 @@ export const UserHeader = () => {
               fontSize="16px"
               fontWeight="700"
               cursor="pointer"
+              textColor="white"
               _hover={{
                 bg: '#333243',
               }}
@@ -91,6 +99,7 @@ export const UserHeader = () => {
               fontSize="16px"
               fontWeight="700"
               cursor="pointer"
+              textColor="white"
               _hover={{
                 bg: '#333243',
               }}

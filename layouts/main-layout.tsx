@@ -3,7 +3,7 @@ import { PropsWithChildren } from 'react';
 import { Header } from '../components';
 import { Footer } from '../components/footer';
 
-export default function Layout({ children }: PropsWithChildren) {
+export function MainLayout({ children }: PropsWithChildren) {
   return (
     <>
       <Header />

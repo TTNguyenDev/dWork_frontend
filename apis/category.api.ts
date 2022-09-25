@@ -8,21 +8,18 @@ enum ContractMethods {
 }
 
 export const CategoryApi = Object.freeze({
-  commands: {
-    async create(payload: { topic_name: string }): Promise<void> {
-      await Container.bcConnector.callChangeMethod({
-        methodName: ContractMethods.new_category,
-        args: payload,
-      });
-    },
+  async create(payload: { topic_name: string }): Promise<void> {
+    await Container.bcConnector.callChangeMethod({
+      methodName: ContractMethods.new_category,
+      args: payload,
+    });
   },
-  queries: {
-    async getList(payload: ApiGetListInput): Promise<CategoryDto[]> {
-      const res = await Container.bcConnector.callViewMethod({
-        methodName: ContractMethods.categories,
-        args: payload,
-      });
-      return res;
-    },
+  ///
+  async getList(payload: ApiGetListInput): Promise<CategoryDto[]> {
+    const res = await Container.bcConnector.callViewMethod({
+      methodName: ContractMethods.categories,
+      args: payload,
+    });
+    return res;
   },
 });

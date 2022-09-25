@@ -46,4 +46,7 @@ export const Button = {
       },
     }),
   },
+  defaultProps: {
+    variant: 'primary',
+  },
 };

@@ -1,4 +1,4 @@
-export const Input = {
+export const NumberInput = {
   variants: {
     primary: () => ({
       field: {
@@ -15,9 +15,15 @@ export const Input = {
         _focus: {
           borderColor: '#777e90',
         },
+        _focusVisible: {
+          outline: 'none',
+        },
         _invalid: {
           borderColor: '#E53E3E',
         },
+      },
+      stepper: {
+        border: 'none',
       },
     }),
   },

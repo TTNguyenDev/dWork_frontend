@@ -1,9 +1,16 @@
 import { format } from 'near-api-js/lib/utils';
+import { useRouter } from 'next/router';
+import { useCallback } from 'react';
 import { useBlockchain } from '../core/hooks';
 
 export const useUserHeader = () => {
+  const router = useRouter();
   const { blockchainState, blockchainMethods } = useBlockchain();
   const account = blockchainState.wallet.account.get();
+
+  const btnCreateNewTaskOnClick = useCallback(() => {
+    router.push('/task/create');
+  }, [router]);
 
   return {
     userHeaderState: {
@@ -24,6 +31,7 @@ export const useUserHeader = () => {
     userHeaderMethods: {
       signIn: blockchainMethods.signIn,
       signOut: blockchainMethods.signOut,
+      btnCreateNewTaskOnClick,
     },
   };
 };

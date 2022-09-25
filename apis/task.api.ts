@@ -1,6 +1,6 @@
 import { Container } from '../core';
 import { ApiGetListInput } from '../core/types';
-import { TaskDto } from '../dtos';
+import { TaskCreateInput, TaskDto } from '../dtos';
 
 enum ContractMethods {
   // commands
@@ -21,28 +21,18 @@ enum ContractMethods {
 }
 
 export const TaskApi = Object.freeze({
-  commands: {
-    async create(payload: {
-      title: string;
-      description: string;
-      price: string;
-      max_participants: string;
-      duration: string;
-      category_id: string;
-    }): Promise<void> {
-      await Container.bcConnector.callChangeMethod({
-        methodName: ContractMethods.new_task,
-        args: payload,
-      });
-    },
+  async create(payload: TaskCreateInput): Promise<void> {
+    await Container.bcConnector.callChangeMethod({
+      methodName: ContractMethods.new_task,
+      args: payload,
+    });
   },
-  queries: {
-    async getList(payload: ApiGetListInput): Promise<TaskDto[]> {
-      const res = await Container.bcConnector.callViewMethod({
-        methodName: ContractMethods.available_tasks,
-        args: payload,
-      });
-      return res;
-    },
+  ///
+  async getList(payload: ApiGetListInput): Promise<TaskDto[]> {
+    const res = await Container.bcConnector.callViewMethod({
+      methodName: ContractMethods.available_tasks,
+      args: payload,
+    });
+    return res;
   },
 });

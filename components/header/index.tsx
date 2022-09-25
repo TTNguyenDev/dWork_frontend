@@ -12,7 +12,6 @@ import { useHeader } from '../../hooks';
 import logoImg from '../../assets/dwork-logo.svg';
 import logoLncImg from '../../assets/lnc-logo.svg';
 import { BsPlusLg } from 'react-icons/bs';
-import { Container } from '../../core';
 import { UserHeader } from '../user-header';
 
 export const Header = () => {
@@ -20,7 +19,7 @@ export const Header = () => {
 
   return (
     <Box
-      bg="blackAlpha.700"
+      bg="rgba(3, 8, 18, 0.7)"
       position="sticky"
       top="0"
       zIndex="sticky"
