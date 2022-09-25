@@ -13,8 +13,6 @@ import { NextPageWithLayout } from '../_app';
 import { TaskCategories, TaskSearchBox } from '../../components';
 
 const ExplorePage: NextPageWithLayout = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   return (
     <>
       <Head>
@@ -42,7 +40,7 @@ const ExplorePage: NextPageWithLayout = () => {
           <Box w="100%">
             <Flex justifyContent="end">
               <Flex w="100%" maxW="500px" justifyContent="end">
-              <TaskCategories />
+                <TaskCategories />
               </Flex>
             </Flex>
             <HStack></HStack>

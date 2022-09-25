@@ -1,6 +1,6 @@
 import { useHookstate } from '@hookstate/core';
 import { useEffect } from 'react';
-import { CategoryCache } from '../cache';
+import { CategoryCache, TaskCache } from '../cache';
 import { useBlockchain } from '../core/hooks';
 import { DB } from '../db';
 import { AppState } from '../store';
@@ -21,7 +21,7 @@ export const useApp = () => {
 
     // Cache data before app ready
     (async () => {
-      await Promise.all([CategoryCache.cache()]);
+      await Promise.all([CategoryCache.cache(), TaskCache.cache()]);
       console.info('App cached!!!');
 
       // Set app ready
