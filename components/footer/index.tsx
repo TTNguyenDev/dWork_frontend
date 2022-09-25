@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react';
 import {
   BsDiscord,
-  BsPlusLg,
   BsTelegram,
   BsTwitter,
   BsYoutube,

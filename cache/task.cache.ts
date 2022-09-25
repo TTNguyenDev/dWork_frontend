@@ -16,7 +16,7 @@ export const TaskCache = Object.freeze({
           created_at: { $exists: true },
         },
       },
-      fetchList: TaskApi.queries.getList,
+      fetchList: TaskApi.getList,
       compareKey: 'id',
     });
     console.info('TaskCache: cached!!');

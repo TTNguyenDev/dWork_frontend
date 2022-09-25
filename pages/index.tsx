@@ -19,7 +19,7 @@ import {
 import Head from 'next/head';
 import { ReactElement } from 'react';
 import ReactPlayer from 'react-player';
-import Layout from './layout';
+import { MainLayout } from '../layouts';
 import { NextPageWithLayout } from './_app';
 import { IoIosRocket, IoIosCreate } from 'react-icons/io';
 import { BsCurrencyDollar } from 'react-icons/bs';
@@ -412,7 +412,7 @@ const HomePage: NextPageWithLayout = () => {
 };
 
 HomePage.getLayout = (page: ReactElement) => {
-  return <Layout>{page}</Layout>;
+  return <MainLayout>{page}</MainLayout>;
 };
 
 export default HomePage;

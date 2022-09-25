@@ -1,9 +1,15 @@
 * {
   font-family: 'Urbanist', sans-serif;
+}
+p {
   color: white;
 }
 
 html,
 body {
   background: black !important;
+}
+
+.rs-calendar-table-cell {
+  color: #575757;
 }

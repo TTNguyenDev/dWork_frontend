@@ -16,7 +16,7 @@ export const CategoryCache = Object.freeze({
           created: { $exists: true },
         },
       },
-      fetchList: CategoryApi.queries.getList,
+      fetchList: CategoryApi.getList,
       compareKey: 'id',
     });
     console.info('CategoryCache: cached!!');

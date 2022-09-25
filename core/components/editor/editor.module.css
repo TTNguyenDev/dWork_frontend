@@ -1,0 +1,62 @@
+.root {
+  height: 100%;
+  padding-bottom: 45px;
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 2px solid #353945;
+}
+
+.root div[class='ql-toolbar ql-snow'] {
+  background: #141416;
+  border: none !important;
+  padding: 10px 0 !important;
+  color: #353945;
+}
+
+.root div[class='ql-toolbar ql-snow'] {
+  color: #353945 !important;
+}
+
+.root div[class='ql-container ql-snow'] {
+  border: none !important;
+  /* background: #eff5fb; */
+  /* border-radius: 12px; */
+}
+
+.root div[class='ql-tooltip ql-editing'] {
+  top: -10px !important;
+  right: 0 !important;
+  left: unset !important;
+  box-shadow: none;
+  z-index: 1000;
+}
+
+.root div[class='ql-tooltip'] {
+  box-shadow: none !important;
+  z-index: 1000;
+}
+
+.root div[class='ql-editor'] {
+  /* padding: 9px 21px !important; */
+  font-size: 16px;
+}
+
+.root div[class='ql-editor ql-blank'] {
+  /* padding: 9px 21px !important; */
+  font-size: 16px;
+}
+
+.root div[class='ql-editor ql-blank']::before {
+  font-style: normal !important;
+  font-size: 16px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  color: #777e90 !important;
+  /* left: 21px !important; */
+}
+/* 
+.root div[class='ql-toolbar ql-snow'] {
+  margin-bottom: 125px;
+} */
