@@ -39,5 +39,11 @@ export const Button = {
         },
       },
     }),
+    ghost: () => ({
+      borderRadius: '3xl',
+      _hover: {
+        color: '#23262f',
+      },
+    }),
   },
 };

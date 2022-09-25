@@ -1,4 +1,8 @@
 import { connect, keyStores, Near, WalletConnection } from 'near-api-js';
+import {
+  ChangeFunctionCallOptions,
+  ViewFunctionCallOptions,
+} from 'near-api-js/lib/account';
 import { NearConfig } from 'near-api-js/lib/near';
 import { IBlockchainConnector } from '../blockchain.connector';
 
@@ -48,5 +52,27 @@ export class NearConnector implements IBlockchainConnector<Near> {
 
   async isSignedIn() {
     return this.wallet.isSignedInAsync();
+  }
+
+  async callViewMethod(
+    payload: Omit<ViewFunctionCallOptions, 'contractId'> & {
+      contractId?: string;
+    }
+  ) {
+    return this.wallet.account().viewFunctionV2({
+      ...payload,
+      contractId: payload.contractId ?? this._config.contractId,
+    });
+  }
+
+  async callChangeMethod(
+    payload: Omit<ChangeFunctionCallOptions, 'contractId'> & {
+      contractId?: string;
+    }
+  ) {
+    return this.wallet.account().functionCall({
+      ...payload,
+      contractId: payload.contractId ?? this._config.contractId,
+    });
   }
 }

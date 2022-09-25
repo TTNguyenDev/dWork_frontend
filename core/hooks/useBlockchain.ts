@@ -7,14 +7,14 @@ export const useBlockchain = () => {
   const blockchainState = useHookstate(BlockchainState);
 
   const _checkLogged = async () => {
-    const isSignedIn = await Container.blockchainConnector.isSignedIn();
+    const isSignedIn = await Container.bcConnector.isSignedIn();
     blockchainState.wallet.merge({
       logged: isSignedIn,
     });
     if (isSignedIn) {
-      const accountId = Container.blockchainConnector.wallet.getAccountId();
+      const accountId = Container.bcConnector.wallet.getAccountId();
       // get account balance
-      const accountBalance = await Container.blockchainConnector.wallet
+      const accountBalance = await Container.bcConnector.wallet
         .account()
         .getAccountBalance();
 
@@ -33,7 +33,7 @@ export const useBlockchain = () => {
   /////
 
   const connect = React.useCallback(async () => {
-    await Container.blockchainConnector.connect();
+    await Container.bcConnector.connect();
     blockchainState.merge({
       loading: false,
       ready: true,
@@ -44,14 +44,14 @@ export const useBlockchain = () => {
   const signIn = React.useCallback(async () => {
     if (blockchainState.ready.get()) {
       BlockchainState.wallet.loading.set(true);
-      await Container.blockchainConnector.signIn();
+      await Container.bcConnector.signIn();
     }
   }, []);
 
   const signOut = React.useCallback(async () => {
     if (blockchainState.ready.get()) {
       BlockchainState.wallet.loading.set(true);
-      await Container.blockchainConnector.signOut();
+      await Container.bcConnector.signOut();
       await _checkLogged();
     }
   }, []);
