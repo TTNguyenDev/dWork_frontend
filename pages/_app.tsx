@@ -2,9 +2,15 @@ import '../styles/reset.css';
 import type { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
-import { ChakraProvider } from '@chakra-ui/react';
+import { Center, ChakraProvider, Spinner } from '@chakra-ui/react';
 import { theme } from '../theme';
 import { useApp } from '../hooks';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// PouchDB
+import PouchDB from 'pouchdb';
+import PouchDBFind from 'pouchdb-find';
+PouchDB.plugin(PouchDBFind);
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -18,11 +24,19 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  useApp();
+  const { appState } = useApp();
+  const queryClient = new QueryClient();
 
   return (
-    <ChakraProvider theme={theme} resetCSS={true}>
-      {getLayout(<Component {...pageProps} />)}
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme} resetCSS={true}>
+        {appState.loading.get() && (
+          <Center w="100vw" h="100vh">
+            <Spinner size="xl" />
+          </Center>
+        )}
+        {appState.ready.get() && getLayout(<Component {...pageProps} />)}
+      </ChakraProvider>
+    </QueryClientProvider>
   );
 }

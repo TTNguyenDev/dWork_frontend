@@ -28,9 +28,17 @@ import { RiUserStarLine } from 'react-icons/ri';
 import ourPartnersImg from '../assets/our-partners.png';
 import lncBrandImg from '../assets/lnc-brand.svg';
 import nearFoundationImg from '../assets/near-foundation-brand.svg';
+import { useHomepage } from '../hooks';
 
-const Home: NextPageWithLayout = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const HomePage: NextPageWithLayout = () => {
+  const {
+    homepageState: { modalDemoVideoIsOpen },
+    homepageMethods: {
+      btnLaunchAppOnClick,
+      demoVideoOnClick,
+      modalDemoVideoOnClose,
+    },
+  } = useHomepage();
 
   return (
     <>
@@ -65,6 +73,7 @@ const Home: NextPageWithLayout = () => {
                 leftIcon={<IoIosRocket size="25" />}
                 fontSize="20px"
                 padding="35px 50px"
+                onClick={btnLaunchAppOnClick}
               >
                 Launch App
               </Button>
@@ -81,7 +90,7 @@ const Home: NextPageWithLayout = () => {
                 padding="30px 20px"
                 cursor="pointer"
                 overflow="hidden"
-                onClick={onOpen}
+                onClick={demoVideoOnClick}
               >
                 <Box pointerEvents="none" position="relative">
                   <HStack position="absolute" top="10px">
@@ -100,8 +109,8 @@ const Home: NextPageWithLayout = () => {
             </Center>
             <Modal
               isCentered
-              onClose={onClose}
-              isOpen={isOpen}
+              onClose={modalDemoVideoOnClose}
+              isOpen={modalDemoVideoIsOpen}
               motionPreset="slideInBottom"
               size="full"
             >
@@ -402,8 +411,8 @@ const Home: NextPageWithLayout = () => {
   );
 };
 
-Home.getLayout = (page: ReactElement) => {
+HomePage.getLayout = (page: ReactElement) => {
   return <Layout>{page}</Layout>;
 };
 
-export default Home;
+export default HomePage;
