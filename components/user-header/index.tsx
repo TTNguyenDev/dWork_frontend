@@ -68,7 +68,7 @@ export const UserHeader = () => {
             </Box>
             <Button
               leftIcon={<BsPlusLg />}
-              variant="primary"
+              variant="solid"
               size="sm"
               w="100%"
               onClick={userHeaderMethods.btnCreateNewTaskOnClick}

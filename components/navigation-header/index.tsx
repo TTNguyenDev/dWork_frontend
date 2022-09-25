@@ -23,7 +23,7 @@ export const NavigationHeader = ({
 
   return (
     <Box
-      bg="blackAlpha.700"
+      bg="rgba(3, 8, 18, 0.7)"
       position="sticky"
       top="0"
       zIndex="sticky"
