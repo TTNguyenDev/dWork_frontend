@@ -7,7 +7,7 @@ export function MainLayout({ children }: PropsWithChildren) {
   return (
     <>
       <Header />
-      <Box as="main" minH="calc(100vh - 400px)">
+      <Box as="main" minH="calc(100vh - 400px)" overflowX="clip">
         {children}
       </Box>
       <Footer />

@@ -13,18 +13,30 @@ import logoImg from '../../assets/dwork-logo.svg';
 import logoLncImg from '../../assets/lnc-logo.svg';
 import { BsPlusLg } from 'react-icons/bs';
 import { UserHeader } from '../user-header';
+import { useWindowScroll } from 'react-use';
+import { useMemo } from 'react';
 
 export const Header = () => {
   const { headerState, headerMethods } = useHeader();
+  const { y } = useWindowScroll();
+
+  const styles = useMemo(() => {
+    if (y > 80)
+      return {
+        bg: 'rgba(3, 8, 18, 0.7)',
+        backdropFilter: 'auto',
+        backdropBlur: '50px',
+      };
+  }, [y]);
 
   return (
     <Box
-      bg="rgba(3, 8, 18, 0.7)"
       position="sticky"
       top="0"
-      zIndex="sticky"
-      backdropFilter="auto"
-      backdropBlur="50px"
+      zIndex="overlay"
+      transition="all"
+      transitionDuration="0.15s"
+      {...styles}
     >
       <Flex justifyContent="space-between" maxW="1200px" margin="auto" p="20px">
         <Box>

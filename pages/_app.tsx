@@ -7,6 +7,7 @@ import { Center, ChakraProvider, Spinner } from '@chakra-ui/react';
 import { theme } from '../theme';
 import { useApp } from '../hooks';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import NextNProgress from 'nextjs-progressbar';
 
 // PouchDB
 import PouchDB from 'pouchdb';
@@ -31,6 +32,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme} resetCSS={true}>
+        <NextNProgress showOnShallow={true} options={{}} />
         {appState.loading.get() && (
           <Center w="100vw" h="100vh">
             <Spinner size="xl" />

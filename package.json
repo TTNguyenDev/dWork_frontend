@@ -21,6 +21,7 @@
     "moment": "^2.29.4",
     "near-api-js": "^1.0.0",
     "next": "12.3.1",
+    "nextjs-progressbar": "^0.0.14",
     "pouchdb": "^7.3.0",
     "pouchdb-find": "^7.3.0",
     "quill": "2.0.0-dev.4",
@@ -32,6 +33,7 @@
     "react-icons": "^4.4.0",
     "react-player": "^2.11.0",
     "react-quilljs": "^1.2.17",
+    "react-use": "^17.4.0",
     "rsuite": "^5.19.0"
   },
   "devDependencies": {

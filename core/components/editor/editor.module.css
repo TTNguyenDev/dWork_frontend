@@ -20,6 +20,7 @@
 }
 
 .root div[class='ql-container ql-snow'] {
+  min-height: 200px;
   border: none !important;
   /* background: #eff5fb; */
   /* border-radius: 12px; */
