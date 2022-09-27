@@ -39,11 +39,16 @@ export const Header = () => {
       {...styles}
     >
       <Flex justifyContent="space-between" maxW="1200px" margin="auto" p="20px">
-        <Box>
+        <Box onClick={headerMethods.brandOnClick}>
           <HStack spacing="20px">
             <Image src={logoImg.src} alt="Logo dWork" />
-            <Flex>
-              <Text fontSize="32px" fontWeight="700" color="white">
+            <Flex visibility={{ base: 'hidden', md: 'inherit' }}>
+              <Text
+                fontSize="32px"
+                fontWeight="700"
+                color="white"
+                whiteSpace="nowrap"
+              >
                 dWork | &nbsp;
               </Text>
               <Image src={logoLncImg.src} alt="Logo LNC" w="60px" />
@@ -51,12 +56,14 @@ export const Header = () => {
           </HStack>
         </Box>
         <HStack spacing="30px">
-          <Text fontSize="16px" fontWeight="700" color="white">
-            Explore
-          </Text>
-          <Text fontSize="16px" fontWeight="700" color="white">
-            How it work
-          </Text>
+          <HStack spacing="30px" display={{ base: 'none', md: 'flex' }}>
+            <Text fontSize="16px" fontWeight="700" color="white">
+              Explore
+            </Text>
+            <Text fontSize="16px" fontWeight="700" color="white">
+              How it work
+            </Text>
+          </HStack>
           {headerState.blockchainLoading ||
           (headerState.logged && headerState.walletLoading) ? (
             <Center w="100px">

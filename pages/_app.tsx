@@ -32,7 +32,12 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme} resetCSS={true}>
-        <NextNProgress showOnShallow={true} options={{}} />
+        <NextNProgress
+          showOnShallow={true}
+          options={{
+            showSpinner: false,
+          }}
+        />
         {appState.loading.get() && (
           <Center w="100vw" h="100vh">
             <Spinner size="xl" />
