@@ -35,7 +35,7 @@ export const NavigationHeader = ({
           <HStack spacing="20px">
             <Button
               leftIcon={<BsArrowLeft />}
-              variant="connectWallet"
+              variant="outline"
               onClick={btnBackOnClick}
             >
               Back

@@ -68,45 +68,31 @@ export const UserHeader = () => {
             </Box>
             <Button
               leftIcon={<BsPlusLg />}
-              variant="solid"
+              variant="primary"
               size="sm"
               w="100%"
               onClick={userHeaderMethods.btnCreateNewTaskOnClick}
             >
-              Create new task
+              CREATE NEW TASK
             </Button>
           </Box>
           <Divider opacity="0.1" />
           <VStack
             spacing="0"
             align="stretch"
-            divider={<Divider opacity="0.1" />}
+            divider={<Divider opacity="0.5" />}
           >
-            <HStack
-              p="10px 20px"
-              fontSize="16px"
-              fontWeight="700"
-              cursor="pointer"
-              textColor="white"
-              _hover={{
-                bg: '#333243',
-              }}
-            >
-              <Box>My Profile</Box>
-            </HStack>
-            <HStack
-              p="10px 20px"
-              fontSize="16px"
-              fontWeight="700"
-              cursor="pointer"
-              textColor="white"
-              _hover={{
-                bg: '#333243',
-              }}
+            <Button variant="solid" borderRadius="none" bg="#23262f">
+              My Profile
+            </Button>
+            <Button
+              variant="solid"
+              borderRadius="none"
+              bg="#23262f"
               onClick={userHeaderMethods.signOut}
             >
-              <Box>Sign Out</Box>
-            </HStack>
+              Sign out
+            </Button>
           </VStack>
         </MenuList>
       </Menu>

@@ -13,25 +13,42 @@ import logoImg from '../../assets/dwork-logo.svg';
 import logoLncImg from '../../assets/lnc-logo.svg';
 import { BsPlusLg } from 'react-icons/bs';
 import { UserHeader } from '../user-header';
+import { useWindowScroll } from 'react-use';
+import { useMemo } from 'react';
 
 export const Header = () => {
   const { headerState, headerMethods } = useHeader();
+  const { y } = useWindowScroll();
+
+  const styles = useMemo(() => {
+    if (y > 80)
+      return {
+        bg: 'rgba(3, 8, 18, 0.7)',
+        backdropFilter: 'auto',
+        backdropBlur: '50px',
+      };
+  }, [y]);
 
   return (
     <Box
-      bg="rgba(3, 8, 18, 0.7)"
       position="sticky"
       top="0"
-      zIndex="sticky"
-      backdropFilter="auto"
-      backdropBlur="50px"
+      zIndex="overlay"
+      transition="all"
+      transitionDuration="0.15s"
+      {...styles}
     >
       <Flex justifyContent="space-between" maxW="1200px" margin="auto" p="20px">
-        <Box>
+        <Box onClick={headerMethods.brandOnClick}>
           <HStack spacing="20px">
             <Image src={logoImg.src} alt="Logo dWork" />
-            <Flex>
-              <Text fontSize="32px" fontWeight="700" color="white">
+            <Flex visibility={{ base: 'hidden', md: 'inherit' }}>
+              <Text
+                fontSize="32px"
+                fontWeight="700"
+                color="white"
+                whiteSpace="nowrap"
+              >
                 dWork | &nbsp;
               </Text>
               <Image src={logoLncImg.src} alt="Logo LNC" w="60px" />
@@ -39,12 +56,14 @@ export const Header = () => {
           </HStack>
         </Box>
         <HStack spacing="30px">
-          <Text fontSize="16px" fontWeight="700" color="white">
-            Explore
-          </Text>
-          <Text fontSize="16px" fontWeight="700" color="white">
-            How it work
-          </Text>
+          <HStack spacing="30px" display={{ base: 'none', md: 'flex' }}>
+            <Text fontSize="16px" fontWeight="700" color="white">
+              Explore
+            </Text>
+            <Text fontSize="16px" fontWeight="700" color="white">
+              How it work
+            </Text>
+          </HStack>
           {headerState.blockchainLoading ||
           (headerState.logged && headerState.walletLoading) ? (
             <Center w="100px">

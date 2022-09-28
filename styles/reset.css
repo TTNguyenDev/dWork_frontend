@@ -8,6 +8,7 @@ p {
 html,
 body {
   background: #030812 !important;
+  /* overflow-x: hidden; */
 }
 
 .rs-calendar-table-cell {

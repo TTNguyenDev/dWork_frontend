@@ -13,7 +13,6 @@ import {
   ModalContent,
   ModalOverlay,
   Text,
-  useDisclosure,
   VStack,
 } from '@chakra-ui/react';
 import Head from 'next/head';
@@ -48,10 +47,25 @@ const HomePage: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Box h="50px" />
-      <Box maxW="1200px" margin="auto" p="0 15px">
+      <Box maxW="1200px" margin="auto" p="0 15px" position="relative">
+        <Box
+          position="absolute"
+          width="700px"
+          height="700px"
+          top="-50%"
+          right="-20%"
+          opacity="0.4"
+          background="linear-gradient(75.96deg, #FFC83A 13.64%, #FF008A 46.53%, #6100FF 78.88%)"
+          filter="blur(60px)"
+          borderRadius="full"
+        />
         <Grid templateColumns="repeat(2, 1fr)" gap="20px">
-          <GridItem>
-            <VStack alignItems="start" spacing="40px" maxW="400px">
+          <GridItem zIndex="banner" colSpan={{ base: 2, md: 1 }}>
+            <VStack
+              alignItems="start"
+              spacing="40px"
+              maxW={{ base: 'auto', md: '400px' }}
+            >
               <Text fontSize="48px" fontWeight="700">
                 Earn
                 <Text
@@ -73,13 +87,14 @@ const HomePage: NextPageWithLayout = () => {
                 leftIcon={<IoIosRocket size="25" />}
                 fontSize="20px"
                 padding="35px 50px"
+                width={{ base: '100%', md: 'auto' }}
                 onClick={btnLaunchAppOnClick}
               >
                 Launch App
               </Button>
             </VStack>
           </GridItem>
-          <GridItem>
+          <GridItem zIndex="banner" colSpan={{ base: 2, md: 1 }}>
             <Center h="100%">
               <AspectRatio
                 ratio={16 / 9}
@@ -152,7 +167,7 @@ const HomePage: NextPageWithLayout = () => {
           bg="linear-gradient(93.51deg, #9B51E0 2.84%, #3081ED 99.18%)"
           overflow="hidden"
         >
-          <GridItem>
+          <GridItem zIndex="banner" colSpan={{ base: 2, md: 1 }}>
             <Box textAlign="center">
               <Text fontSize="36px" fontWeight="600">
                 10000+
@@ -162,7 +177,7 @@ const HomePage: NextPageWithLayout = () => {
               </Text>
             </Box>
           </GridItem>
-          <GridItem>
+          <GridItem zIndex="banner" colSpan={{ base: 2, md: 1 }}>
             <Box textAlign="center">
               <Text fontSize="36px" fontWeight="600">
                 1280+
@@ -172,7 +187,7 @@ const HomePage: NextPageWithLayout = () => {
               </Text>
             </Box>
           </GridItem>
-          <GridItem>
+          <GridItem zIndex="banner" colSpan={{ base: 2, md: 1 }}>
             <Box textAlign="center">
               <Text fontSize="36px" fontWeight="600">
                 500+
@@ -182,7 +197,7 @@ const HomePage: NextPageWithLayout = () => {
               </Text>
             </Box>
           </GridItem>
-          <GridItem>
+          <GridItem zIndex="banner" colSpan={{ base: 2, md: 1 }}>
             <Box textAlign="center">
               <Text fontSize="36px" fontWeight="600">
                 5000$+
@@ -195,9 +210,20 @@ const HomePage: NextPageWithLayout = () => {
         </Grid>
       </Box>
       <Box h="150px" />
-      <Box maxW="1600px" margin="auto" p="0 15px">
+      <Box maxW="1600px" margin="auto" p="0 15px" position="relative">
+        <Box
+          position="absolute"
+          width="700px"
+          height="700px"
+          top="-20%"
+          left="-20%"
+          opacity="0.4"
+          background="linear-gradient(75.96deg, #FFC83A 13.64%, #FF008A 46.53%, #6100FF 78.88%)"
+          filter="blur(60px)"
+          borderRadius="full"
+        />
         <Grid templateColumns="repeat(4, 1fr)" gap="20px" padding="50px 0">
-          <GridItem colSpan={4} mb="80px">
+          <GridItem zIndex="banner" colSpan={4} mb="80px">
             <Text fontSize="36px" fontWeight="600" textAlign="center">
               WHY PEOPLE
               <Text
@@ -210,7 +236,7 @@ const HomePage: NextPageWithLayout = () => {
               US
             </Text>
           </GridItem>
-          <GridItem>
+          <GridItem zIndex="banner" colSpan={{ base: 4, md: 2, lg: 1 }}>
             <Box
               h="100%"
               padding="60px"
@@ -246,7 +272,7 @@ const HomePage: NextPageWithLayout = () => {
               </Text>
             </Box>
           </GridItem>
-          <GridItem>
+          <GridItem zIndex="banner" colSpan={{ base: 4, md: 2, lg: 1 }}>
             <Box
               h="100%"
               padding="60px"
@@ -281,7 +307,7 @@ const HomePage: NextPageWithLayout = () => {
               </Text>
             </Box>
           </GridItem>
-          <GridItem>
+          <GridItem zIndex="banner" colSpan={{ base: 4, md: 2, lg: 1 }}>
             <Box
               h="100%"
               padding="60px"
@@ -318,7 +344,7 @@ const HomePage: NextPageWithLayout = () => {
               </Text>
             </Box>
           </GridItem>
-          <GridItem>
+          <GridItem zIndex="banner" colSpan={{ base: 4, md: 2, lg: 1 }}>
             <Box
               h="100%"
               padding="60px"
@@ -358,7 +384,7 @@ const HomePage: NextPageWithLayout = () => {
       <Box h="150px" />
       <Box maxW="1600px" margin="auto" p="0 15px">
         <Grid templateColumns="repeat(2, 1fr)" gap="20px" padding="50px 0">
-          <GridItem colSpan={2} mb="80px">
+          <GridItem zIndex="banner" colSpan={2} mb="80px">
             <Text fontSize="36px" fontWeight="600" textAlign="center">
               OUR
               <Text
@@ -370,10 +396,10 @@ const HomePage: NextPageWithLayout = () => {
               </Text>
             </Text>
           </GridItem>
-          <GridItem>
+          <GridItem zIndex="banner" colSpan={{ base: 2, md: 1 }}>
             <Image src={ourPartnersImg.src} alt="Out partners image" />
           </GridItem>
-          <GridItem>
+          <GridItem zIndex="banner" colSpan={{ base: 2, md: 1 }}>
             <VStack h="100%" justifyContent="center">
               <Image
                 src={nearFoundationImg.src}
@@ -384,7 +410,6 @@ const HomePage: NextPageWithLayout = () => {
               <Image src={lncBrandImg.src} alt="LNC brand" w="500px" />
             </VStack>
           </GridItem>
-          <GridItem></GridItem>
         </Grid>
       </Box>
       {/* <Box h="150px" />
@@ -403,7 +428,7 @@ const HomePage: NextPageWithLayout = () => {
               ABOUT US
             </Text>
           </GridItem>
-          <GridItem></GridItem>
+          <GridItem zIndex="banner"></GridItem>
         </Grid>
       </Box> */}
       <Box h="150px" />

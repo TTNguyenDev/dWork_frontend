@@ -11,12 +11,7 @@ import {
   Heading,
   VStack,
 } from '@chakra-ui/react';
-import {
-  BsDiscord,
-  BsTelegram,
-  BsTwitter,
-  BsYoutube,
-} from 'react-icons/bs';
+import { BsDiscord, BsTelegram, BsTwitter, BsYoutube } from 'react-icons/bs';
 import logoImg from '../../assets/dwork-logo.svg';
 import logoLncImg from '../../assets/lnc-logo.svg';
 
@@ -41,7 +36,18 @@ export const Footer = () => {
     //   </HStack>
     // </Flex>
 
-    <Box>
+    <Box position="relative" overflowX="clip">
+      <Box
+        position="absolute"
+        width="700px"
+        height="700px"
+        top="-200%"
+        right="-20%"
+        opacity="0.4"
+        background="linear-gradient(75.96deg, #FFC83A 13.64%, #FF008A 46.53%, #6100FF 78.88%)"
+        filter="blur(60px)"
+        borderRadius="full"
+      />
       <Box maxW="1600px" margin="auto" p="30px 15px">
         <Grid
           templateColumns="repeat(4, 1fr)"
