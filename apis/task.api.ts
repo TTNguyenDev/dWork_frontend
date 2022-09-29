@@ -23,14 +23,18 @@ enum ContractMethods {
 
 export const TaskApi = Object.freeze({
   async create(payload: TaskCreateInput): Promise<void> {
-    console.log("Create task payload: ", payload);
+    console.log('Create task payload: ', payload);
     await Container.bcConnector.callChangeMethod({
       methodName: ContractMethods.new_task,
       args: {
         ...payload,
-        price: `${Number(payload.price) * 1000}000000000000000000000`
+        price: `${Number(payload.price) * 1000}000000000000000000000`,
       },
-      attachedDeposit: new BN(`${payload.max_participants * Number(payload.price) * 1000}000000000000000000000`)
+      attachedDeposit: new BN(
+        `${
+          payload.max_participants * Number(payload.price) * 1000
+        }000000000000000000000`
+      ),
     });
   },
   ///
@@ -39,15 +43,15 @@ export const TaskApi = Object.freeze({
       methodName: ContractMethods.available_tasks,
       args: payload,
     });
-    
+
     let tasks = res.map((value: any) => {
       return {
         id: value[0],
-        ...value[1]
-      }
-    })
-    
-    console.log("tinguyen view", res, tasks)
+        ...value[1],
+      };
+    });
+
+    console.log('tinguyen view', res, tasks);
 
     return tasks;
   },

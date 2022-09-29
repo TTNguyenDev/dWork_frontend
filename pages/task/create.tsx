@@ -16,7 +16,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import Head from 'next/head';
-import { ReactElement, useMemo } from 'react';
+import { ReactElement, useEffect, useMemo } from 'react';
 import { NavigationLayout } from '../../layouts';
 import { NextPageWithLayout } from '../_app';
 import { useCreateTask, useTaskCategories } from '../../hooks';
@@ -45,10 +45,15 @@ const TaskCreatePage: NextPageWithLayout = () => {
     [form.watch('price'), form.watch('max_participants')]
   );
 
+  useEffect(() => {
+    form.setValue('price', '1');
+    form.setValue('max_participants', 1);
+  });
+
   const {
     taskCategoriesState: { isLoading: categoryLoading, data },
   } = useTaskCategories();
-  
+
   return (
     <>
       <Head>
@@ -122,7 +127,7 @@ const TaskCreatePage: NextPageWithLayout = () => {
                       max={MAX_PARTICIPANTS_PER_TASK}
                       precision={0}
                       onChange={(value) => {
-                        form.setValue('max_participants', Number(value))
+                        form.setValue('max_participants', Number(value));
                         form.trigger('max_participants');
                       }}
                     >
@@ -152,9 +157,11 @@ const TaskCreatePage: NextPageWithLayout = () => {
                       onChange={(value) => {
                         form.setValue(
                           'duration',
-                          `${value
-                            ? (value as Date).getTime() - Date.now()
-                            : (undefined as any)}`
+                          `${
+                            value
+                              ? (value as Date).getTime() - Date.now()
+                              : (undefined as any)
+                          }`
                         );
                         form.trigger('duration');
                       }}
@@ -241,11 +248,8 @@ const TaskCreatePage: NextPageWithLayout = () => {
                   />
                   <Editor
                     onChange={(value) => {
-                        form.setValue(
-                          'description',
-                          value
-                        );
-                        form.trigger('description');
+                      form.setValue('description', value);
+                      form.trigger('description');
                     }}
                     style={{
                       padding: 0,

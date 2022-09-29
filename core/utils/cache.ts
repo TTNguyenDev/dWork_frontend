@@ -27,12 +27,10 @@ export const cacheDataList = async ({
   let isCompleted = false;
   while (!isCompleted) {
     try {
-      const res = (
-        await fetchList({
-          from_index: currentFromIndex,
-          limit: limitPerCacheHit,
-        })
-      );
+      const res = await fetchList({
+        from_index: currentFromIndex,
+        limit: limitPerCacheHit,
+      });
 
       if (res.length === 0) {
         isCompleted = true;
