@@ -32,7 +32,7 @@ export const cacheDataList = async ({
           from_index: currentFromIndex,
           limit: limitPerCacheHit,
         })
-      ).reverse();
+      );
 
       if (res.length === 0) {
         isCompleted = true;
