@@ -4,9 +4,10 @@ import {
   UseMutationOptions,
 } from '@tanstack/react-query';
 import { TaskRepo } from '../repos';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { TaskCreateInput } from '../dtos';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
+import { useTaskCategories } from './use-task-categories';
 
 export const useCreateTask = ({
   options,
@@ -16,6 +17,8 @@ export const useCreateTask = ({
     'mutationFn'
   >;
 } = {}) => {
+  const { taskCategoriesState } = useTaskCategories();
+
   const createTaskForm = useForm<TaskCreateInput>();
   const createTaskMutation = useMutation(
     (payload: TaskCreateInput) => TaskRepo.create(payload),
@@ -36,6 +39,7 @@ export const useCreateTask = ({
       isLoading: createTaskMutation.isLoading,
       data: createTaskMutation.data,
       form: createTaskForm,
+      taskCategoriesState,
     },
     createTaskMethods: {
       onSubmit,

@@ -13,6 +13,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
+  useMultiStyleConfig,
   VStack,
 } from '@chakra-ui/react';
 import Head from 'next/head';
@@ -20,17 +21,18 @@ import { ReactElement, useMemo } from 'react';
 import { NavigationLayout } from '../../layouts';
 import { NextPageWithLayout } from '../_app';
 import { useCreateTask } from '../../hooks';
-import { CreatableSelect } from 'chakra-react-select';
+import { Select } from 'chakra-react-select';
 import { Editor } from '../../core/components';
 import * as dateFns from 'date-fns';
 import { DatePicker } from 'rsuite';
+import { reactSelectStyles } from '../../styles';
 
 const MAX_PARTICIPANTS_PER_TASK = 100;
 const PRICE_DECIMAL_LENGTH = 2;
 
 const TaskCreatePage: NextPageWithLayout = () => {
   const {
-    createTaskState: { form, isLoading },
+    createTaskState: { form, isLoading, taskCategoriesState },
     createTaskMethods: { onSubmit },
   } = useCreateTask();
 
@@ -44,6 +46,9 @@ const TaskCreatePage: NextPageWithLayout = () => {
       ),
     [form.watch('price'), form.watch('max_participants')]
   );
+
+  const style = useMultiStyleConfig('Input');
+  console.log(style);
   return (
     <>
       <Head>
@@ -192,8 +197,9 @@ const TaskCreatePage: NextPageWithLayout = () => {
                     })}
                   />
                   <Box h="40px">
-                    <CreatableSelect
-                      isClearable
+                    <Select
+                      {...reactSelectStyles}
+                      useBasicStyles
                       onChange={async (payload: any) => {
                         const value = payload?.value.trim();
                         // if (value !== null && payload.__isNew__)
@@ -206,12 +212,12 @@ const TaskCreatePage: NextPageWithLayout = () => {
                         );
                         form.trigger('category_id');
                       }}
-                      // options={categoriesQuery.data?.map((item) => ({
-                      //   value: item.id,
-                      //   label: item.name,
-                      // }))}
-                      // isLoading={categoriesQuery.isLoading}
-                      // isDisabled={createCategoryLoading}
+                      options={taskCategoriesState.data?.map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                      }))}
+                      isLoading={taskCategoriesState.isLoading}
+                      isDisabled={taskCategoriesState.isLoading}
                       placeholder="Choose category"
                     />
                   </Box>
@@ -230,10 +236,14 @@ const TaskCreatePage: NextPageWithLayout = () => {
                     })}
                   />
                   <Editor
-                    onChange={() => {}}
+                    onChange={(value) => {
+                      form.setValue('description', value);
+                      form.trigger('description');
+                    }}
                     style={{
                       padding: 0,
                     }}
+                    isInvalid={!!form.formState.errors.description}
                     placeholder="Description"
                   />
                   {form.formState.errors.description && (
