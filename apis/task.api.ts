@@ -1,3 +1,4 @@
+import BN from 'bn.js';
 import { Container } from '../core';
 import { ApiGetListInput } from '../core/types';
 import { TaskCreateInput, TaskDto } from '../dtos';
@@ -22,9 +23,14 @@ enum ContractMethods {
 
 export const TaskApi = Object.freeze({
   async create(payload: TaskCreateInput): Promise<void> {
+    console.log("Create task payload: ", payload);
     await Container.bcConnector.callChangeMethod({
       methodName: ContractMethods.new_task,
-      args: payload,
+      args: {
+        ...payload,
+        price: `${Number(payload.price) * 1000}000000000000000000000`
+      },
+      attachedDeposit: new BN(`${payload.max_participants * Number(payload.price) * 1000}000000000000000000000`)
     });
   },
   ///
@@ -33,6 +39,16 @@ export const TaskApi = Object.freeze({
       methodName: ContractMethods.available_tasks,
       args: payload,
     });
-    return res;
+    
+    let tasks = res.map((value: any) => {
+      return {
+        id: value[0],
+        ...value[1]
+      }
+    })
+    
+    console.log("tinguyen view", res, tasks)
+
+    return tasks;
   },
 });
