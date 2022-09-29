@@ -17,7 +17,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import Head from 'next/head';
-import { ReactElement, useMemo } from 'react';
+import { ReactElement, useEffect, useMemo } from 'react';
 import { NavigationLayout } from '../../layouts';
 import { NextPageWithLayout } from '../_app';
 import { useCreateTask } from '../../hooks';
@@ -81,17 +81,19 @@ const TaskCreatePage: NextPageWithLayout = () => {
                 </FormControl>
                 <FormControl isInvalid={!!form.formState.errors.price}>
                   <FormLabel>Bounty prize Ⓝ</FormLabel>
+                  <Input
+                    hidden
+                    {...form.register('price', {
+                      required: 'Bounty prize is a required field',
+                    })}
+                  />
                   <NumberInput
                     defaultValue={1}
                     min={0.01}
                     precision={2}
                     onChange={(value) => form.setValue('price', value)}
                   >
-                    <NumberInputField
-                      {...form.register('price', {
-                        required: 'Bounty prize is a required field',
-                      })}
-                    />
+                    <NumberInputField />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
                       <NumberDecrementStepper />
@@ -107,21 +109,24 @@ const TaskCreatePage: NextPageWithLayout = () => {
                   isInvalid={!!form.formState.errors.max_participants}
                 >
                   <FormLabel>Max participants</FormLabel>
+                  <Input
+                    hidden
+                    {...form.register('max_participants', {
+                      required: 'Max participants is a required field',
+                    })}
+                  />
                   {MAX_PARTICIPANTS_PER_TASK && (
                     <NumberInput
                       defaultValue={1}
                       min={1}
                       max={MAX_PARTICIPANTS_PER_TASK}
                       precision={0}
-                      onChange={(value) =>
-                        form.setValue('max_participants', Number(value))
-                      }
+                      onChange={(value) => {
+                        form.setValue('max_participants', Number(value));
+                        form.trigger('max_participants');
+                      }}
                     >
-                      <NumberInputField
-                        {...form.register('max_participants', {
-                          required: 'Max participants is a required field',
-                        })}
-                      />
+                      <NumberInputField />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
                         <NumberDecrementStepper />
