@@ -16,10 +16,10 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import Head from 'next/head';
-import { ReactElement, useMemo } from 'react';
+import { ReactElement, useEffect, useMemo } from 'react';
 import { NavigationLayout } from '../../layouts';
 import { NextPageWithLayout } from '../_app';
-import { useCreateTask } from '../../hooks';
+import { useCreateTask, useTaskCategories } from '../../hooks';
 import { CreatableSelect } from 'chakra-react-select';
 import { Editor } from '../../core/components';
 import * as dateFns from 'date-fns';
@@ -44,6 +44,16 @@ const TaskCreatePage: NextPageWithLayout = () => {
       ),
     [form.watch('price'), form.watch('max_participants')]
   );
+
+  useEffect(() => {
+    form.setValue('price', '1');
+    form.setValue('max_participants', 1);
+  });
+
+  const {
+    taskCategoriesState: { isLoading: categoryLoading, data },
+  } = useTaskCategories();
+
   return (
     <>
       <Head>
@@ -76,17 +86,19 @@ const TaskCreatePage: NextPageWithLayout = () => {
                 </FormControl>
                 <FormControl isInvalid={!!form.formState.errors.price}>
                   <FormLabel>Bounty prize Ⓝ</FormLabel>
+                  <Input
+                    hidden
+                    {...form.register('price', {
+                      required: 'Bounty prize is a required field',
+                    })}
+                  />
                   <NumberInput
                     defaultValue={1}
                     min={0.01}
                     precision={2}
                     onChange={(value) => form.setValue('price', value)}
                   >
-                    <NumberInputField
-                      {...form.register('price', {
-                        required: 'Bounty prize is a required field',
-                      })}
-                    />
+                    <NumberInputField />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
                       <NumberDecrementStepper />
@@ -102,21 +114,24 @@ const TaskCreatePage: NextPageWithLayout = () => {
                   isInvalid={!!form.formState.errors.max_participants}
                 >
                   <FormLabel>Max participants</FormLabel>
+                  <Input
+                    hidden
+                    {...form.register('max_participants', {
+                      required: 'Max participants is a required field',
+                    })}
+                  />
                   {MAX_PARTICIPANTS_PER_TASK && (
                     <NumberInput
                       defaultValue={1}
                       min={1}
                       max={MAX_PARTICIPANTS_PER_TASK}
                       precision={0}
-                      onChange={(value) =>
-                        form.setValue('max_participants', Number(value))
-                      }
+                      onChange={(value) => {
+                        form.setValue('max_participants', Number(value));
+                        form.trigger('max_participants');
+                      }}
                     >
-                      <NumberInputField
-                        {...form.register('max_participants', {
-                          required: 'Max participants is a required field',
-                        })}
-                      />
+                      <NumberInputField />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
                         <NumberDecrementStepper />
@@ -142,9 +157,11 @@ const TaskCreatePage: NextPageWithLayout = () => {
                       onChange={(value) => {
                         form.setValue(
                           'duration',
-                          value
-                            ? (value as Date).getTime() - Date.now()
-                            : (undefined as any)
+                          `${
+                            value
+                              ? (value as Date).getTime() - Date.now()
+                              : (undefined as any)
+                          }`
                         );
                         form.trigger('duration');
                       }}
@@ -206,12 +223,12 @@ const TaskCreatePage: NextPageWithLayout = () => {
                         );
                         form.trigger('category_id');
                       }}
-                      // options={categoriesQuery.data?.map((item) => ({
-                      //   value: item.id,
-                      //   label: item.name,
-                      // }))}
-                      // isLoading={categoriesQuery.isLoading}
-                      // isDisabled={createCategoryLoading}
+                      options={data?.map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                      }))}
+                      isLoading={categoryLoading}
+                      isDisabled={isLoading && categoryLoading}
                       placeholder="Choose category"
                     />
                   </Box>
@@ -230,7 +247,10 @@ const TaskCreatePage: NextPageWithLayout = () => {
                     })}
                   />
                   <Editor
-                    onChange={() => {}}
+                    onChange={(value) => {
+                      form.setValue('description', value);
+                      form.trigger('description');
+                    }}
                     style={{
                       padding: 0,
                     }}

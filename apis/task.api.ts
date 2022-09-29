@@ -1,3 +1,5 @@
+import BN from 'bn.js';
+import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import { Container } from '../core';
 import { ApiGetListInput } from '../core/types';
 import { TaskCreateInput, TaskDto } from '../dtos';
@@ -22,9 +24,18 @@ enum ContractMethods {
 
 export const TaskApi = Object.freeze({
   async create(payload: TaskCreateInput): Promise<void> {
+    console.log('Create task payload: ', payload);
     await Container.bcConnector.callChangeMethod({
       methodName: ContractMethods.new_task,
-      args: payload,
+      args: {
+        ...payload,
+        price: parseNearAmount(payload.price),
+      },
+      attachedDeposit: new BN(
+        parseNearAmount(
+          (payload.max_participants * Number(payload.price)).toString()
+        ) ?? '0'
+      ),
     });
   },
   ///
@@ -33,6 +44,14 @@ export const TaskApi = Object.freeze({
       methodName: ContractMethods.available_tasks,
       args: payload,
     });
-    return res;
+
+    let tasks = res.map((value: any) => {
+      return {
+        id: value[0],
+        ...value[1],
+      };
+    });
+
+    return tasks;
   },
 });

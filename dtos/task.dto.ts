@@ -18,6 +18,6 @@ export type TaskCreateInput = {
   description: string;
   price: string;
   max_participants: number;
-  duration: number;
+  duration: string;
   category_id: string;
 };
