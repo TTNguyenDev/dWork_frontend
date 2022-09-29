@@ -1,4 +1,5 @@
 import BN from 'bn.js';
+import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import { Container } from '../core';
 import { ApiGetListInput } from '../core/types';
 import { TaskCreateInput, TaskDto } from '../dtos';
@@ -28,12 +29,12 @@ export const TaskApi = Object.freeze({
       methodName: ContractMethods.new_task,
       args: {
         ...payload,
-        price: `${Number(payload.price) * 1000}000000000000000000000`,
+        price: parseNearAmount(payload.price),
       },
       attachedDeposit: new BN(
-        `${
-          payload.max_participants * Number(payload.price) * 1000
-        }000000000000000000000`
+        parseNearAmount(
+          (payload.max_participants * Number(payload.price)).toString()
+        ) ?? '0'
       ),
     });
   },
@@ -50,8 +51,6 @@ export const TaskApi = Object.freeze({
         ...value[1],
       };
     });
-
-    console.log('tinguyen view', res, tasks);
 
     return tasks;
   },

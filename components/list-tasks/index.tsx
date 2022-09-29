@@ -1,5 +1,5 @@
-import { Box, Button, HStack, Skeleton, Text } from '@chakra-ui/react';
-import { BN } from 'bn.js';
+import { Box, HStack, Skeleton, Text, Grid, GridItem } from '@chakra-ui/react';
+import { formatNearAmount } from 'near-api-js/lib/utils/format';
 import TimeAgo from 'timeago-react';
 import { useListTasks } from '../../hooks';
 
@@ -14,11 +14,26 @@ export const ListTasks = () => {
     <Box>
       {isLoading && <Skeleton h="20px" />}
       {data && (
-        <HStack spacing="15px">
+        <Grid 
+          templateColumns="repeat(12, 1fr)"
+          gap="15px"
+        >
           {data.map((item) => (
-            <Box key={item.id} minW="200px">
+          <GridItem colSpan={{base: 6, md: 4, lg: 3}} key={item.id}>
+            <Box
+              key={item.id}
+              p="10px 12px"
+              borderRadius="7px"
+              minW="200px"
+              maxW="270px"
+              _hover={{
+                bg: '#5553',
+                blur: '10px',
+              }}
+              maxH="300px"
+            >
               <HStack justify="space-between" align="start">
-                <Text fontSize="16px" fontWeight="600">
+                <Text fontSize="18px" fontWeight="600">
                   {item.title}
                 </Text>
                 <Text
@@ -29,14 +44,17 @@ export const ListTasks = () => {
                   fontWeight="600"
                   textAlign="center"
                 >
-                  {Number(item.price) / 1000000000000 / 1000000000000 + '  Ⓝ'}
+                  {formatNearAmount(item.price, 24) + '  Ⓝ'}
                 </Text>
               </HStack>
-              <Text
-                fontSize="15px"
-                dangerouslySetInnerHTML={{ __html: item.description }}
-              />
-              <HStack justify="space-between">
+              <Box minH="120px" p="7px 0">
+                <Text
+                  fontSize="15px"
+                  noOfLines={4}
+                  dangerouslySetInnerHTML={{ __html: item.description }}
+                />
+              </Box>
+              <HStack justify="space-between" alignItems="end">
                 <Text>{`${item.proposals.length}/${item.max_participants}`}</Text>
                 <Box
                   p="5px 12px"
@@ -48,8 +66,9 @@ export const ListTasks = () => {
                 </Box>
               </HStack>
             </Box>
+            </GridItem>
           ))}
-        </HStack>
+        </Grid>
       )}
     </Box>
   );

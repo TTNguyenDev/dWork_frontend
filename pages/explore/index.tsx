@@ -51,7 +51,7 @@ const ExplorePage: NextPageWithLayout = () => {
           <Box minW="256px">Filter</Box>
           <Box w="100%">
             <Flex justifyContent="end">
-              <Flex w="100%" maxW="500px" justifyContent="end">
+              <Flex w="100%" maxW="900px" justifyContent="end">
                 <ListTasks />
               </Flex>
             </Flex>
