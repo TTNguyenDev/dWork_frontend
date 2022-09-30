@@ -21,7 +21,7 @@ import { ReactElement, useEffect, useMemo } from 'react';
 import { NavigationLayout } from '../../layouts';
 import { NextPageWithLayout } from '../_app';
 import { useCreateTask } from '../../hooks';
-import { Select } from 'chakra-react-select';
+import { CreatableSelect, Select } from 'chakra-react-select';
 import { Editor } from '../../core/components';
 import * as dateFns from 'date-fns';
 import { DatePicker } from 'rsuite';
@@ -32,7 +32,12 @@ const PRICE_DECIMAL_LENGTH = 2;
 
 const TaskCreatePage: NextPageWithLayout = () => {
   const {
-    createTaskState: { form, isLoading, taskCategoriesState },
+    createTaskState: {
+      form,
+      isLoading,
+      taskCategoriesState,
+      isAllowedToCreateTask,
+    },
     createTaskMethods: { onSubmit },
   } = useCreateTask();
 
@@ -208,14 +213,14 @@ const TaskCreatePage: NextPageWithLayout = () => {
                     })}
                   />
                   <Box h="40px">
-                    <Select
+                    <CreatableSelect
                       {...reactSelectStyles}
                       useBasicStyles
                       onChange={async (payload: any) => {
                         const value = payload?.value.trim();
-                        // if (value !== null && payload.__isNew__)
-                        //   form.setValue('newCategory', value);
-                        // else form.setValue('newCategory', undefined);
+                        if (value !== null && payload.__isNew__)
+                          form.setValue('new_category', value);
+                        else form.setValue('new_category', undefined);
 
                         form.setValue(
                           'category_id',
@@ -277,7 +282,7 @@ const TaskCreatePage: NextPageWithLayout = () => {
                 variant="connectWallet"
                 w="200px"
                 isLoading={isLoading}
-                isDisabled={isLoading}
+                isDisabled={isLoading || !isAllowedToCreateTask}
               >
                 CREATE
               </Button>

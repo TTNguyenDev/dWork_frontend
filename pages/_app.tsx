@@ -39,12 +39,12 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             showSpinner: false,
           }}
         />
-        {appState.loading.get() && (
+        {appState.loading.value && (
           <Center w="100vw" h="100vh">
             <Spinner size="xl" />
           </Center>
         )}
-        {appState.ready.get() && getLayout(<Component {...pageProps} />)}
+        {appState.ready.value && getLayout(<Component {...pageProps} />)}
         <StorageDepositModal />
       </ChakraProvider>
     </QueryClientProvider>

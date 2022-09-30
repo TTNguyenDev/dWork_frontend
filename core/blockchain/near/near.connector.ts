@@ -1,9 +1,17 @@
-import { connect, keyStores, Near, WalletConnection } from 'near-api-js';
+import { BN } from 'bn.js';
+import {
+  connect,
+  keyStores,
+  Near,
+  transactions,
+  WalletConnection,
+} from 'near-api-js';
 import {
   ChangeFunctionCallOptions,
   ViewFunctionCallOptions,
 } from 'near-api-js/lib/account';
 import { NearConfig } from 'near-api-js/lib/near';
+import { TransactionAction } from '../../types';
 import { IBlockchainConnector } from '../blockchain.connector';
 
 export type NearConnectorConfig = NearConfig & {
@@ -73,6 +81,27 @@ export class NearConnector implements IBlockchainConnector<Near> {
     return this.wallet.account().functionCall({
       ...payload,
       contractId: payload.contractId ?? this._config.contractId,
+    });
+  }
+
+  async transaction(payload: {
+    contractId?: string;
+    actions: TransactionAction[];
+  }) {
+    const actions = payload.actions.map(
+      ({ methodName, args: body, gas = '30000000000000', deposit = '0' }) =>
+        transactions.functionCall(
+          methodName,
+          body,
+          new BN(gas),
+          new BN(deposit)
+        )
+    );
+
+    // @ts-ignore
+    return this.wallet.account().signAndSendTransaction({
+      receiverId: payload.contractId ?? this._config.contractId,
+      actions,
     });
   }
 }

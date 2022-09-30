@@ -11,7 +11,7 @@ export const useUserHeader = () => {
   const { blockchainState, blockchainMethods } = useBlockchain();
   const { accountState } = useAccount();
 
-  const account = blockchainState.wallet.account.get();
+  const account = blockchainState.wallet.account.value;
 
   const btnCreateNewTaskOnClick = useCallback(() => {
     AuthUtils.authCheckAndExec(() => router.push('/task/create'));
@@ -20,7 +20,7 @@ export const useUserHeader = () => {
   return {
     userHeaderState: {
       loading:
-        blockchainState.loading.get() || blockchainState.wallet.loading.get(),
+        blockchainState.loading.value || blockchainState.wallet.loading.value,
       account: account
         ? {
             id: account.id,
@@ -32,7 +32,7 @@ export const useUserHeader = () => {
             },
           }
         : undefined,
-      isRegistered: accountState.isRegistered.get(),
+      isRegistered: accountState.isRegistered.value,
     },
     userHeaderMethods: {
       signIn: blockchainMethods.signIn,

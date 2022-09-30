@@ -14,3 +14,10 @@ export type ModalStateType = {
   onOpen: () => any;
   onClose: () => any;
 };
+
+export type TransactionAction = {
+  methodName: string;
+  args: object;
+  gas?: string;
+  deposit?: string;
+};

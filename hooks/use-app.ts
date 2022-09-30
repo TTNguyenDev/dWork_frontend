@@ -20,7 +20,7 @@ export const useInitialize = () => {
   }, []);
 
   useEffect(() => {
-    if (!blockchainState.ready.get()) return;
+    if (!blockchainState.ready.value) return;
 
     // Cache data before app ready
     (async () => {
@@ -50,7 +50,7 @@ export const useInitialize = () => {
         ready: true,
       });
     })();
-  }, [blockchainState.ready.get()]);
+  }, [blockchainState.ready.value]);
 
   return {
     appState,

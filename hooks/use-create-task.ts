@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { TaskCreateInput } from '../dtos';
 import { useMemo } from 'react';
 import { useTaskCategories } from './use-task-categories';
+import { useAccount } from './atoms';
 
 export const useCreateTask = ({
   options,
@@ -18,6 +19,9 @@ export const useCreateTask = ({
   >;
 } = {}) => {
   const { taskCategoriesState } = useTaskCategories();
+  const { accountState } = useAccount();
+
+  const isAllowedToCreateTask = useMemo(() => true, []);
 
   const createTaskForm = useForm<TaskCreateInput>({
     defaultValues: {
@@ -45,6 +49,7 @@ export const useCreateTask = ({
       data: createTaskMutation.data,
       form: createTaskForm,
       taskCategoriesState,
+      isAllowedToCreateTask,
     },
     createTaskMethods: {
       onSubmit,
