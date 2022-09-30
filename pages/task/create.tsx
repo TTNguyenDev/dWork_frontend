@@ -48,7 +48,7 @@ const TaskCreatePage: NextPageWithLayout = () => {
   );
 
   const style = useMultiStyleConfig('Input');
-  console.log(style);
+
   return (
     <>
       <Head>
@@ -149,11 +149,17 @@ const TaskCreatePage: NextPageWithLayout = () => {
                   />
                   <Box h="40px">
                     <DatePicker
+                      className={`date-picker rs-theme-dark ${
+                        !!form.formState.errors.duration
+                          ? 'date-picker-invalid'
+                          : ''
+                      }`}
+                      menuClassName="date-picker-menu rs-theme-dark"
                       onChange={(value) => {
                         form.setValue(
                           'duration',
                           value
-                            ? (value as Date).getTime() - Date.now()
+                            ? (value as Date).getTime() - Date.now() + ''
                             : (undefined as any)
                         );
                         form.trigger('duration');

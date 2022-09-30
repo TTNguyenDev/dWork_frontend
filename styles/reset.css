@@ -11,6 +11,48 @@ body {
   /* overflow-x: hidden; */
 }
 
-.rs-calendar-table-cell {
+.date-picker .rs-calendar-table-cell {
   color: #575757;
 }
+.date-picker .rs-picker-toggle {
+  background: transparent !important;
+  color: transparent;
+  border: 2px solid #353945;
+  border-radius: var(--chakra-radii-xl);
+  padding-top: 5.5px;
+  padding-bottom: 5.5px;
+  box-shadow: none;
+  transition: 200ms;
+}
+
+.date-picker .rs-picker-toggle:hover {
+  border-color: #353945 !important;
+}
+
+.date-picker .rs-picker-toggle.rs-picker-toggle-active {
+  border-color: #777e90 !important;
+}
+
+.date-picker-invalid .rs-picker-toggle:hover,
+.date-picker-invalid .rs-picker-toggle.rs-picker-toggle-active {
+  border-color: #e53e3e !important;
+}
+
+.date-picker .rs-picker-toggle-textbox {
+  padding-left: 5px;
+  font-size: 16px;
+  background: transparent !important;
+  opacity: 1;
+  height: 25px;
+  position: relative;
+}
+.date-picker .rs-picker-toggle-placeholder,
+.date-picker .rs-picker-toggle-value {
+  display: none;
+}
+/* .date-picker-menu {
+  background: #333;
+}
+.date-picker-menu .rs-calendar-table-cell-disabled {
+  opacity: 0.2;
+} */

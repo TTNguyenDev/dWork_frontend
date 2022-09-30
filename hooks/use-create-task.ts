@@ -19,7 +19,13 @@ export const useCreateTask = ({
 } = {}) => {
   const { taskCategoriesState } = useTaskCategories();
 
-  const createTaskForm = useForm<TaskCreateInput>();
+  const createTaskForm = useForm<TaskCreateInput>({
+    defaultValues: {
+      max_participants: 1,
+      price: '1',
+    },
+  });
+
   const createTaskMutation = useMutation(
     (payload: TaskCreateInput) => TaskRepo.create(payload),
     options
@@ -28,7 +34,6 @@ export const useCreateTask = ({
   const onSubmit = useMemo(
     () =>
       createTaskForm.handleSubmit(async (data) => {
-        console.log(data);
         await createTaskMutation.mutateAsync(data);
       }),
     [createTaskForm]

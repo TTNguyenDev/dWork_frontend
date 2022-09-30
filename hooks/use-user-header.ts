@@ -2,14 +2,19 @@ import { format } from 'near-api-js/lib/utils';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useBlockchain } from '../core/hooks';
+import { AuthUtils } from '../utils';
+import { useAccount } from './atoms/use-account';
+import { useStorageDeposit } from './use-storage-deposit';
 
 export const useUserHeader = () => {
   const router = useRouter();
   const { blockchainState, blockchainMethods } = useBlockchain();
+  const { accountState } = useAccount();
+
   const account = blockchainState.wallet.account.get();
 
   const btnCreateNewTaskOnClick = useCallback(() => {
-    router.push('/task/create');
+    AuthUtils.authCheckAndExec(() => router.push('/task/create'));
   }, [router]);
 
   return {
@@ -27,6 +32,7 @@ export const useUserHeader = () => {
             },
           }
         : undefined,
+      isRegistered: accountState.isRegistered.get(),
     },
     userHeaderMethods: {
       signIn: blockchainMethods.signIn,

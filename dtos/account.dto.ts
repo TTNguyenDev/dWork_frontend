@@ -3,7 +3,7 @@ export type LockedBalance = {
   release_at: number;
 };
 
-export type Account = {
+export type AccountDto = {
   account_id: string;
   bio: string;
   total_spent: string;

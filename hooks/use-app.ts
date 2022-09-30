@@ -1,13 +1,16 @@
 import { useHookstate } from '@hookstate/core';
+import { format } from 'near-api-js/lib/utils';
 import { useEffect } from 'react';
 import { CategoryCache, TaskCache } from '../cache';
 import { useBlockchain } from '../core/hooks';
 import { DB } from '../db';
-import { AppState } from '../store';
+import { AccountRepo } from '../repos';
+import { useAccount, useApp } from './atoms';
 
-export const useApp = () => {
+export const useInitialize = () => {
   const { blockchainState, blockchainMethods } = useBlockchain();
-  const appState = useHookstate(AppState);
+  const { appState } = useApp();
+  const { accountState } = useAccount();
 
   useEffect(() => {
     (async () => {
@@ -21,8 +24,25 @@ export const useApp = () => {
 
     // Cache data before app ready
     (async () => {
-      await Promise.all([CategoryCache.cache(), TaskCache.cache()]);
-      console.info('App cached!!!');
+      const cacheData = Promise.all([
+        CategoryCache.cache(),
+        TaskCache.cache(),
+      ]).then(() => {
+        console.info('App cached!!!');
+      });
+
+      const checkIsRegistered = AccountRepo.isRegistered().then(
+        (isRegistered) => {
+          console.log('checkIsRegistered', isRegistered);
+          accountState.merge({
+            isRegistered,
+          });
+        }
+      );
+
+      const storageMinimumBalance = await AccountRepo.storageMinimumBalance();
+
+      await Promise.all([cacheData, checkIsRegistered]);
 
       // Set app ready
       appState.merge({
