@@ -50,6 +50,13 @@ const TaskCreatePage: NextPageWithLayout = () => {
           position: 'top',
         });
       },
+      onError: () => {
+        toast({
+          title: 'Create task failed',
+          status: 'error',
+          position: 'top',
+        });
+      },
     },
   });
 
