@@ -33,6 +33,7 @@ body {
   border-color: #777e90 !important;
 }
 
+.date-picker-invalid .rs-picker-toggle,
 .date-picker-invalid .rs-picker-toggle:hover,
 .date-picker-invalid .rs-picker-toggle.rs-picker-toggle-active {
   border-color: #e53e3e !important;
