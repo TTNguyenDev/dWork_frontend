@@ -1,4 +1,5 @@
 import { TaskApi } from '../apis';
+import { CategoryCache, TaskCache } from '../cache';
 import { GetListInput } from '../core/types';
 import { DB } from '../db';
 import { TaskCreateInput, TaskDto } from '../dtos';
@@ -6,6 +7,7 @@ import { TaskCreateInput, TaskDto } from '../dtos';
 export class TaskRepo {
   static async create(input: TaskCreateInput): Promise<void> {
     await TaskApi.create(input);
+    await Promise.all([TaskCache.cache(), CategoryCache.cache()]);
   }
 
   static async getList(input: GetListInput<TaskDto>): Promise<TaskDto[]> {
