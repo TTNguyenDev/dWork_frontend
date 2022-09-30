@@ -1,14 +1,9 @@
-import {
-  MutationOptions,
-  useMutation,
-  UseMutationOptions,
-} from '@tanstack/react-query';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { TaskRepo } from '../repos';
 import { useForm } from 'react-hook-form';
 import { TaskCreateInput } from '../dtos';
 import { useMemo } from 'react';
 import { useTaskCategories } from './use-task-categories';
-import { useAccount } from './atoms';
 
 export const useCreateTask = ({
   options,
@@ -19,7 +14,6 @@ export const useCreateTask = ({
   >;
 } = {}) => {
   const { taskCategoriesState } = useTaskCategories();
-  const { accountState } = useAccount();
 
   const isAllowedToCreateTask = useMemo(() => true, []);
 

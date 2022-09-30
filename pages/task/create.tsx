@@ -14,6 +14,7 @@ import {
   NumberInputStepper,
   Text,
   useMultiStyleConfig,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import Head from 'next/head';
@@ -31,6 +32,7 @@ const MAX_PARTICIPANTS_PER_TASK = 100;
 const PRICE_DECIMAL_LENGTH = 2;
 
 const TaskCreatePage: NextPageWithLayout = () => {
+  const toast = useToast();
   const {
     createTaskState: {
       form,
@@ -39,7 +41,17 @@ const TaskCreatePage: NextPageWithLayout = () => {
       isAllowedToCreateTask,
     },
     createTaskMethods: { onSubmit },
-  } = useCreateTask();
+  } = useCreateTask({
+    options: {
+      onSuccess: () => {
+        toast({
+          title: 'Create task successfully',
+          status: 'success',
+          position: 'top',
+        });
+      },
+    },
+  });
 
   const amount = useMemo(
     () =>
@@ -51,8 +63,6 @@ const TaskCreatePage: NextPageWithLayout = () => {
       ),
     [form.watch('price'), form.watch('max_participants')]
   );
-
-  const style = useMultiStyleConfig('Input');
 
   return (
     <>
