@@ -23,6 +23,9 @@ export class NearConnector implements IBlockchainConnector<Near> {
   }
 
   private _config: NearConnectorConfig;
+  get config(): NearConnectorConfig {
+    return this._config;
+  }
 
   private _conn?: Near;
   get conn(): Near {

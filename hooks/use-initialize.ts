@@ -1,7 +1,8 @@
-import { useHookstate } from '@hookstate/core';
-import { format } from 'near-api-js/lib/utils';
+import { off } from 'process';
 import { useEffect } from 'react';
 import { CategoryCache, TaskCache } from '../cache';
+import { StorageKeys } from '../constants';
+import { Container } from '../core';
 import { useBlockchain } from '../core/hooks';
 import { DB } from '../db';
 import { AccountRepo } from '../repos';
@@ -15,6 +16,16 @@ export const useInitialize = () => {
   useEffect(() => {
     (async () => {
       await DB.init();
+      const oldContractId = localStorage.getItem(StorageKeys.CONTRACT_ID);
+      if (oldContractId !== Container.bcConnector.config.contractId) {
+        localStorage.clear();
+        await DB.destroy();
+        await DB.init();
+        localStorage.setItem(
+          StorageKeys.CONTRACT_ID,
+          Container.bcConnector.config.contractId
+        );
+      }
       await blockchainMethods.connect();
     })();
   }, []);
@@ -40,7 +51,7 @@ export const useInitialize = () => {
         }
       );
 
-      const storageMinimumBalance = await AccountRepo.storageMinimumBalance();
+      // const storageMinimumBalance = await AccountRepo.storageMinimumBalance();
 
       await Promise.all([cacheData, checkIsRegistered]);
 
