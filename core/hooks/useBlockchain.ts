@@ -42,14 +42,14 @@ export const useBlockchain = () => {
   }, []);
 
   const signIn = React.useCallback(async () => {
-    if (blockchainState.ready.get()) {
+    if (blockchainState.ready.value) {
       BlockchainState.wallet.loading.set(true);
       await Container.bcConnector.signIn();
     }
   }, []);
 
   const signOut = React.useCallback(async () => {
-    if (blockchainState.ready.get()) {
+    if (blockchainState.ready.value) {
       BlockchainState.wallet.loading.set(true);
       await Container.bcConnector.signOut();
       await _checkLogged();

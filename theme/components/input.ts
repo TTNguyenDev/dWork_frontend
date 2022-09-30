@@ -5,7 +5,7 @@ export const Input = {
         background: 'transparent',
         fontSize: '16px',
         fontWeight: '500',
-        padding: '22px 14px',
+        // padding: '22px 14px',
         color: '#fcfcfd',
         border: '2px solid #353945',
         borderRadius: 'xl',

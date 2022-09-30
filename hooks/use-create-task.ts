@@ -4,9 +4,11 @@ import {
   UseMutationOptions,
 } from '@tanstack/react-query';
 import { TaskRepo } from '../repos';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { TaskCreateInput } from '../dtos';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
+import { useTaskCategories } from './use-task-categories';
+import { useAccount } from './atoms';
 
 export const useCreateTask = ({
   options,
@@ -16,7 +18,18 @@ export const useCreateTask = ({
     'mutationFn'
   >;
 } = {}) => {
-  const createTaskForm = useForm<TaskCreateInput>();
+  const { taskCategoriesState } = useTaskCategories();
+  const { accountState } = useAccount();
+
+  const isAllowedToCreateTask = useMemo(() => true, []);
+
+  const createTaskForm = useForm<TaskCreateInput>({
+    defaultValues: {
+      max_participants: 1,
+      price: '1',
+    },
+  });
+
   const createTaskMutation = useMutation(
     (payload: TaskCreateInput) => TaskRepo.create(payload),
     options
@@ -25,7 +38,6 @@ export const useCreateTask = ({
   const onSubmit = useMemo(
     () =>
       createTaskForm.handleSubmit(async (data) => {
-        console.log(data);
         await createTaskMutation.mutateAsync(data);
       }),
     [createTaskForm]
@@ -36,6 +48,8 @@ export const useCreateTask = ({
       isLoading: createTaskMutation.isLoading,
       data: createTaskMutation.data,
       form: createTaskForm,
+      taskCategoriesState,
+      isAllowedToCreateTask,
     },
     createTaskMethods: {
       onSubmit,

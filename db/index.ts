@@ -23,4 +23,11 @@ export class DB {
       task,
     };
   }
+
+  static async destroy() {
+    await Promise.all([
+      this.client.category.db.destroy(),
+      this.client.task.db.destroy(),
+    ]);
+  }
 }

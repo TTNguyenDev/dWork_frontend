@@ -10,9 +10,9 @@ export const useHeader = () => {
 
   return {
     headerState: {
-      blockchainLoading: blockchainState.loading.get(),
-      walletLoading: blockchainState.wallet.loading.get(),
-      logged: blockchainState.wallet.logged.get(),
+      blockchainLoading: blockchainState.loading.value,
+      walletLoading: blockchainState.wallet.loading.value,
+      logged: blockchainState.wallet.logged.value,
     },
     headerMethods: {
       signIn: blockchainMethods.signIn,

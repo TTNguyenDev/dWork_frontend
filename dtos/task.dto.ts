@@ -20,4 +20,5 @@ export type TaskCreateInput = {
   max_participants: number;
   duration: string;
   category_id: string;
+  new_category?: string;
 };

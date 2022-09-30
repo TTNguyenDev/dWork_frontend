@@ -13,24 +13,31 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
+  useMultiStyleConfig,
   VStack,
 } from '@chakra-ui/react';
 import Head from 'next/head';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { NavigationLayout } from '../../layouts';
 import { NextPageWithLayout } from '../_app';
-import { useCreateTask, useTaskCategories } from '../../hooks';
-import { CreatableSelect } from 'chakra-react-select';
+import { useCreateTask } from '../../hooks';
+import { CreatableSelect, Select } from 'chakra-react-select';
 import { Editor } from '../../core/components';
 import * as dateFns from 'date-fns';
 import { DatePicker } from 'rsuite';
+import { reactSelectStyles } from '../../styles';
 
 const MAX_PARTICIPANTS_PER_TASK = 100;
 const PRICE_DECIMAL_LENGTH = 2;
 
 const TaskCreatePage: NextPageWithLayout = () => {
   const {
-    createTaskState: { form, isLoading },
+    createTaskState: {
+      form,
+      isLoading,
+      taskCategoriesState,
+      isAllowedToCreateTask,
+    },
     createTaskMethods: { onSubmit },
   } = useCreateTask();
 
@@ -45,14 +52,7 @@ const TaskCreatePage: NextPageWithLayout = () => {
     [form.watch('price'), form.watch('max_participants')]
   );
 
-  useEffect(() => {
-    form.setValue('price', '1');
-    form.setValue('max_participants', 1);
-  });
-
-  const {
-    taskCategoriesState: { isLoading: categoryLoading, data },
-  } = useTaskCategories();
+  const style = useMultiStyleConfig('Input');
 
   return (
     <>
@@ -154,14 +154,18 @@ const TaskCreatePage: NextPageWithLayout = () => {
                   />
                   <Box h="40px">
                     <DatePicker
+                      className={`date-picker rs-theme-dark ${
+                        !!form.formState.errors.duration
+                          ? 'date-picker-invalid'
+                          : ''
+                      }`}
+                      menuClassName="date-picker-menu rs-theme-dark"
                       onChange={(value) => {
                         form.setValue(
                           'duration',
-                          `${
-                            value
-                              ? (value as Date).getTime() - Date.now()
-                              : (undefined as any)
-                          }`
+                          value
+                            ? (value as Date).getTime() - Date.now() + ''
+                            : (undefined as any)
                         );
                         form.trigger('duration');
                       }}
@@ -210,12 +214,13 @@ const TaskCreatePage: NextPageWithLayout = () => {
                   />
                   <Box h="40px">
                     <CreatableSelect
-                      isClearable
+                      {...reactSelectStyles}
+                      useBasicStyles
                       onChange={async (payload: any) => {
                         const value = payload?.value.trim();
-                        // if (value !== null && payload.__isNew__)
-                        //   form.setValue('newCategory', value);
-                        // else form.setValue('newCategory', undefined);
+                        if (value !== null && payload.__isNew__)
+                          form.setValue('new_category', value);
+                        else form.setValue('new_category', undefined);
 
                         form.setValue(
                           'category_id',
@@ -223,12 +228,12 @@ const TaskCreatePage: NextPageWithLayout = () => {
                         );
                         form.trigger('category_id');
                       }}
-                      options={data?.map((item) => ({
+                      options={taskCategoriesState.data?.map((item) => ({
                         value: item.id,
                         label: item.name,
                       }))}
-                      isLoading={categoryLoading}
-                      isDisabled={isLoading && categoryLoading}
+                      isLoading={taskCategoriesState.isLoading}
+                      isDisabled={taskCategoriesState.isLoading}
                       placeholder="Choose category"
                     />
                   </Box>
@@ -254,6 +259,7 @@ const TaskCreatePage: NextPageWithLayout = () => {
                     style={{
                       padding: 0,
                     }}
+                    isInvalid={!!form.formState.errors.description}
                     placeholder="Description"
                   />
                   {form.formState.errors.description && (
@@ -276,7 +282,7 @@ const TaskCreatePage: NextPageWithLayout = () => {
                 variant="connectWallet"
                 w="200px"
                 isLoading={isLoading}
-                isDisabled={isLoading}
+                isDisabled={isLoading || !isAllowedToCreateTask}
               >
                 CREATE
               </Button>

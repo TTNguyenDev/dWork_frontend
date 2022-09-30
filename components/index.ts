@@ -5,3 +5,4 @@ export * from './task-categories';
 export * from './task-filter';
 export * from './task-sort';
 export * from './navigation-header';
+export * from './storage-deposit-modal';

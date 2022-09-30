@@ -15,6 +15,7 @@ export type QuillEditorPropsType = {
   refInsertVideo?: any;
   refInsertNFT?: any;
   style?: any;
+  isInvalid?: boolean;
 };
 
 export const QuillEditor = (props: QuillEditorPropsType) => {
@@ -29,8 +30,10 @@ export const QuillEditor = (props: QuillEditorPropsType) => {
       ? [classes['root'], classes['create-post']].join(' ')
       : classes['root'];
 
+  const borderColor = props.isInvalid ? '#E53E3E' : '#353945';
+
   return (
-    <div className={rootClassName} style={{ ...props.style }}>
+    <div className={rootClassName} style={{ ...props.style, borderColor }}>
       <div id="toolbar">
         {!isMiniMode && (
           <>
