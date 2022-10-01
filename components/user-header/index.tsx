@@ -10,6 +10,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import Link from 'next/link';
 import { BsPlusLg } from 'react-icons/bs';
 import { useUserHeader } from '../../hooks';
 
@@ -83,7 +84,9 @@ export const UserHeader = () => {
             divider={<Divider opacity="0.5" />}
           >
             <Button variant="solid" borderRadius="none" bg="#23262f">
-              My Profile
+              <Link href={`/account/${userHeaderState.account?.id}`}>
+                My Profile
+              </Link>
             </Button>
             <Button
               variant="solid"

@@ -4,7 +4,6 @@ import { useCallback } from 'react';
 import { useBlockchain } from '../core/hooks';
 import { AuthUtils } from '../utils';
 import { useAccount } from './atoms/use-account';
-import { useStorageDeposit } from './use-storage-deposit';
 
 export const useUserHeader = () => {
   const router = useRouter();

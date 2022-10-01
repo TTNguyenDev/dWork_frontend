@@ -13,6 +13,7 @@ export const useBlockchain = () => {
     });
     if (isSignedIn) {
       const accountId = Container.bcConnector.wallet.getAccountId();
+      blockchainState.accountId.set(accountId);
       // get account balance
       const accountBalance = await Container.bcConnector.wallet
         .account()

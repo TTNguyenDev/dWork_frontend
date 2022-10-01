@@ -12,6 +12,7 @@ export const ExploreTaskQueryStateInitValue: TaskQueryState = {
   categoryId: '',
   searchString: '',
 };
+
 export const ExploreTaskQueryState: State<TaskQueryState> = hookstate(
   ExploreTaskQueryStateInitValue
 );

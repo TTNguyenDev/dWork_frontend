@@ -18,6 +18,7 @@ export const useInitialize = () => {
       await DB.init();
       const oldContractId = localStorage.getItem(StorageKeys.CONTRACT_ID);
       if (oldContractId !== Container.bcConnector.config.contractId) {
+        // clear old data
         localStorage.clear();
         await DB.destroy();
         await DB.init();
