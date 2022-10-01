@@ -16,7 +16,7 @@ export class TaskDB {
   async init() {
     await this._db.createIndex({
       index: {
-        fields: ['created_at'],
+        fields: ['created_at', 'price'],
       },
     });
   }

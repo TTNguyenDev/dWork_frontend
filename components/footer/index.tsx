@@ -37,7 +37,7 @@ export const Footer = () => {
     // </Flex>
 
     <Box position="relative" overflowX="clip">
-      <Box
+      {/* <Box
         position="absolute"
         width="700px"
         height="700px"
@@ -47,7 +47,7 @@ export const Footer = () => {
         background="linear-gradient(75.96deg, #FFC83A 13.64%, #FF008A 46.53%, #6100FF 78.88%)"
         filter="blur(60px)"
         borderRadius="full"
-      />
+      /> */}
       <Box maxW="1600px" margin="auto" p="30px 15px">
         <Grid
           templateColumns="repeat(4, 1fr)"

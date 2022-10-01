@@ -8,3 +8,4 @@ export * from './use-list-tasks';
 export * from './use-create-task';
 export * from './use-storage-deposit';
 export * from './use-storage-deposit-modal';
+export * from './use-explore';

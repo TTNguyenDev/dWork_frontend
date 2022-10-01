@@ -1,21 +1,20 @@
-import {
-  Box,
-  Divider,
-  Flex,
-  HStack,
-  Stack,
-  Text,
-  useDisclosure,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Flex, HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import Head from 'next/head';
 import { ReactElement } from 'react';
 import { MainLayout } from '../../layouts';
 import { NextPageWithLayout } from '../_app';
 import { TaskCategories, TaskSearchBox } from '../../components';
 import { ListTasks } from '../../components/list-tasks';
+import { Select } from 'chakra-react-select';
+import { reactSelectStyles } from '../../styles';
+import { TaskOrderByOptions } from '../../constants';
+import { useExplore } from '../../hooks';
 
 const ExplorePage: NextPageWithLayout = () => {
+  const {
+    exploreState: { defaultOrderBy },
+    exploreMethods: { taskQueryMethods },
+  } = useExplore();
   return (
     <>
       <Head>
@@ -44,7 +43,17 @@ const ExplorePage: NextPageWithLayout = () => {
           </Flex>
         </Stack>
         <Stack spacing="30px" direction={{ base: 'column', md: 'row' }}>
-          <Box minW="256px">Sort</Box>
+          <Box minW="256px">
+            <Select
+              {...reactSelectStyles}
+              useBasicStyles
+              onChange={async (payload: any) => {
+                taskQueryMethods.setOrderBy(payload.value);
+              }}
+              options={TaskOrderByOptions}
+              defaultValue={defaultOrderBy}
+            />
+          </Box>
           <Box flex="1">
             <Flex justifyContent="end">
               <Flex w="100%" maxW="500px" justifyContent="end">
@@ -59,7 +68,7 @@ const ExplorePage: NextPageWithLayout = () => {
           alignItems="stretch"
           direction={{ base: 'column', md: 'row' }}
         >
-          <Box minW="256px">Filter</Box>
+          {/* <Box minW="256px">Filter</Box> */}
           <Box flex="1">
             <ListTasks />
           </Box>

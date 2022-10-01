@@ -15,7 +15,7 @@ export const ListTasks = () => {
         <Grid templateColumns="repeat(12, 1fr)" gap="20px">
           {data.map((item) => (
             <GridItem
-              colSpan={{ base: 12, md: 6, lg: 6, xl: 4 }}
+              colSpan={{ base: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
               key={item.id}
               zIndex="10"
             >

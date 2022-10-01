@@ -14,6 +14,10 @@ export const reactSelectStyles = {
       boxShadow: 'none !important',
       outline: 'none !important',
     }),
+    menu: (provided: any, state: any) => ({
+      ...provided,
+      zIndex: '20',
+    }),
   },
   errorBorderColor: '#E53E3E',
   focusBorderColor: '#777e90',
