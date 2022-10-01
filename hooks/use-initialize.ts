@@ -4,6 +4,7 @@ import { CategoryCache, TaskCache } from '../cache';
 import { StorageKeys } from '../constants';
 import { Container } from '../core';
 import { useBlockchain } from '../core/hooks';
+import { BlockchainState } from '../core/store';
 import { DB } from '../db';
 import { AccountRepo } from '../repos';
 import { useAccount, useApp } from './atoms';
@@ -43,18 +44,24 @@ export const useInitialize = () => {
         console.info('App cached!!!');
       });
 
-      const checkIsRegistered = AccountRepo.isRegistered().then(
-        (isRegistered) => {
-          console.log('checkIsRegistered', isRegistered);
-          accountState.merge({
-            isRegistered,
-          });
+      const checkIsRegisteredAndGetProfile = async () => {
+        const accountId = blockchainState.accountId.value;
+        console.log(blockchainState.value);
+        if (accountId) {
+          const isRegistered = await AccountRepo.isRegistered(accountId);
+          console.log('isRegistered', isRegistered);
+          accountState.isRegistered.set(isRegistered);
+          if (isRegistered) {
+            const profile = await AccountRepo.getUserInfo(accountId);
+            console.log('profile', profile);
+            accountState.profile.set(profile);
+          }
         }
-      );
+      };
 
       // const storageMinimumBalance = await AccountRepo.storageMinimumBalance();
 
-      await Promise.all([cacheData, checkIsRegistered]);
+      await Promise.all([cacheData, checkIsRegisteredAndGetProfile()]);
 
       // Set app ready
       appState.merge({

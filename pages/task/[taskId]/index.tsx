@@ -1,20 +1,38 @@
-import { Box, Flex, HStack, Stack, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Flex,
+  SimpleGrid,
+  Spinner,
+  Stack,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import Head from 'next/head';
 import { ReactElement } from 'react';
 import { MainLayout } from '../../../layouts';
 import { NextPageWithLayout } from '../../_app';
-import { TaskCategories, TaskSearchBox } from '../../../components';
-import { ListTasks } from '../../../components/list-tasks';
-import { Select } from 'chakra-react-select';
-import { reactSelectStyles } from '../../../styles';
-import { TaskOrderByOptions } from '../../../constants';
+import { TaskSearchBox } from '../../../components';
 import { useTaskDetailPage } from '../../../hooks';
+import { ProfileCard } from '../../../components/profile-card';
+import { formatNearAmount } from 'near-api-js/lib/utils/format';
+import moment from 'moment';
 
 const TaskDetailPage: NextPageWithLayout = () => {
   const {
     taskDetailPageState: { taskId, isLoading, data },
     taskDetailPageMethods: {},
   } = useTaskDetailPage();
+
+  console.log(data);
+
+  if (!data)
+    return (
+      <Center h="300px">
+        <Spinner />
+      </Center>
+    );
+
   return (
     <>
       <Head>
@@ -31,47 +49,87 @@ const TaskDetailPage: NextPageWithLayout = () => {
         spacing="30px"
       >
         <Stack spacing="30px" direction={{ base: 'column', md: 'row' }}>
-          <Box minW="256px">
-            <Text fontSize="36px" fontWeight="700">
-              Explore
-            </Text>
-          </Box>
-          <Flex flex="1" justifyContent="end">
-            <Box maxW={{ base: 'unset', md: '300px' }} w="100%">
-              <TaskSearchBox />
-            </Box>
-          </Flex>
+          <Text fontSize="36px" fontWeight="700">
+            {data.title}
+          </Text>
         </Stack>
         <Stack spacing="30px" direction={{ base: 'column', md: 'row' }}>
+          <VStack flex="1" alignItems="stretch" spacing="20px">
+            <Box>
+              <SimpleGrid
+                columns={{ base: 1, sm: 2, md: 2, lg: 4 }}
+                spacing="20px"
+              >
+                <VStack
+                  justifyContent="space-around"
+                  borderRadius="2xl"
+                  bg="rgba(150, 150, 150, 0.1)"
+                  backdropFilter="auto"
+                  backdropBlur="100px"
+                  padding="20px"
+                >
+                  <Text fontWeight="800" fontSize="20px">
+                    {formatNearAmount(data.price) + ' Ⓝ'}
+                  </Text>
+                  <Text fontSize="12px">BOUNTY PRIZE</Text>
+                </VStack>
+                <VStack
+                  justifyContent="space-around"
+                  borderRadius="2xl"
+                  bg="rgba(150, 150, 150, 0.1)"
+                  backdropFilter="auto"
+                  backdropBlur="100px"
+                  padding="20px"
+                >
+                  <Text fontWeight="800" fontSize="20px">
+                    {data.max_participants}
+                  </Text>
+                  <Text fontSize="12px">MAX PARTICIPANTS</Text>
+                </VStack>
+                <VStack
+                  justifyContent="space-around"
+                  borderRadius="2xl"
+                  bg="rgba(150, 150, 150, 0.1)"
+                  backdropFilter="auto"
+                  backdropBlur="100px"
+                  padding="20px"
+                >
+                  <Text fontWeight="800" fontSize="20px">
+                    {moment(
+                      Number(data.available_until.substring(0, 13))
+                    ).format('DD-MM-YYYY HH:mm')}
+                  </Text>
+                  <Text fontSize="12px">DEADLINE</Text>
+                </VStack>
+                <VStack
+                  justifyContent="space-around"
+                  borderRadius="2xl"
+                  bg="rgba(150, 150, 150, 0.1)"
+                  backdropFilter="auto"
+                  backdropBlur="100px"
+                  padding="20px"
+                >
+                  <Text fontWeight="800" fontSize="20px">
+                    {`${data.proposals.length}/${data.max_participants}`}
+                  </Text>
+                  <Text fontSize="12px">PROPOSALS</Text>
+                </VStack>
+              </SimpleGrid>
+            </Box>
+            <Box>
+              <Text fontSize="20px" fontWeight="600">
+                DESCRIPTION
+              </Text>
+              <Text
+                fontSize="16px"
+                color="textSecondary"
+                noOfLines={4}
+                dangerouslySetInnerHTML={{ __html: data.description }}
+              />
+            </Box>
+          </VStack>
           <Box minW="256px">
-            <Select
-              {...reactSelectStyles}
-              useBasicStyles
-              isSearchable={false}
-              options={TaskOrderByOptions}
-              defaultValue={defaultOrderBy}
-              onChange={async (payload: any) => {
-                taskQueryMethods.setOrderBy(payload.value);
-              }}
-            />
-          </Box>
-          <Box flex="1">
-            <Flex justifyContent="end">
-              <Flex w="100%" maxW="500px" justifyContent="end">
-                <TaskCategories />
-              </Flex>
-            </Flex>
-            <HStack></HStack>
-          </Box>
-        </Stack>
-        <Stack
-          spacing="30px"
-          alignItems="stretch"
-          direction={{ base: 'column', md: 'row' }}
-        >
-          {/* <Box minW="256px">Filter</Box> */}
-          <Box flex="1">
-            <ListTasks />
+            <ProfileCard accountId={data.owner} />
           </Box>
         </Stack>
       </VStack>
@@ -80,8 +138,8 @@ const TaskDetailPage: NextPageWithLayout = () => {
   );
 };
 
-ExplorePage.getLayout = (page: ReactElement) => {
+TaskDetailPage.getLayout = (page: ReactElement) => {
   return <MainLayout>{page}</MainLayout>;
 };
 
-export default ExplorePage;
+export default TaskDetailPage;

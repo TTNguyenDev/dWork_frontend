@@ -25,11 +25,11 @@ export const AccountApi = Object.freeze({
     });
   },
   ///
-  async isRegistered(): Promise<boolean> {
+  async isRegistered(account_id: string): Promise<boolean> {
     const res = await Container.bcConnector.callViewMethod({
       methodName: ContractMethods.is_registered,
       args: {
-        account_id: Container.bcConnector.wallet.getAccountId(),
+        account_id,
       },
     });
     return res;
