@@ -10,14 +10,15 @@ export const TaskCard = ({ data }: { data: TaskDto }) => {
         key={data.id}
         p="20px"
         borderRadius="2xl"
-        bg="rgba(60, 60, 60, 0.8)"
-        blur="10px"
+        bg="rgba(150, 150, 150, 0.1)"
+        backdropFilter="auto"
+        backdropBlur="100px"
         maxH="300px"
         cursor="pointer"
         transition="all"
         transitionDuration="0.2s"
         _hover={{
-          bg: 'rgba(80, 80, 80, 0.8)',
+          bg: 'rgba(150, 150, 150, 0.3)',
         }}
       >
         <HStack justify="space-between" align="start">

@@ -10,3 +10,7 @@ export function debounce(func: any, timeout = 300) {
     }, timeout);
   };
 }
+
+export function parseToUsername(accountId: string) {
+  return accountId.replace('.testnet', '').replace('.near', '');
+}
