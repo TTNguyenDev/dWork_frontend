@@ -58,7 +58,7 @@ const AccountPage: NextPageWithLayout = () => {
       >
         <Box minW="256px">
           <Box mt="-150px" zIndex="10">
-            {profile ? <ProfileCard data={profile} /> : null}
+            {profile ? <ProfileCard accountId={accountId} /> : null}
           </Box>
         </Box>
         <VStack alignItems="stretch" spacing="30px" flex={1}>

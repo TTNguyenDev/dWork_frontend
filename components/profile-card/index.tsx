@@ -1,18 +1,29 @@
 import {
-  AspectRatio,
   Avatar,
   Box,
   Center,
   Divider,
   SimpleGrid,
+  Spinner,
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { Button } from 'rsuite';
+import Link from 'next/link';
 import { parseToUsername } from '../../core/utils';
-import { AccountDto } from '../../dtos';
+import { useProfileCard } from '../../hooks';
 
-export const ProfileCard = ({ data }: { data: AccountDto }) => {
+export const ProfileCard = ({ accountId }: { accountId: string }) => {
+  const {
+    profileCardState: { data, isLoading },
+  } = useProfileCard({ accountId });
+
+  if (!data)
+    return (
+      <Center h="300px">
+        <Spinner />
+      </Center>
+    );
+
   return (
     <Box
       p="40px 20px"
@@ -25,9 +36,16 @@ export const ProfileCard = ({ data }: { data: AccountDto }) => {
         <Avatar name={data.account_id} borderRadius="full" size="2xl" />
       </Center>
       <Box mb="20px">
-        <Text fontWeight="600" fontSize="32px" textAlign="center">
-          {parseToUsername(data.account_id)}
-        </Text>
+        <Link href={`/account/${data.account_id}`}>
+          <Text
+            fontWeight="600"
+            fontSize="32px"
+            textAlign="center"
+            cursor="pointer"
+          >
+            {parseToUsername(data.account_id)}
+          </Text>
+        </Link>
       </Box>
       <Box mb="20px">
         <Text fontSize="16px" color="textSecondary" textAlign="center">
