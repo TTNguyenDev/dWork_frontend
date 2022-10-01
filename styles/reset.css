@@ -10,6 +10,10 @@ body {
   background: #030812 !important;
   /* overflow-x: hidden; */
 }
+a {
+  text-decoration: inherit !important;
+  color: inherit !important;
+}
 
 .date-picker .rs-calendar-table-cell {
   color: #575757;

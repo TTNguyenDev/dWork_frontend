@@ -1,4 +1,4 @@
-import { Box, HStack, Skeleton, Text, Grid, GridItem } from '@chakra-ui/react';
+import { Box, HStack, Text, GridItem } from '@chakra-ui/react';
 import { formatNearAmount } from 'near-api-js/lib/utils/format';
 import TimeAgo from 'timeago-react';
 import { TaskDto } from '../../dtos';
@@ -8,7 +8,7 @@ export const TaskCard = ({ data }: { data: TaskDto }) => {
     <GridItem colSpan={{ base: 12, md: 6, lg: 6, xl: 4 }} zIndex="10">
       <Box
         key={data.id}
-        p="10px 12px"
+        p="20px"
         borderRadius="2xl"
         bg="rgba(60, 60, 60, 0.8)"
         blur="10px"
@@ -43,8 +43,8 @@ export const TaskCard = ({ data }: { data: TaskDto }) => {
           />
         </Box>
         <HStack justify="space-between" alignItems="end">
-          <Box p="5px 12px" bg="#78a2cc" w="fit-content" borderRadius="100px">
-            <Text>{`${data.proposals.length}/${data.max_participants}`}</Text>
+          <Box p="5px 12px" bg="#32475c" w="fit-content" borderRadius="100px">
+            <Text fontWeight="600">{`${data.proposals.length}/${data.max_participants}`}</Text>
           </Box>
           <Box textColor="textSecondary">
             <TimeAgo datetime={Math.floor(data.created_at / 1000000)} />

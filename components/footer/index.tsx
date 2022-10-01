@@ -64,7 +64,12 @@ export const Footer = () => {
                 <HStack spacing="20px">
                   <Image src={logoImg.src} alt="Logo dWork" />
                   <Flex>
-                    <Text fontSize="32px" fontWeight="700" color="white">
+                    <Text
+                      fontSize="32px"
+                      fontWeight="700"
+                      color="white"
+                      whiteSpace="nowrap"
+                    >
                       dWork | &nbsp;
                     </Text>
                     <Image src={logoLncImg.src} alt="Logo LNC" w="60px" />

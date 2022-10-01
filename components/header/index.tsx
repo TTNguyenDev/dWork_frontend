@@ -15,6 +15,7 @@ import { BsPlusLg } from 'react-icons/bs';
 import { UserHeader } from '../user-header';
 import { useWindowScroll } from 'react-use';
 import { useMemo } from 'react';
+import Link from 'next/link';
 
 export const Header = () => {
   const { headerState, headerMethods } = useHeader();
@@ -39,7 +40,7 @@ export const Header = () => {
       {...styles}
     >
       <Flex justifyContent="space-between" maxW="1200px" margin="auto" p="20px">
-        <Box onClick={headerMethods.brandOnClick}>
+        <Box onClick={headerMethods.brandOnClick} cursor="pointer">
           <HStack spacing="20px">
             <Image src={logoImg.src} alt="Logo dWork" />
             <Flex display={{ base: 'none', sm: 'inherit' }}>
@@ -58,7 +59,7 @@ export const Header = () => {
         <HStack spacing="30px">
           <HStack spacing="30px" display={{ base: 'none', md: 'flex' }}>
             <Text fontSize="16px" fontWeight="700" color="white">
-              Explore
+              <Link href="/explore">Explore</Link>
             </Text>
             <Text fontSize="16px" fontWeight="700" color="white">
               How it work
