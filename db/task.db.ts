@@ -14,10 +14,17 @@ export class TaskDB {
   }
 
   async init() {
-    await this._db.createIndex({
-      index: {
-        fields: ['created_at', 'price'],
-      },
-    });
+    Promise.all([
+      this._db.createIndex({
+        index: {
+          fields: ['created_at'],
+        },
+      }),
+      this._db.createIndex({
+        index: {
+          fields: ['price'],
+        },
+      }),
+    ]);
   }
 }
