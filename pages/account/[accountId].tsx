@@ -1,4 +1,12 @@
-import { Box, Flex, HStack, Stack, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  HStack,
+  Image,
+  Stack,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import Head from 'next/head';
 import { ReactElement } from 'react';
 import { MainLayout } from '../../layouts';
@@ -9,10 +17,18 @@ import { Select } from 'chakra-react-select';
 import { reactSelectStyles } from '../../styles';
 import { TaskOrderByOptions } from '../../constants';
 import { useAccountPage } from '../../hooks';
+import ProfileCoverDefaultImg from '../../assets/profile-cover.jpg';
+import { ProfileCard } from '../../components/profile-card';
 
 const AccountPage: NextPageWithLayout = () => {
   const {
-    accountPageState: { defaultOrderBy, accountId, isOwner },
+    accountPageState: {
+      defaultOrderBy,
+      accountId,
+      isOwner,
+      profile,
+      isLoading,
+    },
     accountPageMethods: { taskQueryMethods },
   } = useAccountPage();
 
@@ -23,58 +39,61 @@ const AccountPage: NextPageWithLayout = () => {
         <meta name="description" content="dWork" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Box height="350px" overflow="hidden">
+        <Image
+          w="100%"
+          h="100%"
+          src={ProfileCoverDefaultImg.src}
+          alt="cover"
+          objectFit="cover"
+        />
+      </Box>
       <Box h="50px" />
-      <VStack
+      <Stack
         maxW="1200px"
         margin="auto"
         p="0 15px"
-        alignItems="stretch"
         spacing="30px"
+        direction={{ base: 'column', md: 'row' }}
       >
-        <Stack spacing="30px" direction={{ base: 'column', md: 'row' }}>
-          <Box minW="256px">
-            <Text fontSize="36px" fontWeight="700">
-              Account
-            </Text>
+        <Box minW="256px">
+          <Box mt="-150px" zIndex="10">
+            {profile ? <ProfileCard data={profile} /> : null}
           </Box>
-          <Flex flex="1" justifyContent="end">
-            <Box maxW={{ base: 'unset', md: '300px' }} w="100%">
-              <TaskSearchBox />
+        </Box>
+        <VStack alignItems="stretch" spacing="30px" flex={1}>
+          <Stack spacing="30px" direction={{ base: 'column', md: 'row' }}>
+            <Box minW="256px">
+              <Select
+                {...reactSelectStyles}
+                useBasicStyles
+                onChange={async (payload: any) => {
+                  taskQueryMethods.setOrderBy(payload.value);
+                }}
+                options={TaskOrderByOptions}
+                defaultValue={defaultOrderBy}
+              />
             </Box>
-          </Flex>
-        </Stack>
-        <Stack spacing="30px" direction={{ base: 'column', md: 'row' }}>
-          <Box minW="256px">
-            <Select
-              {...reactSelectStyles}
-              useBasicStyles
-              onChange={async (payload: any) => {
-                taskQueryMethods.setOrderBy(payload.value);
-              }}
-              options={TaskOrderByOptions}
-              defaultValue={defaultOrderBy}
-            />
-          </Box>
-          <Box flex="1">
-            <Flex justifyContent="end">
-              <Flex w="100%" maxW="500px" justifyContent="end">
-                <TaskCategories />
+            <Box flex="1">
+              <Flex justifyContent="end">
+                <Flex w="100%" maxW="500px" justifyContent="end">
+                  <TaskCategories />
+                </Flex>
               </Flex>
-            </Flex>
-            <HStack></HStack>
-          </Box>
-        </Stack>
-        <Stack
-          spacing="30px"
-          alignItems="stretch"
-          direction={{ base: 'column', md: 'row' }}
-        >
-          {/* <Box minW="256px">Filter</Box> */}
-          <Box flex="1">
-            <ListTasks />
-          </Box>
-        </Stack>
-      </VStack>
+              <HStack></HStack>
+            </Box>
+          </Stack>
+          <Stack
+            spacing="30px"
+            alignItems="stretch"
+            direction={{ base: 'column', md: 'row' }}
+          >
+            <Box flex="1">
+              <ListTasks />
+            </Box>
+          </Stack>
+        </VStack>
+      </Stack>
       <Box h="150px" />
     </>
   );

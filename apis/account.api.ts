@@ -1,6 +1,7 @@
 import { BN } from 'bn.js';
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import { Container } from '../core';
+import { AccountDto } from '../dtos';
 
 enum ContractMethods {
   storage_deposit = 'storage_deposit',
@@ -37,6 +38,15 @@ export const AccountApi = Object.freeze({
     const res = await Container.bcConnector.callViewMethod({
       methodName: ContractMethods.storage_minimum_balance,
       args: {},
+    });
+    return res;
+  },
+  async getUserInfo(account_id: string): Promise<AccountDto> {
+    const res = await Container.bcConnector.callViewMethod({
+      methodName: ContractMethods.user_info,
+      args: {
+        account_id,
+      },
     });
     return res;
   },

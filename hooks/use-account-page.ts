@@ -1,8 +1,10 @@
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import { TaskOrderByOptions } from '../constants';
+import { CachePrefixKeys, TaskOrderByOptions } from '../constants';
 import { useBlockchain } from '../core/hooks';
-import { ExploreTaskQueryState } from '../store';
+import { AccountRepo } from '../repos';
+import { AccountTaskQueryState } from '../store';
 import { useTaskQuery } from './atoms';
 
 export const useAccountPage = () => {
@@ -10,7 +12,7 @@ export const useAccountPage = () => {
   const { blockchainState } = useBlockchain();
 
   const accountId = useMemo(
-    () => router.query.accountId,
+    () => router.query.accountId as string,
     [router.query.accountId]
   );
 
@@ -20,8 +22,19 @@ export const useAccountPage = () => {
   );
 
   const { taskQueryState, taskQueryMethods } = useTaskQuery({
-    state: ExploreTaskQueryState,
+    state: AccountTaskQueryState,
+    defaultQuery: {
+      ownerId: accountId,
+    },
   });
+
+  const accountQuery = useQuery(
+    [CachePrefixKeys.ACCOUNT, accountId],
+    () => AccountRepo.getUserInfo(accountId),
+    {
+      enabled: !!accountId,
+    }
+  );
 
   const defaultOrderBy = useMemo(
     () =>
@@ -35,6 +48,8 @@ export const useAccountPage = () => {
       defaultOrderBy,
       accountId,
       isOwner,
+      profile: accountQuery.data,
+      isLoading: accountQuery.isLoading,
     },
     accountPageMethods: {
       taskQueryMethods,

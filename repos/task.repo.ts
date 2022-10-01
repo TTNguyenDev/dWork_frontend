@@ -18,4 +18,16 @@ export class TaskRepo {
 
     return docs;
   }
+
+  static async get(id: string): Promise<TaskDto | undefined> {
+    const { docs } = await DB.client.task.db.find({
+      skip: 0,
+      limit: 1,
+      selector: {
+        id: { $eq: id },
+      },
+    });
+
+    return docs[0];
+  }
 }

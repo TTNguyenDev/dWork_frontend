@@ -1,10 +1,20 @@
 import { State, useHookstate } from '@hookstate/core';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { TaskOrderBy } from '../../constants';
 import { TaskQueryState } from '../../store';
 
-export const useTaskQuery = ({ state }: { state: State<TaskQueryState> }) => {
+export const useTaskQuery = ({
+  state,
+  defaultQuery,
+}: {
+  state: State<TaskQueryState>;
+  defaultQuery?: Partial<TaskQueryState>;
+}) => {
   const taskQueryState = useHookstate(state);
+
+  useEffect(() => {
+    if (defaultQuery) taskQueryState.merge(defaultQuery);
+  }, [defaultQuery]);
 
   const setOrderBy = useCallback((value: TaskOrderBy) => {
     taskQueryState.orderBy.set(value);

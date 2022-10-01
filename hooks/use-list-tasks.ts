@@ -21,6 +21,9 @@ const buildWhereQuery = (payload: TaskQueryState): PouchDB.Find.Selector => {
           ? { $regex: RegExp(payload.searchString, 'i') }
           : undefined,
       },
+      {
+        owner: payload.ownerId ? { $eq: payload.ownerId } : undefined,
+      },
     ],
   };
 

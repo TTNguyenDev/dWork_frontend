@@ -2,6 +2,7 @@ import React from 'react';
 import { Container } from '../container';
 import { useHookstate } from '@hookstate/core';
 import { BlockchainState } from '../store';
+import { parseToUsername } from '../utils';
 
 export const useBlockchain = () => {
   const blockchainState = useHookstate(BlockchainState);
@@ -22,7 +23,7 @@ export const useBlockchain = () => {
       // update wallet state
       blockchainState.wallet.account.merge({
         id: accountId,
-        username: accountId.replace('.testnet', '').replace('.near', ''),
+        username: parseToUsername(accountId),
         balance: accountBalance,
       });
     }

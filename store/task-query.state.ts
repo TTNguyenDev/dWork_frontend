@@ -5,14 +5,19 @@ export type TaskQueryState = {
   orderBy: TaskOrderBy;
   categoryId?: string;
   searchString?: string;
+  ownerId?: string;
 };
 
-export const ExploreTaskQueryStateInitValue: TaskQueryState = {
+export const TaskQueryStateInitValue: TaskQueryState = {
   orderBy: TaskOrderBy.NEWEST,
   categoryId: '',
   searchString: '',
 };
 
 export const ExploreTaskQueryState: State<TaskQueryState> = hookstate(
-  ExploreTaskQueryStateInitValue
+  TaskQueryStateInitValue
+);
+
+export const AccountTaskQueryState: State<TaskQueryState> = hookstate(
+  TaskQueryStateInitValue
 );
