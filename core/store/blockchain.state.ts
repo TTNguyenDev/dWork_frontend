@@ -13,6 +13,7 @@ export type BlockChainState = {
       balance: AccountBalance;
     };
   };
+  accountId?: string;
 };
 export const BlockchainState: State<BlockChainState> = hookstate({
   loading: true,

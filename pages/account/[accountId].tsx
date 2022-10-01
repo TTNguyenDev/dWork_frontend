@@ -8,17 +8,18 @@ import { ListTasks } from '../../components/list-tasks';
 import { Select } from 'chakra-react-select';
 import { reactSelectStyles } from '../../styles';
 import { TaskOrderByOptions } from '../../constants';
-import { useExplore } from '../../hooks';
+import { useAccountPage } from '../../hooks';
 
-const ExplorePage: NextPageWithLayout = () => {
+const AccountPage: NextPageWithLayout = () => {
   const {
-    exploreState: { defaultOrderBy },
-    exploreMethods: { taskQueryMethods },
-  } = useExplore();
+    accountPageState: { defaultOrderBy, accountId, isOwner },
+    accountPageMethods: { taskQueryMethods },
+  } = useAccountPage();
+
   return (
     <>
       <Head>
-        <title>Explore - dWork</title>
+        <title>Account - dWork</title>
         <meta name="description" content="dWork" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -33,7 +34,7 @@ const ExplorePage: NextPageWithLayout = () => {
         <Stack spacing="30px" direction={{ base: 'column', md: 'row' }}>
           <Box minW="256px">
             <Text fontSize="36px" fontWeight="700">
-              Explore
+              Account
             </Text>
           </Box>
           <Flex flex="1" justifyContent="end">
@@ -47,12 +48,11 @@ const ExplorePage: NextPageWithLayout = () => {
             <Select
               {...reactSelectStyles}
               useBasicStyles
-              isSearchable={false}
-              options={TaskOrderByOptions}
-              defaultValue={defaultOrderBy}
               onChange={async (payload: any) => {
                 taskQueryMethods.setOrderBy(payload.value);
               }}
+              options={TaskOrderByOptions}
+              defaultValue={defaultOrderBy}
             />
           </Box>
           <Box flex="1">
@@ -80,8 +80,8 @@ const ExplorePage: NextPageWithLayout = () => {
   );
 };
 
-ExplorePage.getLayout = (page: ReactElement) => {
+AccountPage.getLayout = (page: ReactElement) => {
   return <MainLayout>{page}</MainLayout>;
 };
 
-export default ExplorePage;
+export default AccountPage;
