@@ -80,13 +80,15 @@ export const UserHeader = () => {
           <Divider opacity="0.1" />
           <VStack
             spacing="0"
-            align="stretch"
+            alignItems="stretch"
             divider={<Divider opacity="0.5" />}
           >
             <Button variant="solid" borderRadius="none" bg="#23262f">
-              <Link href={`/account/${userHeaderState.account?.id}`}>
-                My Profile
-              </Link>
+              <Text w="100%">
+                <Link href={`/account/${userHeaderState.account?.id}`}>
+                  My Profile
+                </Link>
+              </Text>
             </Button>
             <Button
               variant="solid"
@@ -94,7 +96,7 @@ export const UserHeader = () => {
               bg="#23262f"
               onClick={userHeaderMethods.signOut}
             >
-              Sign out
+              <Text w="100%">Sign out</Text>
             </Button>
           </VStack>
         </MenuList>

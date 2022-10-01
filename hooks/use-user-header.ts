@@ -1,4 +1,3 @@
-import { format } from 'near-api-js/lib/utils';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useBlockchain } from '../core/hooks';
@@ -26,7 +25,7 @@ export const useUserHeader = () => {
             username: account.username,
             balance: {
               available: Number(
-                format.formatNearAmount(account.balance.available)
+                accountState.profile.value?.balance ?? 0
               ).toFixed(2),
             },
           }
@@ -35,7 +34,9 @@ export const useUserHeader = () => {
     },
     userHeaderMethods: {
       signIn: blockchainMethods.signIn,
-      signOut: blockchainMethods.signOut,
+      signOut: () => {
+        blockchainMethods.signOut(), window.location.replace('/');
+      },
       btnCreateNewTaskOnClick,
     },
   };
