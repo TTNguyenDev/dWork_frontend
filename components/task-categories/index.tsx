@@ -12,7 +12,7 @@ export const TaskCategories = () => {
       {data && (
         <HStack spacing="10px">
           {data.map((item) => (
-            <Button key={item.id} variant="ghost" size="sm">
+            <Button key={item.id} variant="ghost" size="sm" borderRadius="2xl">
               {item.name}
             </Button>
           ))}

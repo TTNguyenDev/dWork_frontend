@@ -42,7 +42,7 @@ export const Header = () => {
         <Box onClick={headerMethods.brandOnClick}>
           <HStack spacing="20px">
             <Image src={logoImg.src} alt="Logo dWork" />
-            <Flex visibility={{ base: 'hidden', md: 'inherit' }}>
+            <Flex display={{ base: 'none', sm: 'inherit' }}>
               <Text
                 fontSize="32px"
                 fontWeight="700"
