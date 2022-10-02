@@ -12,3 +12,5 @@ export * from './use-explore';
 export * from './use-account-page';
 export * from './use-task-detail-page';
 export * from './use-profile-card';
+export * from './use-submit-work';
+export * from './use-task-proposals';
