@@ -6,3 +6,5 @@ export * from './task-filter';
 export * from './task-sort';
 export * from './navigation-header';
 export * from './storage-deposit-modal';
+export * from './submit-work-form';
+export * from './task-proposals';

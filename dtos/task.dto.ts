@@ -22,3 +22,8 @@ export type TaskCreateInput = {
   category_id: string;
   new_category?: string;
 };
+
+export type SubmitWorkInput = {
+  task_id: string;
+  proof: string;
+};

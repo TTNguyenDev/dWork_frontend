@@ -181,7 +181,7 @@ const TaskCreatePage: NextPageWithLayout = () => {
                         form.setValue(
                           'duration',
                           value
-                            ? (value as Date).getTime() - Date.now() + ''
+                            ? (value as Date).getTime() - Date.now() + '000000'
                             : (undefined as any)
                         );
                         form.trigger('duration');

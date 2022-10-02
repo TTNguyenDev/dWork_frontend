@@ -1,8 +1,13 @@
-import BN from 'bn.js';
+import { BN } from 'bn.js';
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import { Container } from '../core';
 import { ApiGetListInput, TransactionAction } from '../core/types';
-import { TaskCreateInput, TaskDto } from '../dtos';
+import {
+  ProposalDto,
+  SubmitWorkInput,
+  TaskCreateInput,
+  TaskDto,
+} from '../dtos';
 
 enum ContractMethods {
   // commands
@@ -48,6 +53,13 @@ export const TaskApi = Object.freeze({
       actions,
     });
   },
+  async submitWork(payload: SubmitWorkInput): Promise<void> {
+    await Container.bcConnector.callChangeMethod({
+      methodName: ContractMethods.submit_work,
+      args: payload,
+      attachedDeposit: new BN(parseNearAmount('0.01')!),
+    });
+  },
   ///
   async getList(payload: ApiGetListInput): Promise<TaskDto[]> {
     const res = await Container.bcConnector.callViewMethod({
@@ -63,5 +75,25 @@ export const TaskApi = Object.freeze({
     });
 
     return tasks;
+  },
+
+  async get(payload: { task_id: string }): Promise<TaskDto> {
+    const res = await Container.bcConnector.callViewMethod({
+      methodName: ContractMethods.task_by_id,
+      args: payload,
+    });
+
+    return res;
+  },
+
+  async getProposals(payload: { task_id: string }): Promise<ProposalDto[]> {
+    const res = await Container.bcConnector.callViewMethod({
+      methodName: ContractMethods.task_by_id,
+      args: payload,
+    });
+
+    console.log('getProposals', res);
+
+    return res?.proposals;
   },
 });

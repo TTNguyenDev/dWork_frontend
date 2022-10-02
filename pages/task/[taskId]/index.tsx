@@ -1,6 +1,8 @@
 import {
   Box,
+  Button,
   Center,
+  Divider,
   Flex,
   SimpleGrid,
   Spinner,
@@ -12,19 +14,25 @@ import Head from 'next/head';
 import { ReactElement } from 'react';
 import { MainLayout } from '../../../layouts';
 import { NextPageWithLayout } from '../../_app';
-import { TaskSearchBox } from '../../../components';
-import { useTaskDetailPage } from '../../../hooks';
+import {
+  SumitWorkForm,
+  TaskProposals,
+  TaskSearchBox,
+} from '../../../components';
+import { useTaskDetailPage, useTaskProposals } from '../../../hooks';
 import { ProfileCard } from '../../../components/profile-card';
 import { formatNearAmount } from 'near-api-js/lib/utils/format';
 import moment from 'moment';
 
 const TaskDetailPage: NextPageWithLayout = () => {
   const {
-    taskDetailPageState: { taskId, isLoading, data },
+    taskDetailPageState: { taskId, ownerId, isOwner, isLoading, data },
     taskDetailPageMethods: {},
   } = useTaskDetailPage();
 
+  const { taskProposalsState } = useTaskProposals({ taskId });
   console.log(data);
+  console.log(taskProposalsState);
 
   if (!data)
     return (
@@ -126,6 +134,25 @@ const TaskDetailPage: NextPageWithLayout = () => {
                 noOfLines={4}
                 dangerouslySetInnerHTML={{ __html: data.description }}
               />
+            </Box>
+            <Divider />
+            <Box>
+              {!isOwner && (
+                <>
+                  <Text fontSize="20px" fontWeight="600" mb="20px">
+                    SUBMIT WORK
+                  </Text>
+                  <SumitWorkForm taskId={taskId} />
+                </>
+              )}
+              {isOwner && (
+                <>
+                  <Text fontSize="20px" fontWeight="600" mb="20px">
+                    PROPOSALS
+                  </Text>
+                  <TaskProposals taskId={taskId} />
+                </>
+              )}
             </Box>
           </VStack>
           <Box minW="256px">
