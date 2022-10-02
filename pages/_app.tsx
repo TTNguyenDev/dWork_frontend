@@ -13,6 +13,8 @@ import NextNProgress from 'nextjs-progressbar';
 import PouchDB from 'pouchdb';
 import PouchDBFind from 'pouchdb-find';
 import { StorageDepositModal } from '../components';
+import { ApproveWorkModal } from '../components/approve-work-modal';
+import { RejectWorkModal } from '../components/reject-work-modal';
 PouchDB.plugin(PouchDBFind);
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -46,6 +48,8 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         )}
         {appState.ready.value && getLayout(<Component {...pageProps} />)}
         <StorageDepositModal />
+        <ApproveWorkModal />
+        <RejectWorkModal />
       </ChakraProvider>
     </QueryClientProvider>
   );

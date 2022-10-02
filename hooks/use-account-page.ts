@@ -2,14 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { CachePrefixKeys, TaskOrderByOptions } from '../constants';
-import { useBlockchain } from '../core/hooks';
+import { useBlockchain, useWalletAccountId } from '../core/hooks';
 import { AccountRepo } from '../repos';
 import { AccountTaskQueryState } from '../store';
 import { useTaskQuery } from './atoms';
 
 export const useAccountPage = () => {
   const router = useRouter();
-  const { blockchainState } = useBlockchain();
+  const { accountId: walletAccountId } = useWalletAccountId();
 
   const accountId = useMemo(
     () => router.query.accountId as string,
@@ -17,8 +17,8 @@ export const useAccountPage = () => {
   );
 
   const isOwner = useMemo(
-    () => router.query.accountId === blockchainState.accountId.value,
-    [router.query.accountId, blockchainState.accountId.value]
+    () => router.query.accountId === walletAccountId,
+    [router.query.accountId, walletAccountId]
   );
 
   const { taskQueryState, taskQueryMethods } = useTaskQuery({

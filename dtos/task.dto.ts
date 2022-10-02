@@ -27,3 +27,18 @@ export type SubmitWorkInput = {
   task_id: string;
   proof: string;
 };
+
+export type ApproveWorkInput = {
+  task_id: string;
+  worker_id: string;
+};
+
+export type RejectWorkInput = {
+  task_id: string;
+  worker_id: string;
+  reason: string;
+};
+
+export type MarkTaskAsCompletedInput = {
+  task_id: string;
+};

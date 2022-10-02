@@ -1,8 +1,13 @@
-import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { TaskRepo } from '../repos';
 import { useForm } from 'react-hook-form';
 import { SubmitWorkInput } from '../dtos';
 import { useMemo } from 'react';
+import { useAccount } from './atoms';
 
 export const useSubmitWork = ({
   taskId,
@@ -14,6 +19,7 @@ export const useSubmitWork = ({
     'mutationFn'
   >;
 }) => {
+  const { accountMethods } = useAccount();
   const submitWorkForm = useForm<SubmitWorkInput>({
     defaultValues: {
       task_id: taskId,
@@ -29,6 +35,7 @@ export const useSubmitWork = ({
     () =>
       submitWorkForm.handleSubmit(async (data) => {
         await submitWorkMutation.mutateAsync(data);
+        await accountMethods.fetchProfile();
       }),
     [submitWorkForm]
   );

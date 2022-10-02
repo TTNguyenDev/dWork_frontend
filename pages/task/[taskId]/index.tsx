@@ -23,16 +23,22 @@ import { useTaskDetailPage, useTaskProposals } from '../../../hooks';
 import { ProfileCard } from '../../../components/profile-card';
 import { formatNearAmount } from 'near-api-js/lib/utils/format';
 import moment from 'moment';
+import { ProposalCard } from '../../../components/proposal-card';
 
 const TaskDetailPage: NextPageWithLayout = () => {
   const {
-    taskDetailPageState: { taskId, ownerId, isOwner, isLoading, data },
+    taskDetailPageState: {
+      taskId,
+      ownerId,
+      isOwner,
+      isLoading,
+      data,
+      taskProposalsState,
+      isFullApproved,
+      ownerProposal,
+    },
     taskDetailPageMethods: {},
   } = useTaskDetailPage();
-
-  const { taskProposalsState } = useTaskProposals({ taskId });
-  console.log(data);
-  console.log(taskProposalsState);
 
   if (!data)
     return (
@@ -118,7 +124,9 @@ const TaskDetailPage: NextPageWithLayout = () => {
                   padding="20px"
                 >
                   <Text fontWeight="800" fontSize="20px">
-                    {`${data.proposals.length}/${data.max_participants}`}
+                    {`${taskProposalsState.total ?? 0}/${
+                      data.max_participants
+                    }`}
                   </Text>
                   <Text fontSize="12px">PROPOSALS</Text>
                 </VStack>
@@ -137,7 +145,7 @@ const TaskDetailPage: NextPageWithLayout = () => {
             </Box>
             <Divider />
             <Box>
-              {!isOwner && (
+              {!isOwner && !isFullApproved && !ownerProposal && (
                 <>
                   <Text fontSize="20px" fontWeight="600" mb="20px">
                     SUBMIT WORK
@@ -151,6 +159,20 @@ const TaskDetailPage: NextPageWithLayout = () => {
                     PROPOSALS
                   </Text>
                   <TaskProposals taskId={taskId} />
+                </>
+              )}
+              {ownerProposal && (
+                <>
+                  <Text fontSize="20px" fontWeight="600" mb="20px">
+                    MY PROOF
+                  </Text>
+                  <Box>
+                    <ProposalCard
+                      data={ownerProposal}
+                      taskId={taskId}
+                      isWorker
+                    />
+                  </Box>
                 </>
               )}
             </Box>

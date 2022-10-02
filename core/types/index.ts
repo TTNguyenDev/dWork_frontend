@@ -11,8 +11,8 @@ export type GetListInput<T extends {} = {}> = Omit<
 };
 
 export type ModalStateType = {
-  onOpen: () => any;
-  onClose: () => any;
+  onOpen: (...args: any) => any;
+  onClose: (...args: any) => any;
 };
 
 export type TransactionAction = {

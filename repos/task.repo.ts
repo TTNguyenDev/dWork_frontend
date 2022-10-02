@@ -3,7 +3,10 @@ import { CategoryCache, TaskCache } from '../cache';
 import { GetListInput } from '../core/types';
 import { DB } from '../db';
 import {
+  ApproveWorkInput,
+  MarkTaskAsCompletedInput,
   ProposalDto,
+  RejectWorkInput,
   SubmitWorkInput,
   TaskCreateInput,
   TaskDto,
@@ -19,6 +22,19 @@ export class TaskRepo {
     await TaskApi.submitWork(input);
   }
 
+  static async approveWork(input: ApproveWorkInput): Promise<void> {
+    await TaskApi.approveWork(input);
+  }
+
+  static async rejectWork(input: RejectWorkInput): Promise<void> {
+    await TaskApi.rejectWork(input);
+  }
+
+  static async markTaskAsCompleted(
+    input: MarkTaskAsCompletedInput
+  ): Promise<void> {
+    await TaskApi.markTaskAsCompleted(input);
+  }
   ///
 
   static async getList(input: GetListInput<TaskDto>): Promise<TaskDto[]> {

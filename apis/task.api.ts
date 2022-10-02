@@ -3,7 +3,10 @@ import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import { Container } from '../core';
 import { ApiGetListInput, TransactionAction } from '../core/types';
 import {
+  ApproveWorkInput,
+  MarkTaskAsCompletedInput,
   ProposalDto,
+  RejectWorkInput,
   SubmitWorkInput,
   TaskCreateInput,
   TaskDto,
@@ -51,6 +54,10 @@ export const TaskApi = Object.freeze({
 
     await Container.bcConnector.transaction({
       actions,
+      walletCallbackUrl:
+        window.location.origin +
+        '/account/' +
+        Container.bcConnector.wallet.getAccountId(),
     });
   },
   async submitWork(payload: SubmitWorkInput): Promise<void> {
@@ -58,6 +65,28 @@ export const TaskApi = Object.freeze({
       methodName: ContractMethods.submit_work,
       args: payload,
       attachedDeposit: new BN(parseNearAmount('0.01')!),
+    });
+  },
+  async approveWork(payload: ApproveWorkInput): Promise<void> {
+    console.log('approve work', {
+      methodName: ContractMethods.approve_work,
+      args: payload,
+    });
+    await Container.bcConnector.callChangeMethod({
+      methodName: ContractMethods.approve_work,
+      args: payload,
+    });
+  },
+  async rejectWork(payload: RejectWorkInput): Promise<void> {
+    await Container.bcConnector.callChangeMethod({
+      methodName: ContractMethods.reject_work,
+      args: payload,
+    });
+  },
+  async markTaskAsCompleted(payload: MarkTaskAsCompletedInput): Promise<void> {
+    await Container.bcConnector.callChangeMethod({
+      methodName: ContractMethods.mark_task_as_completed,
+      args: payload,
     });
   },
   ///

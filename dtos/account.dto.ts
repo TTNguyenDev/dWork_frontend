@@ -8,7 +8,10 @@ export type AccountDto = {
   bio: string;
   total_spent: string;
   total_earn: string;
-  balance: string;
+  balance: {
+    available: string;
+    total: string;
+  };
   locked_balance: Record<string, LockedBalance>;
   current_jobs: string[];
   completed_jobs: string[];

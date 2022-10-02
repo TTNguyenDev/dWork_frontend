@@ -13,16 +13,15 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
-  useMultiStyleConfig,
   useToast,
   VStack,
 } from '@chakra-ui/react';
 import Head from 'next/head';
-import { ReactElement, useEffect, useMemo } from 'react';
+import { ReactElement, useMemo } from 'react';
 import { NavigationLayout } from '../../layouts';
 import { NextPageWithLayout } from '../_app';
 import { useCreateTask } from '../../hooks';
-import { CreatableSelect, Select } from 'chakra-react-select';
+import { CreatableSelect } from 'chakra-react-select';
 import { Editor } from '../../core/components';
 import * as dateFns from 'date-fns';
 import { DatePicker } from 'rsuite';
