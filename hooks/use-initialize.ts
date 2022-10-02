@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { CategoryCache, TaskCache } from '../cache';
 import { StorageKeys } from '../constants';
 import { Container } from '../core';
-import { useBlockchain } from '../core/hooks';
+import { useBlockchain, useWalletAccountId } from '../core/hooks';
 import { BlockchainState } from '../core/store';
 import { DB } from '../db';
 import { AccountRepo } from '../repos';
@@ -11,8 +11,9 @@ import { useAccount, useApp } from './atoms';
 
 export const useInitialize = () => {
   const { blockchainState, blockchainMethods } = useBlockchain();
+  const { accountId } = useWalletAccountId();
   const { appState } = useApp();
-  const { accountState } = useAccount();
+  const { accountState, accountMethods } = useAccount();
 
   useEffect(() => {
     (async () => {
@@ -45,21 +46,16 @@ export const useInitialize = () => {
       });
 
       const checkIsRegisteredAndGetProfile = async () => {
-        const accountId = blockchainState.accountId.value;
-        console.log(blockchainState.value);
+        console.log('blockchainState', blockchainState.value);
         if (accountId) {
           const isRegistered = await AccountRepo.isRegistered(accountId);
           console.log('isRegistered', isRegistered);
           accountState.isRegistered.set(isRegistered);
           if (isRegistered) {
-            const profile = await AccountRepo.getUserInfo(accountId);
-            console.log('profile', profile);
-            accountState.profile.set(profile);
+            await accountMethods.fetchProfile();
           }
         }
       };
-
-      // const storageMinimumBalance = await AccountRepo.storageMinimumBalance();
 
       await Promise.all([cacheData, checkIsRegisteredAndGetProfile()]);
 
@@ -69,7 +65,7 @@ export const useInitialize = () => {
         ready: true,
       });
     })();
-  }, [blockchainState.ready.value]);
+  }, [blockchainState.ready.value, accountId]);
 
   return {
     appState,

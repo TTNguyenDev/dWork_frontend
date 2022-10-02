@@ -1,11 +1,9 @@
 import {
   Box,
   Button,
-  Divider,
   Flex,
   FormControl,
   FormErrorMessage,
-  FormLabel,
   Input,
   VStack,
 } from '@chakra-ui/react';

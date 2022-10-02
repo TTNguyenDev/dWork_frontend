@@ -90,7 +90,11 @@ export class NearConnector implements IBlockchainConnector<Near> {
   async transaction(payload: {
     contractId?: string;
     actions: TransactionAction[];
+    walletMeta?: string;
+    walletCallbackUrl?: string;
+    returnError?: boolean;
   }) {
+    const { walletMeta, walletCallbackUrl, returnError } = payload;
     const actions = payload.actions.map(
       ({ methodName, args: body, gas = '30000000000000', deposit = '0' }) =>
         transactions.functionCall(
@@ -105,6 +109,9 @@ export class NearConnector implements IBlockchainConnector<Near> {
     return this.wallet.account().signAndSendTransaction({
       receiverId: payload.contractId ?? this._config.contractId,
       actions,
+      walletMeta,
+      walletCallbackUrl,
+      returnError,
     });
   }
 }

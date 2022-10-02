@@ -10,12 +10,44 @@ export const useTaskProposals = ({ taskId }: { taskId?: string }) => {
   );
 
   const taskProposalsQuery = useQuery(
-    [CachePrefixKeys.CATEGORY],
+    [CachePrefixKeys.PROPOSAL, taskId],
     () => TaskRepo.getProposals(taskId!),
     {
       enabled: !!taskId,
     }
   );
+
+  const allItems = useMemo(() => {
+    return taskProposalsQuery.data ?? [];
+  }, [taskProposalsQuery.data]);
+
+  const total = useMemo(() => {
+    return taskProposalsQuery.data?.length ?? 0;
+  }, [taskProposalsQuery.data]);
+
+  const pendingItems = useMemo(() => {
+    return (
+      taskProposalsQuery.data?.filter(
+        (i) => i.status === ProposalStatus.Pending
+      ) ?? []
+    );
+  }, [taskProposalsQuery.data]);
+
+  const approvedItems = useMemo(() => {
+    return (
+      taskProposalsQuery.data?.filter(
+        (i) => i.status === ProposalStatus.Approved
+      ) ?? []
+    );
+  }, [taskProposalsQuery.data]);
+
+  const rejectedItems = useMemo(() => {
+    return (
+      taskProposalsQuery.data?.filter(
+        (i) => i.status === ProposalStatus.Rejected
+      ) ?? []
+    );
+  }, [taskProposalsQuery.data]);
 
   const data = useMemo(() => {
     const items = taskProposalsQuery.data;
@@ -23,13 +55,13 @@ export const useTaskProposals = ({ taskId }: { taskId?: string }) => {
 
     switch (status) {
       case ProposalStatusFilter.PENDING:
-        return items.filter((i) => i.status === ProposalStatus.Pending);
+        return pendingItems;
 
       case ProposalStatusFilter.APPROVED:
-        return items.filter((i) => i.status === ProposalStatus.Approved);
+        return approvedItems;
 
       case ProposalStatusFilter.REJECTED:
-        return items.filter((i) => i.status === ProposalStatus.Approved);
+        return rejectedItems;
     }
   }, [taskProposalsQuery.data, status]);
 
@@ -41,8 +73,13 @@ export const useTaskProposals = ({ taskId }: { taskId?: string }) => {
   return {
     taskProposalsState: {
       isLoading: taskProposalsQuery.isLoading,
+      allItems,
+      total,
       data,
       status,
+      pendingItems,
+      approvedItems,
+      rejectedItems,
     },
     taskProposalsMethods: { btnStatusFilterOnClick },
   };

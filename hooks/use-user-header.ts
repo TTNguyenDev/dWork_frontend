@@ -1,3 +1,4 @@
+import { formatNearAmount } from 'near-api-js/lib/utils/format';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useBlockchain } from '../core/hooks';
@@ -24,9 +25,10 @@ export const useUserHeader = () => {
             id: account.id,
             username: account.username,
             balance: {
-              available: Number(
-                accountState.profile.value?.balance ?? 0
-              ).toFixed(2),
+              available: formatNearAmount(
+                accountState.profile.value?.balance.available ?? '0',
+                3
+              ),
             },
           }
         : undefined,

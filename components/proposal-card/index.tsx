@@ -11,9 +11,26 @@ import {
 import { MdClose, MdCheck } from 'react-icons/md';
 import TimeAgo from 'timeago-react';
 import { parseToUsername } from '../../core/utils';
-import { ProposalDto } from '../../dtos';
+import { ProposalDto, ProposalStatus } from '../../dtos';
+import { useProposalCard } from '../../hooks';
 
-export const ProposalCard = ({ data }: { data: ProposalDto }) => {
+export const ProposalCard = ({
+  data,
+  taskId,
+  isWorker,
+}: {
+  data: ProposalDto;
+  taskId?: string;
+  isWorker?: boolean;
+}) => {
+  const {
+    proposalCardState: { isShowAction, statusLabel },
+    proposalCardMethods: { btnApproveOnClick, btnRejectOnClick },
+  } = useProposalCard({
+    data,
+    taskId,
+  });
+
   return (
     <GridItem colSpan={{ base: 12, md: 6, lg: 6, xl: 4 }} zIndex="10">
       <VStack
@@ -34,9 +51,7 @@ export const ProposalCard = ({ data }: { data: ProposalDto }) => {
             </Box>
           </HStack>
           <Box>
-            <Badge fontSize="14px" colorScheme="green">
-              PENDING
-            </Badge>
+            <Badge fontSize="14px">{statusLabel}</Badge>
           </Box>
         </HStack>
         <Text
@@ -44,26 +59,30 @@ export const ProposalCard = ({ data }: { data: ProposalDto }) => {
           noOfLines={4}
           dangerouslySetInnerHTML={{ __html: data.proof_of_work }}
         />
-        <HStack justifyContent="end" spacing="20px">
-          <Button
-            variant="outline"
-            colorScheme="green"
-            size="sm"
-            lineHeight="0"
-            leftIcon={<MdCheck size="18" />}
-          >
-            APPROVE
-          </Button>
-          <Button
-            variant="outline"
-            colorScheme="red"
-            size="sm"
-            lineHeight="0"
-            leftIcon={<MdClose size="18" />}
-          >
-            REJECT
-          </Button>
-        </HStack>
+        {!isWorker && isShowAction && (
+          <HStack justifyContent="end" spacing="20px">
+            <Button
+              variant="outline"
+              colorScheme="green"
+              size="sm"
+              lineHeight="0"
+              leftIcon={<MdCheck size="18" />}
+              onClick={btnApproveOnClick}
+            >
+              APPROVE
+            </Button>
+            <Button
+              variant="outline"
+              colorScheme="red"
+              size="sm"
+              lineHeight="0"
+              leftIcon={<MdClose size="18" />}
+              onClick={btnRejectOnClick}
+            >
+              REJECT
+            </Button>
+          </HStack>
+        )}
       </VStack>
     </GridItem>
   );

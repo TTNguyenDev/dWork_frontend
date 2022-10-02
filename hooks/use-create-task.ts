@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import { TaskCreateInput } from '../dtos';
 import { useMemo } from 'react';
 import { useTaskCategories } from './use-task-categories';
+import { useRouter } from 'next/router';
+import { useBlockchain, useWalletAccountId } from '../core/hooks';
 
 export const useCreateTask = ({
   options,
@@ -13,6 +15,8 @@ export const useCreateTask = ({
     'mutationFn'
   >;
 } = {}) => {
+  const router = useRouter();
+  const { accountId } = useWalletAccountId();
   const { taskCategoriesState } = useTaskCategories();
 
   const isAllowedToCreateTask = useMemo(() => true, []);
@@ -33,6 +37,7 @@ export const useCreateTask = ({
     () =>
       createTaskForm.handleSubmit(async (data) => {
         await createTaskMutation.mutateAsync(data);
+        router.push(`/account/${accountId}`);
       }),
     [createTaskForm]
   );
