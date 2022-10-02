@@ -8,7 +8,7 @@ import {
   Button,
   VStack,
 } from '@chakra-ui/react';
-import { BsCheck, BsCheckLg } from 'react-icons/bs';
+import { MdClose, MdCheck } from 'react-icons/md';
 import TimeAgo from 'timeago-react';
 import { parseToUsername } from '../../core/utils';
 import { ProposalDto } from '../../dtos';
@@ -48,11 +48,19 @@ export const ProposalCard = ({ data }: { data: ProposalDto }) => {
           <Button
             variant="outline"
             colorScheme="green"
-            leftIcon={<BsCheckLg />}
+            size="sm"
+            lineHeight="0"
+            leftIcon={<MdCheck size="18" />}
           >
             APPROVE
           </Button>
-          <Button variant="outline" colorScheme="red" leftIcon={<BsCheckLg />}>
+          <Button
+            variant="outline"
+            colorScheme="red"
+            size="sm"
+            lineHeight="0"
+            leftIcon={<MdClose size="18" />}
+          >
             REJECT
           </Button>
         </HStack>
