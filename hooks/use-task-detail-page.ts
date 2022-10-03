@@ -2,13 +2,16 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { CachePrefixKeys } from '../constants';
-import { useWalletAccountId } from '../core/hooks';
+import { useWallet, useWalletAccountId } from '../core/hooks';
 import { TaskRepo } from '../repos';
+import { useIsRegistered } from './atoms';
 import { useTaskProposals } from './use-task-proposals';
 
 export const useTaskDetailPage = () => {
   const router = useRouter();
+  const { wallet } = useWallet();
   const { accountId } = useWalletAccountId();
+  const { isRegistered } = useIsRegistered();
 
   const taskId = useMemo(
     () => router.query.taskId as string | undefined,
@@ -35,7 +38,8 @@ export const useTaskDetailPage = () => {
   const isFullApproved = useMemo(
     () =>
       taskQuery.data &&
-      taskProposalsState.total >= taskQuery.data?.max_participants,
+      taskProposalsState.approvedItems.length >=
+        taskQuery.data?.max_participants,
     [taskQuery.data, taskProposalsState.total]
   );
 
@@ -57,6 +61,8 @@ export const useTaskDetailPage = () => {
       taskProposalsState,
       isFullApproved,
       ownerProposal,
+      isRegistered,
+      logged: wallet.logged,
     },
     taskDetailPageMethods: {},
   };

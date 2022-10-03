@@ -14,10 +14,10 @@ export const TaskQueryStateInitValue: TaskQueryState = {
   searchString: '',
 };
 
-export const ExploreTaskQueryState: State<TaskQueryState> = hookstate(
-  TaskQueryStateInitValue
-);
+export const ExploreTaskQueryState: State<TaskQueryState> = hookstate({
+  ...TaskQueryStateInitValue,
+});
 
-export const AccountTaskQueryState: State<TaskQueryState> = hookstate(
-  TaskQueryStateInitValue
-);
+export const AccountTaskQueryState: State<TaskQueryState> = hookstate({
+  ...TaskQueryStateInitValue,
+});

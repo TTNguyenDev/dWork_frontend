@@ -3,6 +3,7 @@ import { TaskRepo } from '../repos';
 import { CachePrefixKeys, ProposalStatusFilter } from '../constants';
 import { useCallback, useMemo, useState } from 'react';
 import { ProposalStatus } from '../dtos';
+import { getProposalStatus } from '../utils';
 
 export const useTaskProposals = ({ taskId }: { taskId?: string }) => {
   const [status, setStatus] = useState<ProposalStatusFilter>(
@@ -28,7 +29,7 @@ export const useTaskProposals = ({ taskId }: { taskId?: string }) => {
   const pendingItems = useMemo(() => {
     return (
       taskProposalsQuery.data?.filter(
-        (i) => i.status === ProposalStatus.Pending
+        (i) => getProposalStatus(i.status) === ProposalStatus.Pending
       ) ?? []
     );
   }, [taskProposalsQuery.data]);
@@ -36,7 +37,7 @@ export const useTaskProposals = ({ taskId }: { taskId?: string }) => {
   const approvedItems = useMemo(() => {
     return (
       taskProposalsQuery.data?.filter(
-        (i) => i.status === ProposalStatus.Approved
+        (i) => getProposalStatus(i.status) === ProposalStatus.Approved
       ) ?? []
     );
   }, [taskProposalsQuery.data]);
@@ -44,7 +45,15 @@ export const useTaskProposals = ({ taskId }: { taskId?: string }) => {
   const rejectedItems = useMemo(() => {
     return (
       taskProposalsQuery.data?.filter(
-        (i) => i.status === ProposalStatus.Rejected
+        (i) => getProposalStatus(i.status) === ProposalStatus.Rejected
+      ) ?? []
+    );
+  }, [taskProposalsQuery.data]);
+
+  const reportingItems = useMemo(() => {
+    return (
+      taskProposalsQuery.data?.filter(
+        (i) => getProposalStatus(i.status) === ProposalStatus.Reporting
       ) ?? []
     );
   }, [taskProposalsQuery.data]);
@@ -62,6 +71,9 @@ export const useTaskProposals = ({ taskId }: { taskId?: string }) => {
 
       case ProposalStatusFilter.REJECTED:
         return rejectedItems;
+
+      case ProposalStatusFilter.REPORTING:
+        return reportingItems;
     }
   }, [taskProposalsQuery.data, status]);
 
@@ -80,6 +92,7 @@ export const useTaskProposals = ({ taskId }: { taskId?: string }) => {
       pendingItems,
       approvedItems,
       rejectedItems,
+      reportingItems,
     },
     taskProposalsMethods: { btnStatusFilterOnClick },
   };

@@ -9,6 +9,7 @@ import { Select } from 'chakra-react-select';
 import { reactSelectStyles } from '../../styles';
 import { TaskOrderByOptions } from '../../constants';
 import { useExplore } from '../../hooks';
+import { ExploreTaskQueryState } from '../../store';
 
 const ExplorePage: NextPageWithLayout = () => {
   const {
@@ -71,7 +72,7 @@ const ExplorePage: NextPageWithLayout = () => {
         >
           {/* <Box minW="256px">Filter</Box> */}
           <Box flex="1">
-            <ListTasks />
+            <ListTasks state={ExploreTaskQueryState} />
           </Box>
         </Stack>
       </VStack>

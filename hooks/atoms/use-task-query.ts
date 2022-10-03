@@ -1,7 +1,7 @@
 import { State, useHookstate } from '@hookstate/core';
 import { useCallback, useEffect } from 'react';
 import { TaskOrderBy } from '../../constants';
-import { TaskQueryState } from '../../store';
+import { TaskQueryState, TaskQueryStateInitValue } from '../../store';
 
 export const useTaskQuery = ({
   state,
@@ -16,6 +16,12 @@ export const useTaskQuery = ({
     if (defaultQuery) taskQueryState.merge(defaultQuery);
   }, [defaultQuery]);
 
+  // useEffect(() => {
+  //   return () => {
+  //     taskQueryState.merge({ ...TaskQueryStateInitValue });
+  //   };
+  // }, []);
+
   const setOrderBy = useCallback((value: TaskOrderBy) => {
     taskQueryState.orderBy.set(value);
   }, []);
@@ -27,6 +33,8 @@ export const useTaskQuery = ({
   const setSearchString = useCallback((value: string) => {
     taskQueryState.searchString.set(value);
   }, []);
+
+  console.log(taskQueryState.value);
 
   return {
     taskQueryState,

@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { TaskRepo } from '../repos';
 import { CachePrefixKeys, TaskOrderBy } from '../constants';
-import { ExploreTaskQueryState, TaskQueryState } from '../store';
+import { TaskQueryState } from '../store';
 import { useTaskQuery } from './atoms';
+import { State } from '@hookstate/core';
 
 const buildWhereQuery = (payload: TaskQueryState): PouchDB.Find.Selector => {
   const selector: PouchDB.Find.Selector = {
@@ -58,9 +59,9 @@ const buildSortQuery = (
   return sort;
 };
 
-export const useListTasks = () => {
+export const useListTasks = ({ state }: { state: State<TaskQueryState> }) => {
   const { taskQueryState } = useTaskQuery({
-    state: ExploreTaskQueryState,
+    state,
   });
 
   const listTasksQuery = useQuery(

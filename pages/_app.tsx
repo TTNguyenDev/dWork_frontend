@@ -12,7 +12,7 @@ import NextNProgress from 'nextjs-progressbar';
 // PouchDB
 import PouchDB from 'pouchdb';
 import PouchDBFind from 'pouchdb-find';
-import { StorageDepositModal } from '../components';
+import { CreateReportModal, StorageDepositModal } from '../components';
 import { ApproveWorkModal } from '../components/approve-work-modal';
 import { RejectWorkModal } from '../components/reject-work-modal';
 PouchDB.plugin(PouchDBFind);
@@ -50,6 +50,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <StorageDepositModal />
         <ApproveWorkModal />
         <RejectWorkModal />
+        <CreateReportModal />
       </ChakraProvider>
     </QueryClientProvider>
   );

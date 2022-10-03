@@ -21,6 +21,7 @@ export const TaskProposals = ({ taskId }: { taskId?: string }) => {
       pendingItems,
       approvedItems,
       rejectedItems,
+      reportingItems,
     },
     taskProposalsMethods: { btnStatusFilterOnClick },
   } = useTaskProposals({ taskId });
@@ -55,7 +56,7 @@ export const TaskProposals = ({ taskId }: { taskId?: string }) => {
         >
           REPORTING &nbsp;
           <Badge fontSize="15px" padding="2px 8px" borderRadius="xl">
-            {0}
+            {reportingItems.length}
           </Badge>
         </Button>
         <Button

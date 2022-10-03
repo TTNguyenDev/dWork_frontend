@@ -54,7 +54,7 @@ export const useBlockchain = () => {
     if (blockchainState.ready.value) {
       BlockchainState.wallet.loading.set(true);
       await Container.bcConnector.signOut();
-      await _checkLogged();
+      // await _checkLogged();
     }
   }, []);
 

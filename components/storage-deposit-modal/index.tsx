@@ -25,11 +25,11 @@ export const StorageDepositModal = () => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Not enough storage balance!</ModalHeader>
+        <ModalHeader>Confirm</ModalHeader>
         <ModalCloseButton _focus={{ boxShadow: 'none' }} />
         <ModalBody>
           <Alert
-            status="warning"
+            status="info"
             variant="subtle"
             flexDirection="column"
             alignItems="center"
@@ -41,11 +41,9 @@ export const StorageDepositModal = () => {
           >
             <AlertIcon boxSize="40px" mr={0} />
             <AlertTitle mt={4} mb={1} fontSize="lg">
-              Not enough storage balance!
+              Add storage balance to be able to interact with this dapp
             </AlertTitle>
-            <AlertDescription maxWidth="sm" mb="15px">
-              Add storage balance to be able to interact with this dapp.
-            </AlertDescription>
+            <AlertDescription maxWidth="sm" mb="15px"></AlertDescription>
           </Alert>
         </ModalBody>
         <ModalFooter>
