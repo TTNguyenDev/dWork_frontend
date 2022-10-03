@@ -15,6 +15,8 @@ import { ReactElement } from 'react';
 import { MainLayout } from '../../../layouts';
 import { NextPageWithLayout } from '../../_app';
 import {
+  DepositToView,
+  LoginToView,
   SumitWorkForm,
   TaskProposals,
   TaskSearchBox,
@@ -36,11 +38,13 @@ const TaskDetailPage: NextPageWithLayout = () => {
       taskProposalsState,
       isFullApproved,
       ownerProposal,
+      isRegistered,
+      logged,
     },
     taskDetailPageMethods: {},
   } = useTaskDetailPage();
 
-  if (!data)
+  if (!data || taskProposalsState.isLoading)
     return (
       <Center h="300px">
         <Spinner />
@@ -124,11 +128,11 @@ const TaskDetailPage: NextPageWithLayout = () => {
                   padding="20px"
                 >
                   <Text fontWeight="800" fontSize="20px">
-                    {`${taskProposalsState.total ?? 0}/${
+                    {`${taskProposalsState.approvedItems.length ?? 0}/${
                       data.max_participants
                     }`}
                   </Text>
-                  <Text fontSize="12px">PROPOSALS</Text>
+                  <Text fontSize="12px">TARGET</Text>
                 </VStack>
               </SimpleGrid>
             </Box>
@@ -145,14 +149,20 @@ const TaskDetailPage: NextPageWithLayout = () => {
             </Box>
             <Divider />
             <Box>
-              {!isOwner && !isFullApproved && !ownerProposal && (
-                <>
-                  <Text fontSize="20px" fontWeight="600" mb="20px">
-                    SUBMIT WORK
-                  </Text>
-                  <SumitWorkForm taskId={taskId} />
-                </>
-              )}
+              <LoginToView />
+              <DepositToView />
+              {logged &&
+                isRegistered &&
+                !isOwner &&
+                !isFullApproved &&
+                !ownerProposal && (
+                  <>
+                    <Text fontSize="20px" fontWeight="600" mb="20px">
+                      SUBMIT WORK
+                    </Text>
+                    <SumitWorkForm taskId={taskId} />
+                  </>
+                )}
               {isOwner && (
                 <>
                   <Text fontSize="20px" fontWeight="600" mb="20px">

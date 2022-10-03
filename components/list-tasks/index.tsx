@@ -1,13 +1,13 @@
-import { Box, HStack, Skeleton, Text, Grid, GridItem } from '@chakra-ui/react';
-import { formatNearAmount } from 'near-api-js/lib/utils/format';
-import TimeAgo from 'timeago-react';
+import { Skeleton, Grid } from '@chakra-ui/react';
+import { State } from '@hookstate/core';
 import { useListTasks } from '../../hooks';
+import { TaskQueryState } from '../../store';
 import { TaskCard } from '../task-card';
 
-export const ListTasks = () => {
+export const ListTasks = ({ state }: { state: State<TaskQueryState> }) => {
   const {
     listTasksState: { isLoading, data },
-  } = useListTasks();
+  } = useListTasks({ state });
 
   return (
     <>

@@ -8,3 +8,6 @@ export * from './navigation-header';
 export * from './storage-deposit-modal';
 export * from './submit-work-form';
 export * from './task-proposals';
+export * from './login-to-view';
+export * from './deposit-to-view';
+export * from './create-report-modal';

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { ProposalDto, ProposalStatus } from '../dtos';
-import { ModalUtils } from '../utils';
+import { getProposalStatus, ModalUtils } from '../utils';
 
 export const useProposalCard = ({
   data,
@@ -22,28 +22,40 @@ export const useProposalCard = ({
     });
   }, []);
 
+  const btnReportOnClick = useCallback(() => {
+    ModalUtils.createReport.onOpen({
+      taskId,
+    });
+  }, []);
+
   const isShowAction = useMemo(
     () => data.status === ProposalStatus.Pending,
     [data.status]
   );
 
+  const status = useMemo(() => {
+    return getProposalStatus(data.status);
+  }, [data.status]);
+
   const statusLabel = useMemo(() => {
-    if (typeof data.status === 'string') return data.status.toLocaleUpperCase();
-    if (typeof data.status === 'object') {
-      if (data.status.Rejected) {
-        return 'REJECTED';
-      }
-    }
+    return status.toLocaleUpperCase();
+  }, [status]);
+
+  const rejectData = useMemo(() => {
+    if (typeof data.status === 'object') return data.status.Rejected;
   }, [data.status]);
 
   return {
     proposalCardState: {
       isShowAction,
+      status,
       statusLabel,
+      rejectData,
     },
     proposalCardMethods: {
       btnApproveOnClick,
       btnRejectOnClick,
+      btnReportOnClick,
     },
   };
 };
