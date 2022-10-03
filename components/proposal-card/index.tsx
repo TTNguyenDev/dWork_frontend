@@ -109,9 +109,7 @@ export const ProposalCard = ({
                     Report ID
                   </Text>
                 </HStack>
-                <Text
-                  dangerouslySetInnerHTML={{ __html: rejectData.report_id }}
-                />
+                <Text>rejectData.report_id</Text>
               </Box>
             </VStack>
           </>
