@@ -4,10 +4,12 @@ import { useMemo } from 'react';
 import { CachePrefixKeys } from '../constants';
 import { useWalletAccountId } from '../core/hooks';
 import { AccountRepo } from '../repos';
+import { useIsAdmin } from './atoms';
 
 export const useAccountLayout = () => {
   const router = useRouter();
   const { accountId: walletAccountId } = useWalletAccountId();
+  const { isAdmin } = useIsAdmin();
 
   const accountId = useMemo(
     () => router.query.accountId as string,
@@ -33,6 +35,7 @@ export const useAccountLayout = () => {
       isOwner,
       profile: accountQuery.data,
       isLoading: accountQuery.isLoading,
+      isAdmin,
     },
     accountLayoutMethods: {},
   };

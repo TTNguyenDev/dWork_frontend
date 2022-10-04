@@ -3,4 +3,5 @@ export enum CachePrefixKeys {
   TASK,
   ACCOUNT,
   PROPOSAL,
+  REPORT,
 }

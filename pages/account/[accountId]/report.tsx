@@ -1,8 +1,12 @@
-import { Text } from '@chakra-ui/react';
+import { Box, Flex, HStack, Select, Stack, Text } from '@chakra-ui/react';
 import { ReactElement } from 'react';
 import { AccountLayout } from '../../../layouts';
 import { NextPageWithLayout } from '../../_app';
 import { useAccountPage } from '../../../hooks';
+import { ListReports } from '../../../components/list-reports';
+import { TaskCategories } from '../../../components';
+import { TaskOrderByOptions } from '../../../constants';
+import { reactSelectStyles } from '../../../styles';
 
 const AccountPage: NextPageWithLayout = () => {
   const {
@@ -12,38 +16,15 @@ const AccountPage: NextPageWithLayout = () => {
 
   return (
     <>
-      <Text>IN DEVELOPMENT</Text>
-
-      {/* <Stack spacing="30px" direction={{ base: 'column', md: 'row' }}>
-        <Box minW="256px">
-          <Select
-            {...reactSelectStyles}
-            useBasicStyles
-            onChange={async (payload: any) => {
-              taskQueryMethods.setOrderBy(payload.value);
-            }}
-            options={TaskOrderByOptions}
-            defaultValue={defaultOrderBy}
-          />
-        </Box>
-        <Box flex="1">
-          <Flex justifyContent="end">
-            <Flex w="100%" maxW="500px" justifyContent="end">
-              <TaskCategories />
-            </Flex>
-          </Flex>
-          <HStack></HStack>
-        </Box>
-      </Stack>
       <Stack
         spacing="30px"
         alignItems="stretch"
         direction={{ base: 'column', md: 'row' }}
       >
         <Box flex="1">
-          <ListTasks state={AccountTaskQueryState} />
+          <ListReports />
         </Box>
-      </Stack> */}
+      </Stack>
     </>
   );
 };

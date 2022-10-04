@@ -5,6 +5,8 @@ export const ModalUtils: {
   approveWork: ModalStateType;
   rejectWork: ModalStateType;
   createReport: ModalStateType;
+  approveReport: ModalStateType;
+  rejectReport: ModalStateType;
 } = Object.freeze({
   storageDeposit: {
     onOpen: () => {},
@@ -19,6 +21,14 @@ export const ModalUtils: {
     onClose: () => {},
   },
   createReport: {
+    onOpen: () => {},
+    onClose: () => {},
+  },
+  approveReport: {
+    onOpen: () => {},
+    onClose: () => {},
+  },
+  rejectReport: {
     onOpen: () => {},
     onClose: () => {},
   },

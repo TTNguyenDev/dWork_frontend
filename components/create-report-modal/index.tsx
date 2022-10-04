@@ -93,7 +93,7 @@ export const CreateReportModal = () => {
                 padding="8px 16px"
                 isDisabled={isLoading}
               >
-                CANCLE
+                CANCEL
               </Button>
             </HStack>
           </ModalFooter>

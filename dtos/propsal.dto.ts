@@ -3,14 +3,17 @@ export enum ProposalStatus {
   Approved = 'Approved',
   Rejected = 'Rejected',
   Reporting = 'Reporting',
-  RejectedByAdmin = 'RejectedByAdmin',
+  RejectedByAdmin = 'Rejected By Admin',
 }
 
 export type ProposalStatusRejected = {
-  Rejected: {
+  Rejected?: {
     reason: string;
     reject_at: string;
     report_id?: string;
+  };
+  RejectedByAdmin?: {
+    account_id: string;
   };
 };
 

@@ -4,6 +4,7 @@ import { AccountDto } from '../dtos';
 export type AccountState = {
   loading: boolean;
   isRegistered?: boolean;
+  isAdmin?: boolean;
   profile?: AccountDto;
 };
 export const AccountState: State<AccountState> = hookstate({

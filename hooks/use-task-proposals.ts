@@ -44,8 +44,10 @@ export const useTaskProposals = ({ taskId }: { taskId?: string }) => {
 
   const rejectedItems = useMemo(() => {
     return (
-      taskProposalsQuery.data?.filter(
-        (i) => getProposalStatus(i.status) === ProposalStatus.Rejected
+      taskProposalsQuery.data?.filter((i) =>
+        [ProposalStatus.Rejected, ProposalStatus.RejectedByAdmin].includes(
+          getProposalStatus(i.status) as any
+        )
       ) ?? []
     );
   }, [taskProposalsQuery.data]);
