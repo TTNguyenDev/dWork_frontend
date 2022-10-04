@@ -1,3 +1,4 @@
+import { useToast } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
@@ -5,10 +6,12 @@ import { CachePrefixKeys } from '../constants';
 import { useWallet, useWalletAccountId } from '../core/hooks';
 import { TaskRepo } from '../repos';
 import { useIsRegistered } from './atoms';
+import { useMarkTaskCompleted } from './use-mark-task-completed';
 import { useTaskProposals } from './use-task-proposals';
 
 export const useTaskDetailPage = () => {
   const router = useRouter();
+  const toast = useToast();
   const { wallet } = useWallet();
   const { accountId } = useWalletAccountId();
   const { isRegistered } = useIsRegistered();
@@ -25,10 +28,28 @@ export const useTaskDetailPage = () => {
   }, [taskId]);
 
   const isOwner = useMemo(() => accountId === ownerId, [accountId, ownerId]);
-  console.log(accountId);
-  console.log(ownerId);
 
   const { taskProposalsState } = useTaskProposals({ taskId });
+  const { markTaskCompleteState, markTaskCompleteMethods } =
+    useMarkTaskCompleted({
+      taskId,
+      options: {
+        onSuccess: () => {
+          toast({
+            title: 'Mark task as completed successfully',
+            status: 'success',
+            position: 'top',
+          });
+        },
+        onError: () => {
+          toast({
+            title: 'Mark task as completed failed',
+            status: 'error',
+            position: 'top',
+          });
+        },
+      },
+    });
 
   const taskQuery = useQuery(
     [CachePrefixKeys.TASK, taskId],
@@ -66,7 +87,10 @@ export const useTaskDetailPage = () => {
       ownerProposal,
       isRegistered,
       logged: wallet.logged,
+      markTaskCompleteState,
     },
-    taskDetailPageMethods: {},
+    taskDetailPageMethods: {
+      markTaskCompleteMethods,
+    },
   };
 };

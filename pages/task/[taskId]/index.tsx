@@ -40,8 +40,9 @@ const TaskDetailPage: NextPageWithLayout = () => {
       ownerProposal,
       isRegistered,
       logged,
+      markTaskCompleteState,
     },
-    taskDetailPageMethods: {},
+    taskDetailPageMethods: { markTaskCompleteMethods },
   } = useTaskDetailPage();
 
   if (!data || taskProposalsState.isLoading)
@@ -66,10 +67,22 @@ const TaskDetailPage: NextPageWithLayout = () => {
         alignItems="stretch"
         spacing="30px"
       >
-        <Stack spacing="30px" direction={{ base: 'column', md: 'row' }}>
+        <Stack
+          spacing="30px"
+          direction={{ base: 'column', md: 'row' }}
+          justifyContent="space-between"
+        >
           <Text fontSize="36px" fontWeight="700">
             {data.title}
           </Text>
+          {isOwner && (
+            <Button
+              isLoading={markTaskCompleteState.isLoading}
+              onClick={markTaskCompleteMethods.submit}
+            >
+              MARK AS COMPLETED
+            </Button>
+          )}
         </Stack>
         <Stack spacing="30px" direction={{ base: 'column', md: 'row' }}>
           <VStack flex="1" alignItems="stretch" spacing="20px">
