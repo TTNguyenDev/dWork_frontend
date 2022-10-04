@@ -1,14 +1,14 @@
 import { useDisclosure, useToast } from '@chakra-ui/react';
 import { useCallback, useEffect } from 'react';
-import { CurrentReportState } from '../store';
+import { CurrentProposalState } from '../store';
 import { ModalUtils } from '../utils';
-import { useCurrentReport } from './atoms';
+import { useCurrentProposal } from './atoms';
 import { useCreateReport } from './use-create-report';
 
 export const useCreateReportModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const { currentReportState } = useCurrentReport();
+  const { currentProposalState } = useCurrentProposal();
   const { createReportState, createReportMethods } = useCreateReport({
     options: {
       onSuccess: () => {
@@ -29,13 +29,13 @@ export const useCreateReportModal = () => {
     },
   });
 
-  const handleOpen = useCallback((payload: CurrentReportState) => {
-    currentReportState.merge(payload);
+  const handleOpen = useCallback((payload: CurrentProposalState) => {
+    currentProposalState.merge(payload);
     onOpen();
   }, []);
 
   const handleClose = useCallback(() => {
-    currentReportState.merge({ taskId: '', reportId: '' });
+    currentProposalState.merge({ taskId: '' });
     onClose();
   }, []);
 
@@ -45,7 +45,7 @@ export const useCreateReportModal = () => {
   }, []);
 
   return {
-    createReportModalState: { isOpen, createReportState, currentReportState },
+    createReportModalState: { isOpen, createReportState, currentProposalState },
     createReportModalMethods: {
       onOpen: handleOpen,
       onClose: handleClose,

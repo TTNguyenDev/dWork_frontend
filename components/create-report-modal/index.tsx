@@ -25,7 +25,7 @@ export const CreateReportModal = () => {
     createReportModalState: {
       isOpen,
       createReportState: { form, isLoading },
-      currentReportState,
+      currentProposalState,
     },
     createReportModalMethods: { onClose, createReportMethods },
   } = useCreateReportModal();
@@ -44,7 +44,7 @@ export const CreateReportModal = () => {
             <Text
               fontSize="18px"
               mb="20px"
-            >{`Report ${currentReportState.taskId.value}`}</Text>
+            >{`Report ${currentProposalState.taskId.value}`}</Text>
             <Box>
               <VStack spacing="30px" align="stretch">
                 <FormControl isInvalid={!!form.formState.errors.report}>
