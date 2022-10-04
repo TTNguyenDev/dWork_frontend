@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { ReportCreateInput } from '../dtos';
 import { useMemo } from 'react';
 import { CachePrefixKeys } from '../constants';
-import { useCurrentReport } from './atoms';
+import { useCurrentProposal } from './atoms';
 
 export const useCreateReport = ({
   options,
@@ -19,7 +19,7 @@ export const useCreateReport = ({
   >;
 } = {}) => {
   const queryClient = useQueryClient();
-  const { currentReportState } = useCurrentReport();
+  const { currentProposalState } = useCurrentProposal();
   const createReportForm = useForm<ReportCreateInput>();
 
   const createReportMutation = useMutation(
@@ -31,15 +31,15 @@ export const useCreateReport = ({
     () =>
       createReportForm.handleSubmit(async (data) => {
         await createReportMutation.mutateAsync({
-          task_id: currentReportState.taskId.value,
+          task_id: currentProposalState.taskId.value,
           report: data.report,
         });
         queryClient.invalidateQueries([
           CachePrefixKeys.PROPOSAL,
-          currentReportState.taskId.value,
+          currentProposalState.taskId.value,
         ]);
       }),
-    [createReportForm, currentReportState.taskId.value]
+    [createReportForm, currentProposalState.taskId.value]
   );
 
   return {
