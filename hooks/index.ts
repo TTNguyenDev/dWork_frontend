@@ -28,3 +28,4 @@ export * from './use-approve-report';
 export * from './use-approve-report-modal';
 export * from './use-reject-report';
 export * from './use-reject-report-modal';
+export * from './use-mark-task-completed';
