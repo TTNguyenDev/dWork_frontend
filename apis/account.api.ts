@@ -14,6 +14,7 @@ enum ContractMethods {
   user_info = 'user_info',
   storage_minimum_balance = 'storage_minimum_balance',
   storage_balance_of = 'storage_balance_of',
+  is_admin = 'is_admin',
 }
 
 export const AccountApi = Object.freeze({
@@ -44,6 +45,15 @@ export const AccountApi = Object.freeze({
   async getUserInfo(account_id: string): Promise<AccountDto> {
     const res = await Container.bcConnector.callViewMethod({
       methodName: ContractMethods.user_info,
+      args: {
+        account_id,
+      },
+    });
+    return res;
+  },
+  async isAdmin(account_id: string): Promise<boolean> {
+    const res = await Container.bcConnector.callViewMethod({
+      methodName: ContractMethods.is_admin,
       args: {
         account_id,
       },

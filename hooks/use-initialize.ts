@@ -48,9 +48,14 @@ export const useInitialize = () => {
       const checkIsRegisteredAndGetProfile = async () => {
         console.log('blockchainState', blockchainState.value);
         if (accountId) {
-          const isRegistered = await AccountRepo.isRegistered(accountId);
+          const [isRegistered, isAdmin] = await Promise.all([
+            AccountRepo.isRegistered(accountId),
+            AccountRepo.isAdmin(accountId),
+          ]);
           console.log('isRegistered', isRegistered);
+          console.log('isAdmin', isAdmin);
           accountState.isRegistered.set(isRegistered);
+          accountState.isAdmin.set(isAdmin);
           if (isRegistered) {
             await accountMethods.fetchProfile();
           }

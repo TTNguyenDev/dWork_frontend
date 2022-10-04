@@ -1,9 +1,5 @@
 import {
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   ModalFooter,
-  Alert,
   Button,
   HStack,
   Modal,
@@ -12,40 +8,39 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Box,
   Text,
 } from '@chakra-ui/react';
-import { useApproveWorkModal } from '../../hooks';
+import { useRejectReportModal } from '../../hooks';
 
-export const ApproveWorkModal = () => {
+export const RejectReportModal = () => {
   const {
-    approveWorkModalState: { isOpen, approveWorkState, currentProposalState },
-    approveWorkModalMethods: { onClose, approveWorkMethods },
-  } = useApproveWorkModal();
+    rejectReportModalState: { isOpen, rejectReportState, currentReportState },
+    rejectReportModalMethods: { onClose, rejectReportMethods },
+  } = useRejectReportModal();
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      closeOnOverlayClick={!approveWorkState.isLoading}
+      closeOnOverlayClick={!rejectReportState.isLoading}
     >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Confirm</ModalHeader>
         <ModalCloseButton
           _focus={{ boxShadow: 'none' }}
-          isDisabled={approveWorkState.isLoading}
+          isDisabled={rejectReportState.isLoading}
         />
         <ModalBody>
-          <Text fontSize="16px">{`Approve the proof of ${currentProposalState.workerId.value}`}</Text>
+          <Text fontSize="16px">{`Reject the report ${currentReportState.reportId.value}`}</Text>
         </ModalBody>
         <ModalFooter>
           <HStack>
             <Button
               variant="primary"
               size="sm"
-              isLoading={approveWorkState.isLoading}
-              onClick={approveWorkMethods.submit}
+              isLoading={rejectReportState.isLoading}
+              onClick={rejectReportMethods.submit}
               padding="8px 16px"
             >
               SUBMIT
@@ -56,7 +51,7 @@ export const ApproveWorkModal = () => {
               size="sm"
               onClick={onClose}
               padding="8px 16px"
-              isDisabled={approveWorkState.isLoading}
+              isDisabled={rejectReportState.isLoading}
             >
               CANCEL
             </Button>

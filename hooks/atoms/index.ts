@@ -5,3 +5,4 @@ export * from './use-current-proposal';
 export * from './use-profile';
 export * from './use-is-register';
 export * from './use-current-report';
+export * from './use-is-admin';

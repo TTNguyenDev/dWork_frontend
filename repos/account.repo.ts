@@ -15,4 +15,7 @@ export class AccountRepo {
   static async getUserInfo(accountId: string): Promise<AccountDto> {
     return AccountApi.getUserInfo(accountId);
   }
+  static async isAdmin(accountId: string): Promise<boolean> {
+    return AccountApi.isAdmin(accountId);
+  }
 }

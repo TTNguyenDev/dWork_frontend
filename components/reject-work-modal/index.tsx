@@ -93,7 +93,7 @@ export const RejectWorkModal = () => {
                 padding="8px 16px"
                 isDisabled={isLoading}
               >
-                CANCLE
+                CANCEL
               </Button>
             </HStack>
           </ModalFooter>

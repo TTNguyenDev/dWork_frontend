@@ -18,12 +18,15 @@ export const useTaskDetailPage = () => {
     [router.query.taskId]
   );
 
-  const ownerId = useMemo(
-    () => (taskId ? taskId.split('_')[0] : undefined),
-    [taskId]
-  );
+  const ownerId = useMemo(() => {
+    if (!taskId) return;
+    const index = taskId.lastIndexOf('_');
+    return taskId.substring(0, index);
+  }, [taskId]);
 
   const isOwner = useMemo(() => accountId === ownerId, [accountId, ownerId]);
+  console.log(accountId);
+  console.log(ownerId);
 
   const { taskProposalsState } = useTaskProposals({ taskId });
 

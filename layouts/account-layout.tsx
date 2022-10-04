@@ -19,7 +19,7 @@ export function AccountLayout({
   tab,
 }: PropsWithChildren<{ tab: 'task' | 'proof' | 'report' }>) {
   const {
-    accountLayoutState: { accountId, profile },
+    accountLayoutState: { accountId, profile, isAdmin },
   } = useAccountLayout();
 
   return (
@@ -73,6 +73,7 @@ export function AccountLayout({
                   variant="ghost"
                   borderRadius="md"
                   isActive={tab === 'report'}
+                  hidden={!isAdmin}
                 >
                   REPORT
                 </Button>

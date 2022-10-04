@@ -15,6 +15,8 @@ import PouchDBFind from 'pouchdb-find';
 import { CreateReportModal, StorageDepositModal } from '../components';
 import { ApproveWorkModal } from '../components/approve-work-modal';
 import { RejectWorkModal } from '../components/reject-work-modal';
+import { RejectReportModal } from '../components/reject-report-modal';
+import { ApproveReportModal } from '../components/approve-report-modal';
 PouchDB.plugin(PouchDBFind);
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -51,6 +53,8 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <ApproveWorkModal />
         <RejectWorkModal />
         <CreateReportModal />
+        <ApproveReportModal />
+        <RejectReportModal />
       </ChakraProvider>
     </QueryClientProvider>
   );
