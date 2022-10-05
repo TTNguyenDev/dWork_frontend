@@ -1,9 +1,11 @@
 import {
+  Badge,
   Box,
   Button,
   Center,
   Divider,
   Flex,
+  HStack,
   SimpleGrid,
   Spinner,
   Stack,
@@ -26,6 +28,7 @@ import { ProfileCard } from '../../../components/profile-card';
 import { formatNearAmount } from 'near-api-js/lib/utils/format';
 import moment from 'moment';
 import { ProposalCard } from '../../../components/proposal-card';
+import { MdCheck, MdCheckCircleOutline } from 'react-icons/md';
 
 const TaskDetailPage: NextPageWithLayout = () => {
   const {
@@ -75,13 +78,25 @@ const TaskDetailPage: NextPageWithLayout = () => {
           <Text fontSize="36px" fontWeight="700">
             {data.title}
           </Text>
-          {isOwner && (
+          {isOwner && !markTaskCompleteState.isCompleted && (
             <Button
               isLoading={markTaskCompleteState.isLoading}
               onClick={markTaskCompleteMethods.submit}
+              variant="outline"
+              colorScheme="green"
             >
               MARK AS COMPLETED
             </Button>
+          )}
+          {markTaskCompleteState.isCompleted && (
+            <Center>
+              <Badge colorScheme="green" p="5px 10px" borderRadius="2xl">
+                <HStack>
+                  <MdCheck size="20px" />
+                  <Text fontSize="18px">COMPLETED</Text>
+                </HStack>
+              </Badge>
+            </Center>
           )}
         </Stack>
         <Stack spacing="30px" direction={{ base: 'column', md: 'row' }}>
@@ -126,9 +141,7 @@ const TaskDetailPage: NextPageWithLayout = () => {
                   padding="20px"
                 >
                   <Text fontWeight="800" fontSize="20px">
-                    {moment(
-                      Number(data.available_until.substring(0, 13))
-                    ).format('DD-MM-YYYY HH:mm')}
+                    {moment(data.available_until).format('DD-MM-YYYY HH:mm')}
                   </Text>
                   <Text fontSize="12px">DEADLINE</Text>
                 </VStack>
@@ -167,6 +180,7 @@ const TaskDetailPage: NextPageWithLayout = () => {
               {logged &&
                 isRegistered &&
                 !isOwner &&
+                !markTaskCompleteState.isCompleted &&
                 !isFullApproved &&
                 !ownerProposal && (
                   <>

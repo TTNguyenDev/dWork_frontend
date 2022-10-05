@@ -6,13 +6,13 @@ import { TaskCategories } from '../../../components';
 import { ListTasks } from '../../../components/list-tasks';
 import { Select } from 'chakra-react-select';
 import { reactSelectStyles } from '../../../styles';
-import { TaskOrderByOptions } from '../../../constants';
+import { TaskOrderByOptions, TaskStatusOptions } from '../../../constants';
 import { useAccountPage } from '../../../hooks';
 import { AccountTaskQueryState } from '../../../store';
 
 const AccountPage: NextPageWithLayout = () => {
   const {
-    accountPageState: { defaultOrderBy },
+    accountPageState: { defaultOrderBy, defaultStatus },
     accountPageMethods: { taskQueryMethods },
   } = useAccountPage();
 
@@ -32,9 +32,17 @@ const AccountPage: NextPageWithLayout = () => {
         </Box>
         <Box flex="1">
           <Flex justifyContent="end">
-            <Flex w="100%" maxW="500px" justifyContent="end">
-              <TaskCategories />
-            </Flex>
+            <Box maxW={{ base: 'unset', md: '256px' }} w="100%">
+              <Select
+                {...reactSelectStyles}
+                useBasicStyles
+                onChange={async (payload: any) => {
+                  taskQueryMethods.setStatus(payload.value);
+                }}
+                options={TaskStatusOptions}
+                defaultValue={defaultStatus}
+              />
+            </Box>
           </Flex>
           <HStack></HStack>
         </Box>

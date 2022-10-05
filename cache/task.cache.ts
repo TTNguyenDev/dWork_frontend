@@ -1,8 +1,9 @@
 import { TaskApi } from '../apis';
 import { cacheDataList } from '../core/utils';
 import { DB } from '../db';
+import { AccountState } from '../store';
 
-const LIMIT_PER_CACHE_HIT = 500;
+const LIMIT_PER_CACHE_HIT = 5000;
 
 export const TaskCache = Object.freeze({
   async cache() {
@@ -20,5 +21,9 @@ export const TaskCache = Object.freeze({
       compareKey: 'id',
     });
     console.info('TaskCache: cached!!');
+  },
+  async refresh() {
+    const dbClient = DB.client.task.db;
+    console.info('TaskCache: refresh!!');
   },
 });

@@ -2,7 +2,7 @@ import { CategoryApi } from '../apis';
 import { cacheDataList } from '../core/utils';
 import { DB } from '../db';
 
-const LIMIT_PER_CACHE_HIT = 500;
+const LIMIT_PER_CACHE_HIT = 5000;
 
 export const CategoryCache = Object.freeze({
   async cache() {

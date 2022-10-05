@@ -1,7 +1,7 @@
 import { State, useHookstate } from '@hookstate/core';
 import { useCallback, useEffect } from 'react';
-import { TaskOrderBy } from '../../constants';
-import { TaskQueryState, TaskQueryStateInitValue } from '../../store';
+import { TaskOrderBy, TaskStatus } from '../../constants';
+import { TaskQueryState } from '../../store';
 
 export const useTaskQuery = ({
   state,
@@ -34,7 +34,9 @@ export const useTaskQuery = ({
     taskQueryState.searchString.set(value);
   }, []);
 
-  console.log(taskQueryState.value);
+  const setStatus = useCallback((value: TaskStatus) => {
+    taskQueryState.status.set(value);
+  }, []);
 
   return {
     taskQueryState,
@@ -42,6 +44,7 @@ export const useTaskQuery = ({
       setOrderBy,
       setCategoryId,
       setSearchString,
+      setStatus,
     },
   };
 };

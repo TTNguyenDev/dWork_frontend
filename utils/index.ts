@@ -26,9 +26,9 @@ export const calcAmountToCreateTask = ({
   price: string;
   max_participants: number;
 }) => {
-  return (
-    Number(price) *
-    max_participants *
-    RATIO_AMOUT_TO_CREATE_TASK
-  ).toFixed(PRICE_FRACTION_DIGITS);
+  return Number(
+    (Number(price) * max_participants * RATIO_AMOUT_TO_CREATE_TASK).toFixed(
+      PRICE_FRACTION_DIGITS
+    )
+  );
 };
