@@ -44,6 +44,7 @@ const TaskDetailPage: NextPageWithLayout = () => {
       isRegistered,
       logged,
       markTaskCompleteState,
+      isCompletable,
     },
     taskDetailPageMethods: { markTaskCompleteMethods },
   } = useTaskDetailPage();
@@ -78,7 +79,7 @@ const TaskDetailPage: NextPageWithLayout = () => {
           <Text fontSize="36px" fontWeight="700">
             {data.title}
           </Text>
-          {isOwner && !markTaskCompleteState.isCompleted && (
+          {isCompletable && (
             <Button
               isLoading={markTaskCompleteState.isLoading}
               onClick={markTaskCompleteMethods.submit}

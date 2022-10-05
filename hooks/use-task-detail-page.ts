@@ -75,6 +75,15 @@ export const useTaskDetailPage = () => {
     }
   }, [taskProposalsState.allItems, accountId, isOwner]);
 
+  const isCompletable = useMemo(
+    () =>
+      isOwner &&
+      !markTaskCompleteState.isCompleted &&
+      (isFullApproved ||
+        (taskQuery.data && taskQuery.data.available_until <= Date.now())),
+    [taskQuery.data, taskQuery.data, markTaskCompleteState.isCompleted]
+  );
+
   return {
     taskDetailPageState: {
       taskId,
@@ -88,6 +97,7 @@ export const useTaskDetailPage = () => {
       isRegistered,
       logged: wallet.logged,
       markTaskCompleteState,
+      isCompletable,
     },
     taskDetailPageMethods: {
       markTaskCompleteMethods,
