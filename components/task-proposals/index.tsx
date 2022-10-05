@@ -12,7 +12,13 @@ import { ProposalStatusFilter } from '../../constants';
 import { useTaskProposals } from '../../hooks';
 import { ProposalCard } from '../proposal-card';
 
-export const TaskProposals = ({ taskId }: { taskId?: string }) => {
+export const TaskProposals = ({
+  taskId,
+  isMyProofs,
+}: {
+  taskId?: string;
+  isMyProofs?: boolean;
+}) => {
   const {
     taskProposalsState: {
       isLoading,
@@ -24,7 +30,7 @@ export const TaskProposals = ({ taskId }: { taskId?: string }) => {
       reportingItems,
     },
     taskProposalsMethods: { btnStatusFilterOnClick },
-  } = useTaskProposals({ taskId });
+  } = useTaskProposals({ taskId, isMyProofs });
 
   return (
     <Box>
@@ -71,9 +77,14 @@ export const TaskProposals = ({ taskId }: { taskId?: string }) => {
         </Button>
       </SimpleGrid>
       <VStack align="stretch">
-        {taskId &&
+        {(isMyProofs || taskId) &&
           data?.map((item, index) => (
-            <ProposalCard key={index} data={item} taskId={taskId} />
+            <ProposalCard
+              key={index}
+              data={item}
+              taskId={taskId ?? item.task_id}
+              isWorker={isMyProofs}
+            />
           ))}
       </VStack>
     </Box>

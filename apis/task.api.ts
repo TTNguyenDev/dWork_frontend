@@ -123,13 +123,34 @@ export const TaskApi = Object.freeze({
     return mapToTask(res);
   },
 
+  async getListByIds(ids: string[]): Promise<TaskDto[]> {
+    const res = await Container.bcConnector.callViewMethod({
+      methodName: ContractMethods.tasks_by_ids,
+      args: {
+        ids,
+      },
+    });
+
+    let tasks = res.map((value: any) => {
+      return mapToTask({
+        id: value[0],
+        ...value[1],
+      });
+    });
+
+    return tasks;
+  },
+
   async getProposals(payload: { task_id: string }): Promise<ProposalDto[]> {
     const res = await Container.bcConnector.callViewMethod({
       methodName: ContractMethods.task_by_id,
       args: payload,
     });
 
-    return res?.proposals;
+    return res?.proposals?.map((i: any) => ({
+      task_id: payload.task_id,
+      ...i,
+    }));
   },
 });
 

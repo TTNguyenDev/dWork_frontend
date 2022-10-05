@@ -11,6 +11,7 @@ import {
   TaskCreateInput,
   TaskDto,
 } from '../dtos';
+import { AccountState } from '../store';
 
 export class TaskRepo {
   static async create(input: TaskCreateInput): Promise<void> {
@@ -60,5 +61,25 @@ export class TaskRepo {
 
   static async getProposals(taskId: string): Promise<ProposalDto[]> {
     return TaskApi.getProposals({ task_id: taskId });
+  }
+
+  static async getMyProofs(): Promise<ProposalDto[]> {
+    const accountId = AccountState.profile.value?.account_id;
+    const current_jobs =
+      AccountState.profile.value?.current_jobs.filter(
+        (i) => !i.includes(accountId ?? '')
+      ) ?? [];
+    const res = (await TaskApi.getListByIds(current_jobs))
+      .map((item) => {
+        const data = item.proposals.find((p) => p.account_id === accountId);
+        if (data)
+          return {
+            ...data,
+            task_id: item.id,
+          };
+      })
+      .filter((i) => !!i) as ProposalDto[];
+
+    return res;
   }
 }

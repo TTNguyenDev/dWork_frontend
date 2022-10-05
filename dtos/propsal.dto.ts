@@ -18,6 +18,7 @@ export type ProposalStatusRejected = {
 };
 
 export type ProposalDto = {
+  task_id?: string;
   account_id: string;
   submit_time: number;
   proof_of_work: string;

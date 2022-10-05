@@ -35,10 +35,7 @@ export const useRejectWork = ({
           worker_id: currentProposalState.workerId.value,
           reason: data.reason,
         });
-        queryClient.invalidateQueries([
-          CachePrefixKeys.PROPOSAL,
-          currentProposalState.taskId.value,
-        ]);
+        queryClient.invalidateQueries([CachePrefixKeys.PROPOSAL]);
       }),
     [rejectWorkForm, currentProposalState.taskId.value]
   );

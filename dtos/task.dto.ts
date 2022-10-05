@@ -1,3 +1,5 @@
+import { ProposalDto } from './propsal.dto';
+
 export type TaskDto = {
   id: string;
   owner: string;
@@ -6,7 +8,7 @@ export type TaskDto = {
   max_participants: number;
   price: string;
   budget: string;
-  proposals: string[];
+  proposals: ProposalDto[];
   created_at: number;
   last_rejection_published_at?: number;
   available_until: number;

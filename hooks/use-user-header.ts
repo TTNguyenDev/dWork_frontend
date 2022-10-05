@@ -16,6 +16,10 @@ export const useUserHeader = () => {
     AuthUtils.authCheckAndExec(() => router.push('/task/create'));
   }, [router]);
 
+  const btnProfileOnClick = useCallback(() => {
+    AuthUtils.authCheckAndExec(() => router.push(`/account/${account?.id}`));
+  }, [router, account?.id]);
+
   return {
     userHeaderState: {
       loading:
@@ -40,6 +44,7 @@ export const useUserHeader = () => {
         blockchainMethods.signOut(), window.location.replace('/');
       },
       btnCreateNewTaskOnClick,
+      btnProfileOnClick,
     },
   };
 };
