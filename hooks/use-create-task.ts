@@ -5,7 +5,7 @@ import { TaskCreateInput } from '../dtos';
 import { useMemo } from 'react';
 import { useTaskCategories } from './use-task-categories';
 import { useRouter } from 'next/router';
-import { useBlockchain, useWalletAccountId } from '../core/hooks';
+import { useWalletAccountId } from '../core/hooks';
 
 export const useCreateTask = ({
   options,
