@@ -26,6 +26,8 @@ import { Editor } from '../../core/components';
 import * as dateFns from 'date-fns';
 import { DatePicker } from 'rsuite';
 import { reactSelectStyles } from '../../styles';
+import { RATIO_AMOUT_TO_CREATE_TASK } from '../../constants';
+import { calcAmountToCreateTask } from '../../utils';
 
 const MAX_PARTICIPANTS_PER_TASK = 100;
 const PRICE_DECIMAL_LENGTH = 2;
@@ -61,12 +63,10 @@ const TaskCreatePage: NextPageWithLayout = () => {
 
   const amount = useMemo(
     () =>
-      Number(
-        (
-          Number(form.getValues('price')) *
-          Number(form.getValues('max_participants'))
-        ).toFixed(PRICE_DECIMAL_LENGTH)
-      ),
+      calcAmountToCreateTask({
+        price: form.getValues('price'),
+        max_participants: form.getValues('max_participants'),
+      }),
     [form.watch('price'), form.watch('max_participants')]
   );
 

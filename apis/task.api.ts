@@ -1,5 +1,6 @@
 import { BN } from 'bn.js';
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
+import { RATIO_AMOUT_TO_CREATE_TASK } from '../constants';
 import { Container } from '../core';
 import { ApiGetListInput, TransactionAction } from '../core/types';
 import {
@@ -11,6 +12,7 @@ import {
   TaskCreateInput,
   TaskDto,
 } from '../dtos';
+import { calcAmountToCreateTask } from '../utils';
 
 enum ContractMethods {
   // commands
@@ -50,6 +52,12 @@ export const TaskApi = Object.freeze({
         ...payload,
         price: parseNearAmount(payload.price),
       },
+      deposit: parseNearAmount(
+        calcAmountToCreateTask({
+          price: payload.price,
+          max_participants: payload.max_participants,
+        }).toString()
+      )!,
     });
 
     await Container.bcConnector.transaction({

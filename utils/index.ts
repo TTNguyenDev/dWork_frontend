@@ -1,3 +1,7 @@
+import {
+  PRICE_FRACTION_DIGITS,
+  RATIO_AMOUT_TO_CREATE_TASK,
+} from '../constants';
 import { ProposalStatus, ProposalStatusRejected } from '../dtos';
 
 export * from './auth.utils';
@@ -13,4 +17,18 @@ export const getProposalStatus = (
     if (status.RejectedByAdmin) return ProposalStatus.RejectedByAdmin;
   }
   return '';
+};
+
+export const calcAmountToCreateTask = ({
+  price,
+  max_participants,
+}: {
+  price: string;
+  max_participants: number;
+}) => {
+  return (
+    Number(price) *
+    max_participants *
+    RATIO_AMOUT_TO_CREATE_TASK
+  ).toFixed(PRICE_FRACTION_DIGITS);
 };
