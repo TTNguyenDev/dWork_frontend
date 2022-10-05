@@ -9,7 +9,7 @@ export type TaskDto = {
   proposals: string[];
   created_at: number;
   last_rejection_published_at?: number;
-  available_until: string;
+  available_until: number;
   category_id: string;
 };
 

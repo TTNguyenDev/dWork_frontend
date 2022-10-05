@@ -1,6 +1,6 @@
 import { ApiGetListInput } from '../types';
 
-const DEFAULT_LIMIT_PER_CACHE_HIT = 500;
+const DEFAULT_LIMIT_PER_CACHE_HIT = 5000;
 
 export const cacheDataList = async ({
   dbClient,

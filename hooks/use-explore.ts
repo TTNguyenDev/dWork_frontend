@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { TaskOrderByOptions } from '../constants';
+import { TaskOrderByOptions, TaskStatus } from '../constants';
 import { ExploreTaskQueryState } from '../store';
 import { useTaskQuery } from './atoms';
 

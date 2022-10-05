@@ -105,10 +105,10 @@ export const TaskApi = Object.freeze({
     });
 
     let tasks = res.map((value: any) => {
-      return {
+      return mapToTask({
         id: value[0],
         ...value[1],
-      };
+      });
     });
 
     return tasks;
@@ -120,7 +120,7 @@ export const TaskApi = Object.freeze({
       args: payload,
     });
 
-    return res;
+    return mapToTask(res);
   },
 
   async getProposals(payload: { task_id: string }): Promise<ProposalDto[]> {
@@ -129,8 +129,13 @@ export const TaskApi = Object.freeze({
       args: payload,
     });
 
-    console.log('getProposals', res);
-
     return res?.proposals;
   },
+});
+
+const mapToTask = (data: any) => ({
+  ...data,
+  available_until: Number(
+    data.available_until.substring(0, data.available_until.length - 6)
+  ),
 });

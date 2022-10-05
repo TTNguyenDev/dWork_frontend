@@ -4,9 +4,9 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { TaskRepo } from '../repos';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { CachePrefixKeys } from '../constants';
-import { useCurrentProposal } from './atoms';
+import { useAccount } from './atoms';
 
 export const useMarkTaskCompleted = ({
   taskId,
@@ -19,6 +19,7 @@ export const useMarkTaskCompleted = ({
   >;
 }) => {
   const queryClient = useQueryClient();
+  const { accountState, accountMethods } = useAccount();
   const markTaskCompleteMutation = useMutation(
     () =>
       TaskRepo.markTaskAsCompleted({
@@ -29,13 +30,20 @@ export const useMarkTaskCompleted = ({
 
   const submit = useCallback(async () => {
     await markTaskCompleteMutation.mutateAsync();
+    await accountMethods.fetchProfile();
     queryClient.invalidateQueries([CachePrefixKeys.TASK, taskId]);
   }, [taskId]);
+
+  const isCompleted = useMemo(
+    () => accountState.profile.value?.completed_jobs.includes(taskId ?? ''),
+    [accountState.profile.value?.completed_jobs, taskId]
+  );
 
   return {
     markTaskCompleteState: {
       isLoading: markTaskCompleteMutation.isLoading,
       data: markTaskCompleteMutation.data,
+      isCompleted,
     },
     markTaskCompleteMethods: {
       submit,

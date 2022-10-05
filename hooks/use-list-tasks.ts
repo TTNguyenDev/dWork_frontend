@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { TaskRepo } from '../repos';
-import { CachePrefixKeys, TaskOrderBy } from '../constants';
-import { TaskQueryState } from '../store';
+import { CachePrefixKeys, TaskOrderBy, TaskStatus } from '../constants';
+import { AccountState, TaskQueryState } from '../store';
 import { useTaskQuery } from './atoms';
 import { State } from '@hookstate/core';
 
@@ -25,6 +25,22 @@ const buildWhereQuery = (payload: TaskQueryState): PouchDB.Find.Selector => {
       {
         owner: payload.ownerId ? { $eq: payload.ownerId } : undefined,
       },
+      payload.status === TaskStatus.AVAILABLE
+        ? {
+            available_until: { $gt: Date.now() },
+            id: { $nin: AccountState.profile.value?.completed_jobs },
+          }
+        : {},
+      payload.status === TaskStatus.COMPLETED
+        ? {
+            id: { $in: AccountState.profile.value?.completed_jobs },
+          }
+        : {},
+      payload.status === TaskStatus.EXPIRED
+        ? {
+            available_until: { $lte: Date.now() },
+          }
+        : {},
     ],
   };
 
