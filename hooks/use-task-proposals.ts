@@ -5,16 +5,23 @@ import { useCallback, useMemo, useState } from 'react';
 import { ProposalStatus } from '../dtos';
 import { getProposalStatus } from '../utils';
 
-export const useTaskProposals = ({ taskId }: { taskId?: string }) => {
+export const useTaskProposals = ({
+  taskId,
+  isMyProofs,
+}: {
+  taskId?: string;
+  isMyProofs?: boolean;
+}) => {
   const [status, setStatus] = useState<ProposalStatusFilter>(
     ProposalStatusFilter.PENDING
   );
 
   const taskProposalsQuery = useQuery(
     [CachePrefixKeys.PROPOSAL, taskId],
-    () => TaskRepo.getProposals(taskId!),
+    () =>
+      isMyProofs ? TaskRepo.getMyProofs() : TaskRepo.getProposals(taskId!),
     {
-      enabled: !!taskId,
+      enabled: isMyProofs ?? !!taskId,
     }
   );
 

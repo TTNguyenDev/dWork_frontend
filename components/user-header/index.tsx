@@ -83,10 +83,13 @@ export const UserHeader = () => {
             alignItems="stretch"
             divider={<Divider opacity="0.5" />}
           >
-            <Button variant="solid" borderRadius="none" bg="#23262f">
-              <Link href={`/account/${userHeaderState.account?.id}`}>
-                <Text w="100%">My Profile</Text>
-              </Link>
+            <Button
+              variant="solid"
+              borderRadius="none"
+              bg="#23262f"
+              onClick={userHeaderMethods.btnProfileOnClick}
+            >
+              <Text w="100%">My Profile</Text>
             </Button>
             <Button
               variant="solid"

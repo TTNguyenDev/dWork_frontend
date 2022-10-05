@@ -4,7 +4,6 @@ import {
   Button,
   Center,
   Divider,
-  Flex,
   HStack,
   SimpleGrid,
   Spinner,
@@ -21,14 +20,13 @@ import {
   LoginToView,
   SumitWorkForm,
   TaskProposals,
-  TaskSearchBox,
 } from '../../../components';
-import { useTaskDetailPage, useTaskProposals } from '../../../hooks';
+import { useTaskDetailPage } from '../../../hooks';
 import { ProfileCard } from '../../../components/profile-card';
 import { formatNearAmount } from 'near-api-js/lib/utils/format';
 import moment from 'moment';
 import { ProposalCard } from '../../../components/proposal-card';
-import { MdCheck, MdCheckCircleOutline } from 'react-icons/md';
+import { MdCheck } from 'react-icons/md';
 
 const TaskDetailPage: NextPageWithLayout = () => {
   const {

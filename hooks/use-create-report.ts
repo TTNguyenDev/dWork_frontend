@@ -34,10 +34,7 @@ export const useCreateReport = ({
           task_id: currentProposalState.taskId.value,
           report: data.report,
         });
-        queryClient.invalidateQueries([
-          CachePrefixKeys.PROPOSAL,
-          currentProposalState.taskId.value,
-        ]);
+        queryClient.invalidateQueries([CachePrefixKeys.PROPOSAL]);
       }),
     [createReportForm, currentProposalState.taskId.value]
   );
