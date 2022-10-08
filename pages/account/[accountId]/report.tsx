@@ -2,7 +2,7 @@ import { Box, Flex, HStack, Select, Stack, Text } from '@chakra-ui/react';
 import { ReactElement } from 'react';
 import { AccountLayout } from '../../../layouts';
 import { NextPageWithLayout } from '../../_app';
-import { useAccountPage } from '../../../hooks';
+import { useAccountLayout, useAccountPage } from '../../../hooks';
 import { ListReports } from '../../../components/list-reports';
 import { TaskCategories } from '../../../components';
 import { TaskOrderByOptions } from '../../../constants';
@@ -13,6 +13,10 @@ const AccountPage: NextPageWithLayout = () => {
     accountPageState: { defaultOrderBy },
     accountPageMethods: { taskQueryMethods },
   } = useAccountPage();
+  
+  const {
+    accountLayoutState: { isAdmin },
+  } = useAccountLayout();
 
   return (
     <>
@@ -22,7 +26,15 @@ const AccountPage: NextPageWithLayout = () => {
         direction={{ base: 'column', md: 'row' }}
       >
         <Box flex="1">
-          <ListReports />
+          {
+            isAdmin ? (
+              <ListReports />
+            ) : (
+              <Text>
+                Not available to access this page
+              </Text>
+            ) 
+          }
         </Box>
       </Stack>
     </>

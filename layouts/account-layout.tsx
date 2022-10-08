@@ -13,6 +13,7 @@ import { useAccountLayout } from '../hooks';
 import ProfileCoverDefaultImg from '../assets/profile-cover.jpg';
 import Link from 'next/link';
 import { MainLayout } from './main-layout';
+import { AccountState } from '../store';
 
 export function AccountLayout({
   children,
@@ -64,6 +65,7 @@ export function AccountLayout({
                   variant="ghost"
                   borderRadius="md"
                   isActive={tab === 'proof'}
+                  hidden={AccountState.profile.value?.account_id != accountId}
                 >
                   PROOF
                 </Button>

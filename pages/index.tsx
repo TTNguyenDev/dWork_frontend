@@ -386,13 +386,13 @@ const HomePage: NextPageWithLayout = () => {
         <Grid templateColumns="repeat(2, 1fr)" gap="20px" padding="50px 0">
           <GridItem zIndex="banner" colSpan={2} mb="80px">
             <Text fontSize="36px" fontWeight="600" textAlign="center">
-              OUR
+              EARLY
               <Text
                 as="span"
                 bg="linear-gradient(93.51deg, #9B51E0 2.84%, #3081ED 99.18%)"
                 bgClip="text"
               >
-                &nbsp;PARTNERS
+                &nbsp;SUPPORTERS
               </Text>
             </Text>
           </GridItem>

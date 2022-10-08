@@ -8,10 +8,12 @@ import {
   Divider,
   Button,
 } from '@chakra-ui/react';
+import Link from 'next/link';
 import { MdCheck, MdClose } from 'react-icons/md';
 import { parseToUsername } from '../../core/utils';
 import { ReportDto } from '../../dtos';
 import { useReportCard } from '../../hooks';
+import {FiExternalLink} from 'react-icons/fi';
 
 export const ReportCard = ({ data }: { data: ReportDto }) => {
   const {
@@ -48,10 +50,15 @@ export const ReportCard = ({ data }: { data: ReportDto }) => {
             <Text>{data.report_id}</Text>
           </Box>
           <Box>
-            <HStack mb="5px" justifyContent="space-between">
+            <HStack mb="5px" justifyContent="left">
               <Text fontWeight="800" fontSize="16px">
                 Task ID
               </Text>
+              <Link href={`/task/${data.task_id}`}>
+                <Box cursor="pointer" color="#fff9" _hover={{ color: "#FEB2B2" }}>
+                  <FiExternalLink size={17}/>
+                </Box>
+              </Link>
             </HStack>
             <Text>{data.task_id}</Text>
           </Box>

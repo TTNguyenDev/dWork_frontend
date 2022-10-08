@@ -70,7 +70,7 @@ export const Footer = () => {
                       color="white"
                       whiteSpace="nowrap"
                     >
-                      dWork | &nbsp;
+                      dWork
                     </Text>
                     <Image src={logoLncImg.src} alt="Logo LNC" w="60px" />
                   </Flex>
