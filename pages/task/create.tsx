@@ -240,7 +240,7 @@ const TaskCreatePage: NextPageWithLayout = () => {
 
                         form.setValue(
                           'category_id',
-                          value.replaceAll(' ', '_')
+                          (value + '').replaceAll(' ', '_').toLocaleLowerCase()
                         );
                         form.trigger('category_id');
                       }}

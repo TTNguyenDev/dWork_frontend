@@ -28,12 +28,20 @@ const buildWhereQuery = (payload: TaskQueryState): PouchDB.Find.Selector => {
       payload.status === TaskStatus.AVAILABLE
         ? {
             available_until: { $gt: Date.now() },
-            id: { $nin: AccountState.profile.value?.completed_jobs },
+            id: {
+              $nin: AccountState.profile.value
+                ? AccountState.profile.value.completed_jobs
+                : [],
+            },
           }
         : {},
       payload.status === TaskStatus.COMPLETED
         ? {
-            id: { $in: AccountState.profile.value?.completed_jobs },
+            id: {
+              $in: AccountState.profile.value
+                ? AccountState.profile.value.completed_jobs
+                : [],
+            },
           }
         : {},
       payload.status === TaskStatus.EXPIRED
@@ -85,7 +93,7 @@ export const useListTasks = ({ state }: { state: State<TaskQueryState> }) => {
     () =>
       TaskRepo.getList({
         skip: 0,
-        limit: 10,
+        limit: 1000,
         selector: buildWhereQuery(taskQueryState.value),
         sort: buildSortQuery(taskQueryState.value),
       })
