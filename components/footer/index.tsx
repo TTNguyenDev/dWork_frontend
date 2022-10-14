@@ -72,7 +72,6 @@ export const Footer = () => {
                     >
                       dWork
                     </Text>
-                    <Image src={logoLncImg.src} alt="Logo LNC" w="60px" />
                   </Flex>
                 </HStack>
                 <HStack
