@@ -3,7 +3,7 @@ import { cacheDataList } from '../core/utils';
 import { DB } from '../db';
 import { AccountState } from '../store';
 
-const LIMIT_PER_CACHE_HIT = 5000;
+const LIMIT_PER_CACHE_HIT = 1000;
 
 export const TaskCache = Object.freeze({
   async cache() {

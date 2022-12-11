@@ -28,16 +28,19 @@ import ourPartnersImg from '../assets/our-partners.png';
 import lncBrandImg from '../assets/lnc-brand.svg';
 import nearFoundationImg from '../assets/near-foundation-brand.svg';
 import { useHomepage } from '../hooks';
+import ExplorePage from './explore';
 
 const HomePage: NextPageWithLayout = () => {
   const {
-    homepageState: { modalDemoVideoIsOpen },
+    homepageState: { modalDemoVideoIsOpen, logged },
     homepageMethods: {
       btnLaunchAppOnClick,
       demoVideoOnClick,
       modalDemoVideoOnClose,
     },
   } = useHomepage();
+
+  if (logged) return <ExplorePage />;
 
   return (
     <>

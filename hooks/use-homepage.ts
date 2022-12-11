@@ -1,11 +1,14 @@
 import { useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
-import { useBlockchain } from '../core/hooks';
+import { useBlockchain, useWallet } from '../core/hooks';
 
 export const useHomepage = () => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    wallet: { logged },
+  } = useWallet();
 
   // btn launch app
   const btnLaunchAppOnClick = useCallback(() => {
@@ -24,6 +27,7 @@ export const useHomepage = () => {
   return {
     homepageState: {
       modalDemoVideoIsOpen,
+      logged,
     },
     homepageMethods: {
       btnLaunchAppOnClick,

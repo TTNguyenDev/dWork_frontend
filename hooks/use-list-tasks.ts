@@ -1,9 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { TaskRepo } from '../repos';
-import { CachePrefixKeys, TaskOrderBy, TaskStatus } from '../constants';
+import {
+  CachePrefixKeys,
+  FETCH_TASKS_LIMIT,
+  TaskOrderBy,
+  TaskStatus,
+} from '../constants';
 import { AccountState, TaskQueryState } from '../store';
 import { useTaskQuery } from './atoms';
 import { State } from '@hookstate/core';
+import { useMemo } from 'react';
+import { TaskDto } from '../dtos';
 
 const buildWhereQuery = (payload: TaskQueryState): PouchDB.Find.Selector => {
   const selector: PouchDB.Find.Selector = {
@@ -88,22 +95,42 @@ export const useListTasks = ({ state }: { state: State<TaskQueryState> }) => {
     state,
   });
 
-  const listTasksQuery = useQuery(
-    [CachePrefixKeys.TASK, taskQueryState.value],
-    () =>
+  const listTasksQuery = useInfiniteQuery({
+    queryKey: [CachePrefixKeys.TASK, taskQueryState.value],
+    queryFn: ({ pageParam: { skip } = {} }) =>
       TaskRepo.getList({
-        skip: 0,
-        limit: 1000,
+        skip,
+        limit: FETCH_TASKS_LIMIT,
         selector: buildWhereQuery(taskQueryState.value),
         sort: buildSortQuery(taskQueryState.value),
-      })
-  );
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < FETCH_TASKS_LIMIT) return undefined;
+      const skip = allPages.length * FETCH_TASKS_LIMIT;
+      return {
+        skip,
+      };
+    },
+    keepPreviousData: true,
+  });
+
+  const listTasks = useMemo(() => {
+    if (listTasksQuery.data?.pages.length) {
+      return listTasksQuery.data.pages.reduce(
+        (a: TaskDto[], b: TaskDto[]) => [...a, ...b],
+        []
+      );
+    } else return [];
+  }, [listTasksQuery.data?.pages]);
 
   return {
     listTasksState: {
       isLoading: listTasksQuery.isLoading,
-      data: listTasksQuery.data,
+      data: listTasks,
+      hasNextPage: listTasksQuery.hasNextPage,
     },
-    listTasksMethods: {},
+    listTasksMethods: {
+      fetchNextPage: listTasksQuery.fetchNextPage,
+    },
   };
 };
